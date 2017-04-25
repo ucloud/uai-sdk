@@ -54,7 +54,7 @@ class UaiDeployTool(object):
         self._upload_code()
         self._upload_json_file()
         self._request_server()
-        self._check_request()
+        self._check_server()
 
     def _format_check_params(self):
         self.check_params['Action'] = 'Check'

@@ -15,6 +15,7 @@
 
 import sys
 import os
+import argparse
 
 from uai.deploy.tf_tool import TFDeployTool
 
