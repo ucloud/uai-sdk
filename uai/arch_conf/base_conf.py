@@ -117,13 +117,17 @@ class ArchJsonConf(object):
                         'type': self.params['language'].split('-')[0]
                     },
                     'os': self.params['os'],
-                    'os-deps':
-                    [dep.strip() for dep in self.params['os_deps'].split(',')],
-                    'pip':
-                    [pip_dep.strip() for pip_dep in self.params['pip'].split(',')]
+                    'os-deps':[],
+                    'pip':[]
                 }
             }
         }
+
+        if self.params.has_key('os_deps') == True and self.params['os_deps'] != None:
+            self.conf_params['docker']['dockerfile']['os-deps'] = [dep.strip() for dep in self.params['os_deps'].split(',')]
+
+        if self.params.has_key('pip') == True and self.params['pip'] != None:
+            self.conf_params['docker']['dockerfile']['pip'] = [pip_dep.strip() for pip_dep in self.params['pip'].split(',')]
 
     def _load_args(self):
         """ Json param loader

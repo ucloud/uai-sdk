@@ -13,8 +13,11 @@
 # limitations under the License.
 # ==============================================================================
 
+from __future__ import print_function
 from .base_conf import ArchJsonConf, ArchJsonConfLoader
 
+def str_to_bool(str):
+    return str.lower() in ("true", "t", "yes", "1")
 
 class KerasJsonConf(ArchJsonConf):
     """Keras Json Config class
@@ -36,7 +39,7 @@ class KerasJsonConf(ArchJsonConf):
             help='the Keras model name')
         self.args_parser.add_argument(
             '--all_one_file',
-            type=bool,
+            type=str,
             required=True,
             help='whether the model is all in one file')
         self.args_parser.add_argument(
@@ -58,7 +61,7 @@ class KerasJsonConf(ArchJsonConf):
             'keras': {
                 'model_dir': self.params['model_dir'],
                 'model_name': self.params['model_name'],
-                'all_one_file': self.params['all_one_file'],
+                'all_one_file': str_to_bool(self.params['all_one_file']),
                 'model_arc_type': self.params['model_arc_type'],
             }
         }
