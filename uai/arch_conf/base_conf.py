@@ -91,6 +91,11 @@ class ArchJsonConf(object):
             type=int,
             default=120,
             help='the default steps (10min == 120) to poll the state of deploy')
+        args_parser.add_argument(
+            '--ai_arch_v',
+            type=str,
+            default="",
+            help='AI architecture specific version')
         self.args_parser = args_parser
 
     def _load_conf_params(self):
@@ -111,7 +116,7 @@ class ArchJsonConf(object):
                     'private_key': self.params['private_key']
                 },
                 'dockerfile': {
-                    'driver': self.platform,
+                    'driver': self.platform + self.params['ai_arch_v'],
                     'language': {
                         'version': self.params['language'].split('-')[1],
                         'type': self.params['language'].split('-')[0]
