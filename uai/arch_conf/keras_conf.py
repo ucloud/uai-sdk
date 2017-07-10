@@ -13,17 +13,14 @@
 # limitations under the License.
 # ==============================================================================
 
-from __future__ import print_function
-from .base_conf import ArchJsonConf, ArchJsonConfLoader
+from base_conf import ArchJsonConf
+from base_conf import ArchJsonConfLoader
 
-def str_to_bool(str):
-    return str.lower() in ("true", "t", "yes", "1")
+from uai.utils.utils import str_to_bool
 
 class KerasJsonConf(ArchJsonConf):
-    """Keras Json Config class
-
+    """ Keras Json Config class
     """
-
     def __init__(self, parser):
         """ Keras Json Config Class, Use the super to init
         """
@@ -32,27 +29,61 @@ class KerasJsonConf(ArchJsonConf):
     def _add_args(self):
         super(KerasJsonConf, self)._add_args()
 
-        self.args_parser.add_argument(
+        # # add pack parameters
+        # self.pack_parser.add_argument(
+        #     '--ai_arch_v',
+        #     type=str,
+        #     default='keras-1.2.0',
+        #     help='ai arch version of keras')
+        self.pack_parser.add_argument(
             '--model_name',
             type=str,
             required=True,
             help='the Keras model name')
-        self.args_parser.add_argument(
+        self.pack_parser.add_argument(
             '--all_one_file',
             type=str,
             required=True,
             help='whether the model is all in one file')
-        self.args_parser.add_argument(
-            '--model_arc_type',
+        self.pack_parser.add_argument(
+            '--model_arch_type',
             type=str,
             default='json',
-            help='the model arc type to save')
-        self.params = vars(self.parser.parse_args())
+            help='the model arch type to save')
+
+        # # add deploy parameters
+        # self.deploy_parser.add_argument(
+        #     '--ai_arch_v',
+        #     type=str,
+        #     default='keras-1.2.0',
+        #     help='ai arch version of keras')
+        self.deploy_parser.add_argument(
+            '--model_name',
+            type=str,
+            required=False,
+            help='the Keras model name')
+        self.deploy_parser.add_argument(
+            '--all_one_file',
+            type=str,
+            required=False,
+            help='whether the model is all in one file')
+        self.deploy_parser.add_argument(
+            '--model_arch_type',
+            type=str,
+            default='json',
+            help='the model arch type to save')
+
+        # self.params = vars(self.parser.parse_args())
+
+    def load_params(self):
+        super(KerasJsonConf, self).load_params()
 
     def _load_conf_params(self):
         """ Config the conf_params from the CMD
         """
         super(KerasJsonConf, self)._load_conf_params()
+        if self.params['all_one_file']:
+            self.params['all_one_file']=str_to_bool(self.params['all_one_file'])
         self.conf_params['http_server'] = {
             'exec': {
                 'main_file': self.params['main_file'],
@@ -61,12 +92,16 @@ class KerasJsonConf(ArchJsonConf):
             'keras': {
                 'model_dir': self.params['model_dir'],
                 'model_name': self.params['model_name'],
-                'all_one_file': str_to_bool(self.params['all_one_file']),
-                'model_arc_type': self.params['model_arc_type'],
+                'all_one_file': self.params['all_one_file'],
+                'model_arch_type': self.params['model_arch_type'],
             }
         }
 
+    def _load_args(self):
+        super(KerasJsonConf, self)._load_args()
+
     def get_conf_params(self):
+        self._load_args()
         return self.conf_params
 
     def get_arg_params(self):
@@ -82,7 +117,7 @@ class KerasJsonConfLoader(ArchJsonConfLoader):
         self.model_dir = self.server_conf['keras']['model_dir']
         self.model_name = self.server_conf['keras']['model_name']
         self.all_one_file = self.server_conf['keras']['all_one_file']
-        self.model_arc_type = self.server_conf['keras']['model_arc_type']
+        self.model_arch_type = self.server_conf['keras']['model_arch_type']
 
     def get_model_dir(self):
         return self.model_dir
@@ -93,5 +128,5 @@ class KerasJsonConfLoader(ArchJsonConfLoader):
     def get_all_one_file(self):
         return self.all_one_file
 
-    def get_model_arc_type(self):
-        return self.model_arc_type
+    def get_model_arch_type(self):
+        return self.model_arch_type

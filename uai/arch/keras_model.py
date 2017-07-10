@@ -12,36 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
+
 import os
 from uai.arch.base_model import AiUcloudModel
-from uai.arch_conf.keras_conf import KerasJsonConf, KerasJsonConfLoader
-
+from uai.arch_conf.keras_conf import KerasJsonConf
+from uai.arch_conf.keras_conf import KerasJsonConfLoader
 
 class KerasAiUcloudModel(AiUcloudModel):
     """
-    Base model class for user defined Keras Model
+        Base model class for user defined Keras Model
     """
-
     def __init__(self, conf=None, model_type='keras'):
         super(KerasAiUcloudModel, self).__init__(conf, model_type)
         self.output = {}
         self._parse_conf(conf)
-        self.model = self.load_model()
+        self.load_model()
 
     def _parse_conf(self, conf):
         """
-        Parse Keras related config
-        Args:
-            conf:    key/val object for AI architecture specific config
+            Parse Keras related config
+            Args:
+                conf: key/val object for AI architecture specific config
         """
         keras_json_conf_loader = KerasJsonConfLoader(conf)
         self.model_dir = keras_json_conf_loader.get_model_dir()
         self.model_name = keras_json_conf_loader.get_model_name()
         self.all_one_file = keras_json_conf_loader.get_all_one_file()
         if not self.all_one_file:
-            self.model_arc_type = keras_json_conf_loader.get_model_arc_type()
-            self.model_arc_file = os.path.join(
-                self.model_dir, self.model_name + '.' + self.model_arc_type)
+            self.model_arch_type = keras_json_conf_loader.get_model_arch_type()
+            self.model_arch_file = os.path.join(
+                self.model_dir, self.model_name + '.' + self.model_arch_type)
             self.model_weight_file = os.path.join(self.model_dir,
                                                   self.model_name + '.h5')
         else:

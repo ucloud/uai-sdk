@@ -20,11 +20,11 @@ from __future__ import print_function
 import json
 import StringIO
 
-from PIL import Image
 import numpy as np
 import tensorflow as tf
-
+from PIL import Image
 from uai.arch.tf_model import TFAiUcloudModel
+
 
 class MnistModel(TFAiUcloudModel):
   def __init__(self, conf):

@@ -14,18 +14,17 @@
 # ==============================================================================
 
 import os
-from uai.arch_conf.base_conf import ArchJsonConf, ArchJsonConfLoader
-
+from uai.arch_conf.base_conf import ArchJsonConf
+from uai.arch_conf.base_conf import ArchJsonConfLoader
 
 class AiUcloudModel(object):
     """
-    Base class struct for user defined AI Model
+        Base class struct for user defined AI Model
     """
-
     def __init__(self, conf, model_type):
         """
         Args:
-            conf:       key/val object for AI architecture specific config
+            conf: key/val object for AI architecture specific config
             model_type: str, the model type
         """
         self.conf = conf

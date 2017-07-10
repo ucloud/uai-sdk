@@ -13,24 +13,21 @@
 # limitations under the License.
 # ==============================================================================
 
-"""A very simple MNIST inferencer.
-
+""" A very simple MNIST inferencer.
 """
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-
-from PIL import Image
 import numpy as np
 import tensorflow as tf
-
+from PIL import Image
 from uai.arch.tf_model import TFAiUcloudModel
 
 class MnistModel(TFAiUcloudModel):
-  """Mnist example model
+  """ Mnist example model
   """
-
   def __init__(self, conf):
     super(MnistModel, self).__init__(conf)
 

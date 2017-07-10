@@ -13,13 +13,12 @@
 # limitations under the License.
 # ==============================================================================
 
-from .base_conf import ArchJsonConf, ArchJsonConfLoader
+from base_conf import ArchJsonConf
+from base_conf import ArchJsonConfLoader
 
 class TFJsonConf(ArchJsonConf):
-    """TensorFlow Json Config class
-
+    """ TensorFlow Json Config class
     """
-
     def __init__(self, parser):
         """ TensorFlow Json Config Class, Use the super to init
         """
@@ -28,8 +27,8 @@ class TFJsonConf(ArchJsonConf):
     def _add_args(self):
         super(TFJsonConf, self)._add_args()
 
-        self.params = vars(self.parser.parse_args())
-        print self.params
+    def load_params(self):
+        super(TFJsonConf, self).load_params()
 
     def _load_conf_params(self):
         """ Config the conf_params from the CMD
@@ -41,11 +40,15 @@ class TFJsonConf(ArchJsonConf):
                 'main_class': self.params['main_class']
             },
             'tensorflow': {
-                'model_dir': self.params['model_dir']
+                'model_dir': self.params['model_dir']                
             }
         }
 
+    def _load_args(self):
+        super(TFJsonConf, self)._load_args()
+
     def get_conf_params(self):
+        self._load_args()
         return self.conf_params
 
     def get_arg_params(self):
@@ -58,6 +61,6 @@ class TFJsonConfLoader(ArchJsonConfLoader):
     def _load(self):
         super(TFJsonConfLoader, self)._load()
         self.model_dir = self.server_conf['tensorflow']['model_dir']
-
+    
     def get_model_dir(self):
         return self.model_dir

@@ -14,31 +14,30 @@
 # ==============================================================================
 
 """A very simple MNIST inferencer.
-
 """
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-
-from PIL import Image
 import numpy as np
-from keras.models import load_model, model_from_json
+from PIL import Image
+from keras.models import load_model
+from keras.models import model_from_json
 from uai.arch.keras_model import KerasAiUcloudModel
 
 class MnistModel(KerasAiUcloudModel):
-    """Mnist example model
+    """ Mnist example model
     """
     def __init__(self, conf):
         super(MnistModel, self).__init__(conf)
 
     def load_model(self):
-        model_json_file = open(self.model_arc_file, 'r')
+        model_json_file = open(self.model_arch_file, 'r')
         model_json = model_json_file.read()
         model_json_file.close()
         model_json = model_from_json(model_json)
         model_json.load_weights(self.model_weight_file)
-        return model_json
+        self.model = model_json
 
     def execute(self, data, batch_size):
         ims = []

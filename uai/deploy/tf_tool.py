@@ -13,20 +13,43 @@
 # limitations under the License.
 # ==============================================================================
 
-from base_tool import UaiDeployTool
-# from base_tool import register_new_arch
+import argparse
+from base_tool import *
 from uai.arch_conf.tf_conf import TFJsonConf
-
+from uai.pack.tf_pack_tool import TFPackTool
 
 class TFDeployTool(UaiDeployTool):
+    """ TensorFlow Deploy Tool class  
+    """
     def __init__(self, parser):
         super(TFDeployTool, self).__init__('tensorflow', parser)
 
     def _add_args(self):
-        """Tensorflow specific _add_args tool to parse Tensorflow params through TFJsonConf
+        """ TensorFlow specific _add_args tool to parse TensorFlow
+            params through KerasJsonConf
         """
-        tf_json_conf = TFJsonConf(self.parser)
-        self.conf_params = tf_json_conf.get_conf_params()
+        self.config = TFJsonConf(self.parser)
+
+    def _load_args(self):
+        self.config.load_params()
+        self.conf_params = self.config.get_conf_params()
+        self.params = self.config.get_arg_params()
+
+    def pack(self):
+        self.packTool = TFPackTool(argparse.ArgumentParser())
+        if self.params['upload_name'] == "uaiserivce.tar":
+            self.params['upload_name'] = time.strftime('%Y-%m-%d_%X', time.localtime()) + ".tar"
+
+        sys.argv = ['any', 'pack']
+        for k in self.params.keys():
+            if k == 'public_key' or k == 'private_key' \
+                    or k == 'os' or k == 'language' or k == 'ai_arch_v' or k == 'os_deps' or k == 'pip' \
+                    or k=='bucket' or k=='pack_file_path' \
+                    or k=='main_file' or k=='main_class' or k=='model_dir' or k=='code_files'\
+                    or k=='upload_name':
+                sys.argv.append('--' + k)
+                sys.argv.append(self.params[k])
+        self.packTool.pack()
 
     def deploy(self):
         super(TFDeployTool, self).deploy()

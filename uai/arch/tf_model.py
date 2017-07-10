@@ -12,13 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
+
 from uai.arch.base_model import AiUcloudModel
-from uai.arch_conf.tf_conf import TFJsonConf, TFJsonConfLoader
+from uai.arch_conf.tf_conf import TFJsonConf
+from uai.arch_conf.tf_conf import TFJsonConfLoader
 
 class TFAiUcloudModel(AiUcloudModel):
-    """Base model class for user defined Tensorflow Model
     """
-
+        Base model class for user defined Tensorflow Model
+    """
     def __init__(self, conf=None, model_type='tensorflow'):
         super(TFAiUcloudModel, self).__init__(conf, model_type)
         self.output = {}
@@ -27,9 +29,9 @@ class TFAiUcloudModel(AiUcloudModel):
 
     def _parse_conf(self, conf):
         """
-        Parse Tensorflow related config
-        Args:
-            conf:    key/val object for AI architecture specific config
+            Parse Tensorflow related config
+            Args:
+                conf: key/val object for AI architecture specific config
         """
         tf_json_conf_loader = TFJsonConfLoader(conf)
         self.model_dir = tf_json_conf_loader.get_model_dir()

@@ -4,10 +4,14 @@ This SDK include basic APIs to run AI inference services on a http server.
 It currently only support tensorflow, we will continue to add more platform into it.
 
 ## Supported AI Platform
-Tensorflow (0.11 tested)
+Tensorflow (0.11.0 tested)
+Tensorflow（1.1.0 tested）
+MXNet(0.9.5 tested)
+Keras(1.2.0 tested)
+Caffe(1.0.0 tested)
 
 ## How to install
-1. Install Tensorflow (0.11 prefered)
+1. Install your deep learning python package, such as Tensorflow, MXNet, Keras, Caffe (tested version preferred)
 2. Install UCloud Ufile SDK (https://docs.ucloud.cn/storage_cdn/ufile/tools)
 
         $ wget http://sdk.ufile.ucloud.com.cn/python_sdk.tar.gz
@@ -32,3 +36,11 @@ Tensorflow (0.11 tested)
 
 ## UCloud Http Server for UAI
 https://github.com/ucloud/uai-sdk-httpserver
+
+## How to interactive with Ucloud api
+1. Choose your deep learning python package, such as Tensorflow, MXNet, Keras, Caffe (tested version preferred)
+2. Find corresponding tool under uai_tools folder
+3. Use xx_deploy.py, i.e. for tensorflow
+        $ python tf_deploy.py --help
+   See help docs: https://docs.ucloud.cn/analysis/uai-service/index
+4. Notes: ai_arch, language, os, os_deps，pip files should be under the same path as xx_deploy.py

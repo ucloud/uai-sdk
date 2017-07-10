@@ -12,7 +12,7 @@ except ImportError:
     setuptools = None
     from distutils.core import setup
 
-packages = ['uai', 'uai/arch', 'uai/arch_conf', 'uai/deploy', 'uai/utils']
+packages = ['uai', 'uai/arch', 'uai/arch_conf', 'uai/deploy', 'uai/pack', 'uai/utils', 'uai/cmd']
 
 
 def read(*names, **kwargs):
