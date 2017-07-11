@@ -51,16 +51,16 @@ class MXNetJsonConf(ArchJsonConf):
         #     type=str,
         #     default='mxnet-0.9.5',
         #     help='ai arch version of mxnet')
-        self.deploy_parser.add_argument(
-            '--model_name',
-            type=str,
-            required=False,
-            help='the MXNet model name')
-        self.deploy_parser.add_argument(
-            '--num_epoch',
-            type=int,
-            required=False,
-            help='the num of the model ckpt epoch')
+        # self.deploy_parser.add_argument(
+        #     '--model_name',
+        #     type=str,
+        #     required=False,
+        #     help='the MXNet model name')
+        # self.deploy_parser.add_argument(
+        #     '--num_epoch',
+        #     type=int,
+        #     required=False,
+        #     help='the num of the model ckpt epoch')
 
         # self.params = vars(self.parser.parse_args())
 

@@ -234,34 +234,34 @@ class ArchJsonConf(object):
             help='the all python files')
         self.pack_parser = code_parse
 
-        container_parse = parser.add_argument_group(
-            'Container-Params', 'Container Enviroment Parameters')
-        container_parse.add_argument(
-            '--os',
-            type=str,
-            default='ubuntu',
-            help='the type of the docker os')
-        container_parse.add_argument(
-            '--language',
-            type=str,
-            default='python-2.7.6',
-            help='the language of the docker')
-        container_parse.add_argument(
-            '--ai_arch_v',
-            type=str,
-            # default='tensorflow-1.1.0',
-            required=True,
-            help='AI architecture and specific version')
-        container_parse.add_argument(
-            '--os_deps',
-            type=str,
-            # default='',
-            help='the dependency of the ubuntu apt-get')
-        container_parse.add_argument(
-            '--pip',
-            type=str,
-            # default='',
-            help='the dependency of the python pip')
+        # container_parse = parser.add_argument_group(
+        #     'Container-Params', 'Container Enviroment Parameters')
+        # container_parse.add_argument(
+        #     '--os',
+        #     type=str,
+        #     default='ubuntu',
+        #     help='the type of the docker os')
+        # container_parse.add_argument(
+        #     '--language',
+        #     type=str,
+        #     default='python-2.7.6',
+        #     help='the language of the docker')
+        # container_parse.add_argument(
+        #     '--ai_arch_v',
+        #     type=str,
+        #     # default='tensorflow-1.1.0',
+        #     required=True,
+        #     help='AI architecture and specific version')
+        # container_parse.add_argument(
+        #     '--os_deps',
+        #     type=str,
+        #     # default='',
+        #     help='the dependency of the ubuntu apt-get')
+        # container_parse.add_argument(
+        #     '--pip',
+        #     type=str,
+        #     # default='',
+        #     help='the dependency of the python pip')
 
     def _add_deploy_args(self, parser):
         args_parser = parser.add_argument_group(

@@ -57,21 +57,21 @@ class KerasJsonConf(ArchJsonConf):
         #     type=str,
         #     default='keras-1.2.0',
         #     help='ai arch version of keras')
-        self.deploy_parser.add_argument(
-            '--model_name',
-            type=str,
-            required=False,
-            help='the Keras model name')
-        self.deploy_parser.add_argument(
-            '--all_one_file',
-            type=str,
-            required=False,
-            help='whether the model is all in one file')
-        self.deploy_parser.add_argument(
-            '--model_arch_type',
-            type=str,
-            default='json',
-            help='the model arch type to save')
+        # self.deploy_parser.add_argument(
+        #     '--model_name',
+        #     type=str,
+        #     required=False,
+        #     help='the Keras model name')
+        # self.deploy_parser.add_argument(
+        #     '--all_one_file',
+        #     type=str,
+        #     required=False,
+        #     help='whether the model is all in one file')
+        # self.deploy_parser.add_argument(
+        #     '--model_arch_type',
+        #     type=str,
+        #     default='json',
+        #     help='the model arch type to save')
 
         # self.params = vars(self.parser.parse_args())
 

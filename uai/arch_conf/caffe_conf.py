@@ -45,11 +45,11 @@ class CaffeJsonConf(ArchJsonConf):
         #     type=str,
         #     default='caffe-1.0.0',
         #     help='ai arch version of caffe')
-        self.deploy_parser.add_argument(
-            '--model_name',
-            type=str,
-            required=False,
-            help='the Caffe model name')
+        # self.deploy_parser.add_argument(
+        #     '--model_name',
+        #     type=str,
+        #     required=False,
+        #     help='the Caffe model name')
         # self.params = vars(self.parser.parse_args())
 
 
