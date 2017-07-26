@@ -152,7 +152,6 @@ class UaiPackTool(object):
 
     def pack(self):
         self._load_args()
-        self._translate_args()
         self._get_filelist()
         self._gen_jsonfile()
         self._pack_file()
