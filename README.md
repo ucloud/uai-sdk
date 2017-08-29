@@ -1,14 +1,22 @@
 # uai-sdk
 UCloud AI service SDK
 This SDK include basic APIs to run AI inference services on a http server.
+It currently only support tensorflow, mxnet, keras, caffe, we will continue to add more platform into it.
+
+UCloud AI train SDK
+This SDK include tools for packing AI train codes into docker
 It currently only support tensorflow, we will continue to add more platform into it.
 
 ## Supported AI Platform
+UaiService
 Tensorflow (0.11.0 tested)
 Tensorflow（1.1.0 tested）
 MXNet(0.9.5 tested)
 Keras(1.2.0 tested)
 Caffe(1.0.0 tested)
+
+UaiTrain
+Tensorflow（1.1.0 tested）
 
 ## How to install
 1. Install your deep learning python package, such as Tensorflow, MXNet, Keras, Caffe (tested version preferred)
@@ -42,5 +50,13 @@ https://github.com/ucloud/uai-sdk-httpserver
 2. Find corresponding tool under uai_tools folder
 3. Use xx_deploy.py, i.e. for tensorflow
         $ python tf_deploy.py --help
-   See help docs: https://docs.ucloud.cn/analysis/uai-service/index
+   See help docs: https://docs.ucloud.cn/ai/uai-service/index
 4. Notes: ai_arch, language, os, os_deps，pip files should be under the same path as xx_deploy.py
+
+
+## How to pack AI train code
+1. Find corresponding tool under uaitrain_tools folder
+2. Use xx_deploy.py, i.e. for tensorflow
+        $ python tf_deploy.py --help
+   See help docs: https://docs.ucloud.cn/ai/uai-train
+4. Notes: when use pack tool, please ensure all your code is under the same path where the pack tool located
