@@ -8,13 +8,12 @@ import re
 try:
     import setuptools
     setup = setuptools.setup
+    find_packages = setuptools.find_packages
 except ImportError:
     setuptools = None
     from distutils.core import setup
 
-packages = ['uai', 'uai/arch', 'uai/arch_conf', 'uai/deploy', 'uai/pack', 'uai/utils', 'uai/cmd',
-            'uaitrain', 'uaitrain/arch', 'uaitrain/arch/tensorflow', 'uaitrain/cmd', 'uaitrain/arch_conf', 'uaitrain/pack']
-
+packages = find_packages()
 
 def read(*names, **kwargs):
     return io.open(
