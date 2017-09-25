@@ -107,6 +107,7 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         code_parse.add_argument(
             '--train_params',
             type=str,
+            default="",
             help='The params used in training')
 
         cmd_gen_parse = pack_parser.add_argument_group(
@@ -275,7 +276,7 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
             "-v " + self.test_data_path + ":" + "/data/data " + \
             "-v " + self.test_output_path + ":" + "/data/output " + \
             self.user_cpu_image + " " + "/bin/bash -c " + \
-            "\"cd /data && /usr/bin/python " + pycmd + " " + "--work_dir=/data --data_dir=/data/data --output_dir=/data/output --log_dir=/data/output/log\""
+            "\"cd /data && /usr/bin/python " + pycmd + " " + "--work_dir=/data --data_dir=/data/data --output_dir=/data/output --log_dir=/data/output\""
         return cpu_docker_cmd
 
     def _gen_gpu_docker_cmd(self, pycmd):
@@ -283,7 +284,7 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
             "-v " + self.test_data_path + ":" + "/data/data " + \
             "-v " + self.test_output_path + ":" + "/data/output " + \
             self.user_gpu_image + " " + "/bin/bash -c " + \
-            "\"cd /data && /usr/bin/python " + pycmd + " " + "--work_dir=/data --data_dir=/data/data --output_dir=/data/output --log_dir=/data/output/log\""
+            "\"cd /data && /usr/bin/python " + pycmd + " " + "--work_dir=/data --data_dir=/data/data --output_dir=/data/output --log_dir=/data/output\""
         return gpu_docker_cmd
 
     def _gen_run_cmd(self):
@@ -370,7 +371,3 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         self.cpu_image = cpu_image_name
 
         self._build_userimage()
-
-
-
-

@@ -26,6 +26,6 @@ class TensorFlowUAITrainDockerImagePackOp(BaseUAITrainDockerImagePackOp):
             "-v " + self.test_data_path + ":" + "/data/data " + \
             "-v " + self.test_output_path + ":" + "/data/output " + \
             self.user_gpu_image + " " + "/bin/bash -c " + \
-            "\"cd /data && /usr/bin/python " + pycmd + " " + "--num_gpus=1 --work_dir=/data --data_dir=/data/data --output_dir=/data/output --log_dir=/data/output/log\""
+            "\"cd /data && /usr/bin/python " + pycmd + " " + "--num_gpus=1 --work_dir=/data --data_dir=/data/data --output_dir=/data/output --log_dir=/data/output\""
         return gpu_docker_cmd
         

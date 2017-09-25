@@ -55,7 +55,7 @@ class CaffeUAITrainDockerImagePackOp(BaseUAITrainDockerImagePackOp):
             "-v " + self.test_data_path + ":" + "/data/data " + \
             "-v " + self.test_output_path + ":" + "/data/output " + \
             self.user_cpu_image + " " + "/bin/bash -c " + \
-            "\"cd /data && /usr/bin/python " + pycmd + " " + "--use_cpu=True --work_dir=/data --data_dir=/data/data --output_dir=/data/output --log_dir=/data/output/log\" "
+            "\"cd /data && /usr/bin/python " + pycmd + " " + "--use_cpu=True --work_dir=/data --data_dir=/data/data --output_dir=/data/output --log_dir=/data/output\" "
         return cpu_docker_cmd
 
     def _gen_gpu_docker_cmd(self, pycmd):
@@ -63,7 +63,7 @@ class CaffeUAITrainDockerImagePackOp(BaseUAITrainDockerImagePackOp):
             "-v " + self.test_data_path + ":" + "/data/data " + \
             "-v " + self.test_output_path + ":" + "/data/output " + \
             self.user_gpu_image + " " + "/bin/bash -c " + \
-            "\"cd /data && /usr/bin/python " + pycmd + " " + "--use_cpu=False --num_gpus=1 --work_dir=/data --data_dir=/data/data --output_dir=/data/output --log_dir=/data/output/log\""
+            "\"cd /data && /usr/bin/python " + pycmd + " " + "--use_cpu=False --num_gpus=1 --work_dir=/data --data_dir=/data/data --output_dir=/data/output --log_dir=/data/output\""
         return gpu_docker_cmd
 
 
