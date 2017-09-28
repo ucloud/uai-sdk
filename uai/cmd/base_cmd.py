@@ -58,7 +58,7 @@ class UaiCmdTool(object):
         elif self.conf_params['commands'] == 'listservice':
             self._format_listservice_param()
             self.cmd_url = UCLOUD_API_URL
-            print self.cmd_params
+            print(self.cmd_params)
         elif self.conf_params['commands'] == 'listversion':
             self._format_listversion_param()
             self.cmd_url = UCLOUD_API_URL
@@ -233,7 +233,7 @@ class UaiCmdTool(object):
                         pkglist.remove(pkg)
                         resultlist.append(avpkg["PkgId"])
 
-        if len(pkglist) <> 0:
+        if len(pkglist) != 0:
             uai_logger.error("Some {0} package is not supported: {1}".format(pkgtype, pkglist))
             raise RuntimeError("Some {0} package is not supported: {1}".format(pkgtype, pkglist))
 

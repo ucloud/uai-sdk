@@ -66,7 +66,7 @@ def check_retcode(ret_info):
             common[ret_code](ret_message)
         except KeyError:
             uai_logger.error("The RetCode is not included in COMMON RetCode.")
-        except Exception, e:
+        except Exception as e:
             uai_logger.exception(e)
             if "Time Out" in str(e):
                 return RETRY_CONDITION

@@ -95,7 +95,7 @@ class UaiPackTool(object):
         for i in self.filelist:
             try:
                 tar.add(i)
-            except OSError, e:
+            except OSError as e:
                 uai_logger.info('{0} : {1}'.format(OSError, e))
                 uai_logger.info('The package process is interrupted.')
                 sys.exit(0)
@@ -152,6 +152,7 @@ class UaiPackTool(object):
 
     def pack(self):
         self._load_args()
+        # self._translate_args()
         self._get_filelist()
         self._gen_jsonfile()
         self._pack_file()

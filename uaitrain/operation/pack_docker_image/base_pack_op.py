@@ -162,25 +162,20 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         return True
 
     def _translate_pkg_to_id(self, pkgtype, pkg):
-        if not os.path.exists(pkgtype):
-            uai_logger.info("Start download {0} package info".format(pkgtype))
+        uai_logger.info("Start download {0} package info".format(pkgtype))
 
-            api_op = GetUAITrainEnvPkgAPIOp(self.pub_key, 
-                self.pri_key,
-                pkgtype,
-                self.project_id, 
-                self.region, 
-                self.zone)
-            succ, result = api_op.call_api()
+        api_op = GetUAITrainEnvPkgAPIOp(self.pub_key,
+            self.pri_key,
+            pkgtype,
+            self.project_id,
+            self.region,
+            self.zone)
+        succ, result = api_op.call_api()
 
-            if succ is False:
-                raise RuntimeError("Error get {0} info from server".format(pkgtype))
-            with open(pkgtype, 'w') as f:
-                json.dump(result['PkgSet'], f)
+        if succ is False:
+            raise RuntimeError("Error get {0} info from server".format(pkgtype))
         
-        resultlist = []
-        uai_logger.info("Start translate {0} package to their id, packages: {1}".format(pkgtype, pkg))
-        for avpkg in json.load(open(pkgtype), 'utf-8'):
+        for avpkg in result['PkgSet']:
             if pkgtype == 'OS' or pkgtype == 'Python' or pkgtype == 'AIFrame':
                 versionsplit = pkg.rfind('-')
                 if versionsplit > 0:

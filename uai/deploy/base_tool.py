@@ -79,7 +79,7 @@ class UaiDeployTool(object):
                     or k == 'service_id':
                 sys.argv.append('--' + k)
                 sys.argv.append(self.params[k])
-        print sys.argv
+        print(sys.argv)
         # self.checkProgressTool.cmd(self.params)
         self.checkProgressTool.cmd()
 

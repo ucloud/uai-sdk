@@ -44,8 +44,8 @@ def save_json(params, json_file):
 def unpack_tar(tar_file):
     try:
         tar_file = tarfile.open(tarfile)
-    except Exception, e:
-        print e
+    except Exception as e:
+        print(e)
         raise OSError
     tar_file.extractall()
 
