@@ -55,7 +55,7 @@ flags.DEFINE_string("output_dir", "/data/output", "Default output path")
 	Note: DO NOT CHANGE THIS VALUE
 	      UCloud Train Job Executor Will Set it Automatically
 '''
-flags.DEFINE_string("log_dir", "/data/output/", "Default log path")
+flags.DEFINE_string("log_dir", "/data/output", "Default log path")
 
 '''
 	Define num_gpus for training
