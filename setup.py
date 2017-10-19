@@ -10,8 +10,7 @@ try:
     setup = setuptools.setup
     find_packages = setuptools.find_packages
 except ImportError:
-    setuptools = None
-    from distutils.core import setup
+    raise RuntimeError("Please install setuptools")
 
 packages = find_packages()
 

@@ -1,25 +1,22 @@
 #coding:utf8
 import hashlib
-import urlparse
 import tarfile
-import urllib
 import json
 
 
 def _verfy_ac(private_key, params):
     items = params.items()
-    items.sort()
+    items = sorted(items, reverse=False) # must use reverse=False to adapt python3
 
-    print(items)
     params_data = ""
     for key, value in items:
         params_data = params_data + str(key) + val_to_str(value)
     params_data = params_data + private_key
 
     sign = hashlib.sha1()
-    sign.update(params_data)
+    sign.update(params_data.encode('utf-8')) # must encode to adapt python3
     signature = sign.hexdigest()
-
+    print("Signature",signature)
     return signature
 
 def val_to_str(val):

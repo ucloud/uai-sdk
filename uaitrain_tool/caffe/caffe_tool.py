@@ -26,11 +26,11 @@ if __name__ == '__main__':
 
     subparsers = parser.add_subparsers(dest='commands', help='commands')
 
-    pcck_op = CaffeUAITrainDockerImagePackOp(subparsers)
+    pack_op = CaffeUAITrainDockerImagePackOp(subparsers)
     cmd_args = vars(parser.parse_args())
 
     if cmd_args['commands'] == 'pack':
-        pcck_op.cmd_run(cmd_args)
+        pack_op.cmd_run(cmd_args)
     else:
         print("UAI Train Deploy Tool Only Support Packing Docker Images Now")
 

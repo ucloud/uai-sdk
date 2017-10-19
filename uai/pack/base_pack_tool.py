@@ -13,7 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 
-import os 
+import os
 import sys
 import json
 import argparse
@@ -25,16 +25,18 @@ from uai.cmd.base_cmd import UaiCmdTool
 
 UFILE_INFO = './ufile_info.log'
 
+
 class UaiPackTool(object):
     """ The Base Pack Tool Class with UAI
     """
+
     def __init__(self, platform, parser):
         self.platform = platform
         self.parser = parser
 
         self.conf_params = {}
         self.filelist = []
-        
+
         self._add_args()
 
         self.ufile_info = open(UFILE_INFO, 'w')
@@ -43,7 +45,7 @@ class UaiPackTool(object):
         """ AI Arch Specific Pack Tool should implement its own _add_args
         """
         raise UserWarning("UaiPackTool._add_args Unimplemented")
-        
+
     def _load_args(self):
         """ AI Arch Specific Pack Tool should implement its own _load_args
         """
@@ -80,7 +82,7 @@ class UaiPackTool(object):
         self.conf_params['docker']['ufile'].pop('code_files')
         self.conf_params['docker']['ufile'].pop('model_dir')
         self.conf_params['docker']['ufile'].pop('upload_name')
-        #self.conf_params['docker']['ufile'].pop('upload_prefix')
+        # self.conf_params['docker']['ufile'].pop('upload_prefix')
 
         with open(os.path.join(self.params['pack_file_path'], 'ufile.json'), 'w') as f:
             json.dump(self.conf_params, f)
@@ -88,7 +90,7 @@ class UaiPackTool(object):
     def _pack_file(self):
         """ Pack files in the target path
         """
-        uai_logger.info('Start packing files in the target pack path.')
+        uai_logger.info('Start packing files in the target tar path.')
         os.chdir(self.params['pack_file_path'])
 
         tar = tarfile.open(self.params['upload_name'], 'w')
@@ -99,7 +101,7 @@ class UaiPackTool(object):
                 uai_logger.info('{0} : {1}'.format(OSError, e))
                 uai_logger.info('The package process is interrupted.')
                 sys.exit(0)
-        
+
         uai_logger.info('Finish packing the files.')
 
     def _upload_file(self):
@@ -118,7 +120,7 @@ class UaiPackTool(object):
         uai_logger.debug('Ufile response: {0}'.format(resp))
         assert resp.status_code == 200, 'upload seems something error'
         uai_logger.debug('upload local file :{0} to ufile key= {1} successful'.
-                     format(local_file, key))
+                         format(local_file, key))
 
         current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.ufile_info.write('Upload Time: {0}\n'.format(current_time))
@@ -149,11 +151,12 @@ class UaiPackTool(object):
         else:
             self.conf_params['pip'] = ""
 
-
     def pack(self):
         self._load_args()
-        # self._translate_args()
+        self._translate_args()
         self._get_filelist()
         self._gen_jsonfile()
         self._pack_file()
         self._upload_file()
+
+

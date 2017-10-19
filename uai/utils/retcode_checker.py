@@ -1,6 +1,10 @@
-from common_handler import common
+from uai.utils.common_handler import common
 from uai.utils.logger import uai_logger
-from urllib import quote
+try:  #python2
+    from urllib import quote
+except ImportError:  #python3
+    from urllib.parse import quote
+
 
 # Condition code
 NORMAL_CONDITION = 0
