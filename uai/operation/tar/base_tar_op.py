@@ -19,12 +19,13 @@ import json
 import tarfile
 from uai.utils.logger import uai_logger
 from uai.operation.base_operation import BaseUaiServiceOp
-
-class UaiServiceTarOp(BaseUaiServiceOp):
+from uai.operation.operation import Operation
+class UaiServiceTarOp(Operation):
     """ The Base Pack Tool Class with UAI
     """
     def __init__(self, parser):
         super(UaiServiceTarOp, self).__init__(parser)
+
         self.conf_params = {}
         self.filelist = []
 

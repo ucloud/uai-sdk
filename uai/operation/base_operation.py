@@ -1,11 +1,11 @@
-
-class BaseUaiServiceOp(object):
+from uai.operation.operation import Operation
+class BaseUaiServiceOp(Operation):
 
     def __init__(self, parser):
-        self.parser = parser
-        self._add_args(self.parser)
+        super(BaseUaiServiceOp, self).__init__(parser)
 
     def _add_args(self, parser):
+        super(BaseUaiServiceOp, self)._add_args(parser)
         args_parser = parser.add_argument_group('User-Params',
                                                 'Uai Service Managment Parameters')
         args_parser.add_argument(
@@ -26,6 +26,7 @@ class BaseUaiServiceOp(object):
         #add other params in subclasses#
 
     def _parse_args(self):
+        super(BaseUaiServiceOp, self)._parse_args()
         self.public_key = self.params['public_key']
         self.private_key = self.params['private_key']
         self.project_id = self.params['project_id'] if 'project_id' in self.params else ''
@@ -34,7 +35,6 @@ class BaseUaiServiceOp(object):
         # add other params in subclasses#
 
     def cmd_run(self, params):
-        self.params = params
-        self._parse_args()
+        super(BaseUaiServiceOp, self).cmd_run(params)
         pass
         # add other params in subclasses#
