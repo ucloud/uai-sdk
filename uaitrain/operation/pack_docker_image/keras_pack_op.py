@@ -19,7 +19,7 @@ class KerasUAITrainDockerImagePackOp(BaseUAITrainDockerImagePackOp):
     """docstring for ClassName"""
     def __init__(self, parser):
         super(KerasUAITrainDockerImagePackOp, self).__init__(parser)
-        self.ai_arch = "caffe"
+        self.ai_arch = "keras"
 
     def _parse_args(self, args):
         super(KerasUAITrainDockerImagePackOp, self)._parse_args(args)

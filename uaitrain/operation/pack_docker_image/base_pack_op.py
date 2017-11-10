@@ -31,6 +31,7 @@ TMP_CPU_DOCKER_FILE = "uaitrain-cpu.Dockerfile"
 TMP_DOCKER_FILE = "uaitrain.Dockerfile"
 DOCKER_RUN_CMD_FILE = "uaitrain_cmd.txt"
 
+
 class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
     def __init__(self, parser):
         super(BaseUAITrainDockerImagePackOp, self).__init__(parser)
@@ -87,8 +88,9 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
             help='The docker image tag')
         pack_parser.add_argument(
             '--internal_uhub',
-            type=bool,
-            default=False,
+            type=str,
+            choices=['true', 'false'],
+            default='false',
             help='Whether to use internal uhub. Use it when your are in UCloud Uhost')
 
     def _add_code_args(self, pack_parser):
@@ -124,7 +126,7 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
             help='The output dir for local test')
 
     def _add_args(self):
-        pack_parser = self.parser.add_parser('pack', help = 'Pack local docker image for uai train')
+        pack_parser = self.parser.add_parser('pack', help='Pack local docker image for uai train')
         self.pack_parser = pack_parser
         self._add_account_args(pack_parser)
         self._add_pack_args(pack_parser)
@@ -150,6 +152,8 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         self.uhub_imagetag = args['uhub_imagetag']
         self.internal_uhub = args['internal_uhub']
 
+        self.internal_uhub = True if self.internal_uhub == 'true' else False
+
         if self.internal_uhub is True:
             self.dcoker_register = DOCKER_INTERNAL_REGISTRY
 
@@ -165,22 +169,22 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         uai_logger.info("Start download {0} package info".format(pkgtype))
 
         api_op = GetUAITrainEnvPkgAPIOp(self.pub_key,
-            self.pri_key,
-            pkgtype,
-            self.project_id,
-            self.region,
-            self.zone)
+                                        self.pri_key,
+                                        pkgtype,
+                                        self.project_id,
+                                        self.region,
+                                        self.zone)
         succ, result = api_op.call_api()
 
         if succ is False:
             raise RuntimeError("Error get {0} info from server".format(pkgtype))
-        
+
         for avpkg in result['PkgSet']:
             if pkgtype == 'OS' or pkgtype == 'Python' or pkgtype == 'AIFrame':
                 versionsplit = pkg.rfind('-')
                 if versionsplit > 0:
                     if avpkg["PkgName"] == pkg[:versionsplit] and (
-                        avpkg["PkgVersion"] == "" or avpkg["PkgVersion"] == pkg[versionsplit + 1:]):
+                                    avpkg["PkgVersion"] == "" or avpkg["PkgVersion"] == pkg[versionsplit + 1:]):
                         return avpkg["PkgId"]
                 elif versionsplit < 0:
                     if avpkg["PkgName"] == pkg:
@@ -199,13 +203,13 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         '''
         uai_logger.info("Pull base image from " + self.dcoker_register)
         retcode = subprocess.check_call(["docker", "pull", self.cpu_image], stderr=subprocess.STDOUT)
-        if retcode != 0: 
+        if retcode != 0:
             raise RuntimeError("Error pull image: {0}, Please check your network".format(self.cpu_image))
 
         uai_logger.info("Create CPU Dockerfile")
         dockerbuf = []
         dockerbuf.append("From " + self.cpu_image + "\n")
-        dockerbuf.append("ADD " + "./" + self.code_path  + " /data/\n")
+        dockerbuf.append("ADD " + "./" + self.code_path + " /data/\n")
         with open(TMP_CPU_DOCKER_FILE, 'w') as f:
             f.write(''.join(dockerbuf))
 
@@ -219,7 +223,7 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
                                         stderr=subprocess.STDOUT)
         if retcode != 0:
             raise RuntimeError("Error build image: {0}, Please retry".format(userimage))
-        
+
         self.user_cpu_image = userimage
 
     def _build_gpu_userimage(self):
@@ -249,9 +253,9 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
             userimage = userimage + ":" + DOCKER_TAG_SUFFIX
         retcode = subprocess.check_call(["docker", "build", "-t", userimage, "-f", TMP_DOCKER_FILE, "."],
                                         stderr=subprocess.STDOUT)
-        if retcode != 0: 
+        if retcode != 0:
             raise RuntimeError("Error build image: {0}, Please retry".format(userimage))
-        
+
         print(userimage)
         self.user_gpu_image = userimage
 
@@ -259,7 +263,7 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         uai_logger.info("Push user image")
         retcode = subprocess.check_call(["docker", "push", self.user_gpu_image],
                                         stderr=subprocess.STDOUT)
-        if retcode != 0: 
+        if retcode != 0:
             raise RuntimeError("Error push image {0}, Please check your network".format(self.user_gpu_image))
 
     def _gen_pycmd(self):
@@ -268,18 +272,18 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
 
     def _gen_cpu_docker_cmd(self, pycmd):
         cpu_docker_cmd = "sudo docker run -it " + \
-            "-v " + self.test_data_path + ":" + "/data/data " + \
-            "-v " + self.test_output_path + ":" + "/data/output " + \
-            self.user_cpu_image + " " + "/bin/bash -c " + \
-            "\"cd /data && /usr/bin/python " + pycmd + " " + "--work_dir=/data --data_dir=/data/data --output_dir=/data/output --log_dir=/data/output\""
+                         "-v " + self.test_data_path + ":" + "/data/data " + \
+                         "-v " + self.test_output_path + ":" + "/data/output " + \
+                         self.user_cpu_image + " " + "/bin/bash -c " + \
+                         "\"cd /data && /usr/bin/python " + pycmd + " " + "--work_dir=/data --data_dir=/data/data --output_dir=/data/output --log_dir=/data/output\""
         return cpu_docker_cmd
 
     def _gen_gpu_docker_cmd(self, pycmd):
         gpu_docker_cmd = "sudo nvidia-docker run -it " + \
-            "-v " + self.test_data_path + ":" + "/data/data " + \
-            "-v " + self.test_output_path + ":" + "/data/output " + \
-            self.user_gpu_image + " " + "/bin/bash -c " + \
-            "\"cd /data && /usr/bin/python " + pycmd + " " + "--work_dir=/data --data_dir=/data/data --output_dir=/data/output --log_dir=/data/output\""
+                         "-v " + self.test_data_path + ":" + "/data/data " + \
+                         "-v " + self.test_output_path + ":" + "/data/output " + \
+                         self.user_gpu_image + " " + "/bin/bash -c " + \
+                         "\"cd /data && /usr/bin/python " + pycmd + " " + "--work_dir=/data --data_dir=/data/data --output_dir=/data/output --log_dir=/data/output\""
         return gpu_docker_cmd
 
     def _gen_run_cmd(self):
@@ -309,8 +313,9 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
 
     def _build_userimage(self):
         uai_logger.info("Docker login on " + self.dcoker_register)
-        retcode = subprocess.check_call(["docker", "login", "-u", self.uhub_username, "-p", self.uhub_password, self.dcoker_register],
-                                        stderr=subprocess.STDOUT)
+        retcode = subprocess.check_call(
+            ["docker", "login", "-u", self.uhub_username, "-p", self.uhub_password, "-e", "x", self.dcoker_register],
+            stderr=subprocess.STDOUT)
         if retcode != 0:
             raise RuntimeError("Error login to uhub, Please check your username and password, or try with sudo")
 
@@ -321,6 +326,13 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
             self._push_gpu_userimage()
 
         self._gen_run_cmd()
+
+    def check_interHub(self, baseimage):
+        if baseimage.startswith(DOCKER_PUBLIC_REGISTRY) and self.internal_uhub is True:
+            baseimage = baseimage.replace(DOCKER_PUBLIC_REGISTRY, DOCKER_INTERNAL_REGISTRY, 1)
+        if baseimage.startswith(DOCKER_INTERNAL_REGISTRY) and self.internal_uhub is False:
+            baseimage = baseimage.replace(DOCKER_INTERNAL_REGISTRY, DOCKER_PUBLIC_REGISTRY, 1)
+        return baseimage
 
     def cmd_run(self, args):
         if self._parse_args(args) == False:
@@ -339,11 +351,12 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
             ai_arch_v,
             acc_id,
             self.project_id,
-            self.region, 
+            self.region,
             self.zone)
 
         succ, result = get_acc_image_op.call_api()
         acc_image_name = result['BimgName'][0]
+        acc_image_name = self.check_interHub(acc_image_name)
 
         cpu_acc_id = self._translate_pkg_to_id('Accelerator', 'cpu')
         get_cpu_image_op = CheckAndGetUAITrainBasesImageAPIOp(
@@ -354,10 +367,11 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
             ai_arch_v,
             cpu_acc_id,
             self.project_id,
-            self.region, 
+            self.region,
             self.zone)
         succ, result = get_cpu_image_op.call_api()
         cpu_image_name = result['BimgName'][0]
+        cpu_image_name = self.check_interHub(cpu_image_name)
 
         print(acc_image_name)
         print(cpu_image_name)
