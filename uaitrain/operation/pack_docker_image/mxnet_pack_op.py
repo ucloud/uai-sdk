@@ -19,7 +19,7 @@ class MXNetUAITrainDockerImagePackOp(BaseUAITrainDockerImagePackOp):
     """docstring for ClassName"""
     def __init__(self, parser):
         super(MXNetUAITrainDockerImagePackOp, self).__init__(parser)
-        self.ai_arch = "caffe"
+        self.ai_arch = "mxnet"
 
     def _parse_args(self, args):
         super(MXNetUAITrainDockerImagePackOp, self)._parse_args(args)

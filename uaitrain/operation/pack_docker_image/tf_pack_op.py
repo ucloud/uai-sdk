@@ -19,7 +19,7 @@ class TensorFlowUAITrainDockerImagePackOp(BaseUAITrainDockerImagePackOp):
     """docstring for ClassName"""
     def __init__(self, parser):
         super(TensorFlowUAITrainDockerImagePackOp, self).__init__(parser)
-        self.ai_arch = "caffe"
+        self.ai_arch = "tensorflow"
 
     def _gen_gpu_docker_cmd(self, pycmd):
         gpu_docker_cmd = "sudo nvidia-docker run -it " + \
