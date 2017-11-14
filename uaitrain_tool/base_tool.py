@@ -18,7 +18,6 @@ import os
 import argparse
 import time
 
-from uaitrain.operation.pack_docker_image.pytorch_pack_op import PytorchUAITrainDockerImagePackOp
 from uaitrain.operation.create_train_job.base_create_op import BaseUAITrainCreateTrainJobOp
 from uaitrain.operation.stop_train_job.base_stop_op import BaseUAITrainStopTrainJobOp
 from uaitrain.operation.delete_train_job.base_delete_op import BaseUAITrainDeleteTrainJobOp
@@ -27,12 +26,11 @@ from uaitrain.operation.info_train_job.info_train_op import BaseUAITrainRunningJ
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='AI PyTorch Arch Deployer',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+            description='AI TensorFlow Arch Deployer',
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     subparsers = parser.add_subparsers(dest='commands', help='commands')
 
-    pack_op = PytorchUAITrainDockerImagePackOp(subparsers)
     create_op = BaseUAITrainCreateTrainJobOp(subparsers)
     stop_op = BaseUAITrainStopTrainJobOp(subparsers)
     delete_op = BaseUAITrainDeleteTrainJobOp(subparsers)
@@ -40,9 +38,7 @@ if __name__ == '__main__':
     info_op = BaseUAITrainRunningJobInfoOp(subparsers)
     cmd_args = vars(parser.parse_args())
 
-    if cmd_args['commands'] == 'pack':
-        pack_op.cmd_run(cmd_args)
-    elif cmd_args['commands'] == 'create':
+    if cmd_args['commands'] == 'create':
         create_op.cmd_run(cmd_args)
     elif cmd_args['commands'] == 'stop':
         stop_op.cmd_run(cmd_args)
@@ -53,4 +49,5 @@ if __name__ == '__main__':
     elif cmd_args['commands'] == 'info':
         info_op.cmd_run(cmd_args)
     else:
-        print("Unknown CMD, please use python tf_tool.py -h to check")
+        print("UAI Train Base Tool Only Support General operations, please use python base_tool.py -h to check")
+    

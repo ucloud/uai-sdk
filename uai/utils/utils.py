@@ -3,6 +3,7 @@ import hashlib
 import tarfile
 import json
 
+GATEWAY_DEFAULT='Default'
 
 def _verfy_ac(private_key, params):
     items = params.items()

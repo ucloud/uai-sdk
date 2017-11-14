@@ -19,6 +19,11 @@ import argparse
 import time
 
 from uaitrain.operation.pack_docker_image.tf_pack_op import TensorFlowUAITrainDockerImagePackOp
+from uaitrain.operation.create_train_job.base_create_op import BaseUAITrainCreateTrainJobOp
+from uaitrain.operation.stop_train_job.base_stop_op import BaseUAITrainStopTrainJobOp
+from uaitrain.operation.delete_train_job.base_delete_op import BaseUAITrainDeleteTrainJobOp
+from uaitrain.operation.list_train_job.base_list_job_op import BaseUAITrainListTrainJobOp
+from uaitrain.operation.info_train_job.info_train_op import BaseUAITrainRunningJobInfoOp
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -28,10 +33,24 @@ if __name__ == '__main__':
     subparsers = parser.add_subparsers(dest='commands', help='commands')
 
     pack_op = TensorFlowUAITrainDockerImagePackOp(subparsers)
+    create_op = BaseUAITrainCreateTrainJobOp(subparsers)
+    stop_op = BaseUAITrainStopTrainJobOp(subparsers)
+    delete_op = BaseUAITrainDeleteTrainJobOp(subparsers)
+    list_op = BaseUAITrainListTrainJobOp(subparsers)
+    info_op = BaseUAITrainRunningJobInfoOp(subparsers)
     cmd_args = vars(parser.parse_args())
 
     if cmd_args['commands'] == 'pack':
         pack_op.cmd_run(cmd_args)
+    elif cmd_args['commands'] == 'create':
+        create_op.cmd_run(cmd_args)
+    elif cmd_args['commands'] == 'stop':
+        stop_op.cmd_run(cmd_args)
+    elif cmd_args['commands'] == 'delete':
+        delete_op.cmd_run(cmd_args)
+    elif cmd_args['commands'] == 'list':
+        list_op.cmd_run(cmd_args)
+    elif cmd_args['commands'] == 'info':
+        info_op.cmd_run(cmd_args)
     else:
-        print("UAI Train Deploy Tool Only Support Packing Docker Images Now")
-    
+        print("Unknown CMD, please use python tf_tool.py -h to check")

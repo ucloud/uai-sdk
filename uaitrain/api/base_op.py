@@ -15,6 +15,7 @@
 
 import requests
 import json
+
 from uai.utils.utils import _verfy_ac
 from uai.utils.logger import uai_logger
 from uai.utils.retcode_checker import *
@@ -22,6 +23,10 @@ from uai.utils.retcode_checker import *
 DEFAULT_UCLOUD_API_URL = 'http://api.ucloud.cn'
 DEFAULT_UAI_TRAIN_REGION = 'cn-bj2'
 DEFAULT_UAI_TRAIN_ZONE = 'cn-bj2-04'
+
+# DEFAULT_UCLOUD_API_URL = 'http://api.pre.ucloudadmin.com'
+# DEFAULT_UAI_TRAIN_REGION = 'pre'
+# DEFAULT_UAI_TRAIN_ZONE = 'pre'
 
 PARAM_ACTION = 'Action'
 PARAM_PUBLIC_KEY = 'PublicKey'
@@ -60,7 +65,7 @@ class BaseUAITrainAPIOp(object):
             self.cmd_params.pop('Signature')
         self.cmd_params['Signature'] = _verfy_ac(self.priv_key,
                                                  self.cmd_params)
-
+        print (self.cmd_params)
         uai_logger.info("Call http request: {0} ".format(get_request(self.cmd_url, params=self.cmd_params)))
         r = requests.get(self.cmd_url, params=self.cmd_params)
         rsp = json.loads(r.text, 'utf-8')
@@ -70,7 +75,7 @@ class BaseUAITrainAPIOp(object):
             return False, rsp
         else:
             del rsp[PARAM_ACTION]
-            uai_logger.info("{0} Success: {1}".format(self.cmd_params[PARAM_ACTION], get_response(rsp, 0)))
+            #uai_logger.info("{0} Success: {1}".format(self.cmd_params[PARAM_ACTION], get_response(rsp, 0)))
             return True, rsp
         # add other operations in subclasses#
 
@@ -89,5 +94,5 @@ class BaseUAITrainAPIOp(object):
 
         return self._cmd_common_request()
 
-    def check_errcode():
+    def check_errcode(self):
         pass

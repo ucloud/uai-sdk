@@ -12,9 +12,13 @@
 - Tensorflow (0.11.0 tested)
 - Tensorflow（1.1.0 tested）
 - Tensorflow（1.2.0 tested）
+- Tensorflow (1.3.0 tested)
+- Tensorflow (1.4.0 tested)
 - MXNet(0.9.5 tested)
+- MXNet(0.11.0 tested)
 - Keras(1.2.0 tested)
 - Caffe(1.0.0 tested)
+- PyTorch(0.2.0 tested)
 
 ## How to install
 1. Install your deep learning python package, such as Tensorflow, MXNet, Keras, Caffe (tested version preferred)
