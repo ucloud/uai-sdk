@@ -13,10 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 
-import sys
-import os
 import argparse
-import time
 
 from uaitrain.operation.pack_docker_image.pytorch_pack_op import PytorchUAITrainDockerImagePackOp
 from uaitrain.operation.create_train_job.base_create_op import BaseUAITrainCreateTrainJobOp
@@ -24,6 +21,10 @@ from uaitrain.operation.stop_train_job.base_stop_op import BaseUAITrainStopTrain
 from uaitrain.operation.delete_train_job.base_delete_op import BaseUAITrainDeleteTrainJobOp
 from uaitrain.operation.list_train_job.base_list_job_op import BaseUAITrainListTrainJobOp
 from uaitrain.operation.info_train_job.info_train_op import BaseUAITrainRunningJobInfoOp
+from uaitrain.operation.get_realtime_log.base_log_op import BaseUAITrainGetRealtimeLogOp
+from uaitrain.operation.list_bill_info.base_bill_op import BaseUAITrainListBillInfoOp
+from uaitrain.operation.rename_train_job.base_rename_op import BaseUAITrainRenameTrainJobOp
+from uaitrain.operation.get_train_job_conf.base_conf_op import BaseUAITrainTrainJobConfOp
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -38,6 +39,11 @@ if __name__ == '__main__':
     delete_op = BaseUAITrainDeleteTrainJobOp(subparsers)
     list_op = BaseUAITrainListTrainJobOp(subparsers)
     info_op = BaseUAITrainRunningJobInfoOp(subparsers)
+    log_op = BaseUAITrainGetRealtimeLogOp(subparsers)
+    bill_op = BaseUAITrainListBillInfoOp(subparsers)
+    rename_op = BaseUAITrainRenameTrainJobOp(subparsers)
+    conf_op = BaseUAITrainTrainJobConfOp(subparsers)
+
     cmd_args = vars(parser.parse_args())
 
     if cmd_args['commands'] == 'pack':
@@ -52,5 +58,13 @@ if __name__ == '__main__':
         list_op.cmd_run(cmd_args)
     elif cmd_args['commands'] == 'info':
         info_op.cmd_run(cmd_args)
+    elif cmd_args['commands'] == 'log':
+        log_op.cmd_run(cmd_args)
+    elif cmd_args['commands'] == 'bill':
+        bill_op.cmd_run(cmd_args)
+    elif cmd_args['commands'] == 'rename':
+        rename_op.cmd_run(cmd_args)
+    elif cmd_args['commands'] == 'conf':
+        conf_op.cmd_run(cmd_args)
     else:
-        print("Unknown CMD, please use python tf_tool.py -h to check")
+        print("Unknown CMD, please use python pytorch_tool.py -h to check")

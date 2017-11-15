@@ -13,16 +13,16 @@
 # limitations under the License.
 # ==============================================================================
 
-import sys
-import os
 import argparse
-import time
 
 from uaitrain.operation.create_train_job.base_create_op import BaseUAITrainCreateTrainJobOp
 from uaitrain.operation.stop_train_job.base_stop_op import BaseUAITrainStopTrainJobOp
 from uaitrain.operation.delete_train_job.base_delete_op import BaseUAITrainDeleteTrainJobOp
 from uaitrain.operation.list_train_job.base_list_job_op import BaseUAITrainListTrainJobOp
 from uaitrain.operation.info_train_job.info_train_op import BaseUAITrainRunningJobInfoOp
+from uaitrain.operation.rename_train_job.base_rename_op import BaseUAITrainRenameTrainJobOp
+from uaitrain.operation.get_train_job_conf.base_conf_op import BaseUAITrainTrainJobConfOp
+from uaitrain.operation.get_tensorboard_url.get_tensorboard_url import BaseUAITrainGetTensorBoardUrlOp
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -36,6 +36,8 @@ if __name__ == '__main__':
     delete_op = BaseUAITrainDeleteTrainJobOp(subparsers)
     list_op = BaseUAITrainListTrainJobOp(subparsers)
     info_op = BaseUAITrainRunningJobInfoOp(subparsers)
+    rename_op = BaseUAITrainRenameTrainJobOp(subparsers)
+    conf_op = BaseUAITrainTrainJobConfOp(subparsers)
     cmd_args = vars(parser.parse_args())
 
     if cmd_args['commands'] == 'create':
@@ -48,6 +50,10 @@ if __name__ == '__main__':
         list_op.cmd_run(cmd_args)
     elif cmd_args['commands'] == 'info':
         info_op.cmd_run(cmd_args)
+    elif cmd_args['commands'] == 'conf':
+        conf_op.cmd_run(cmd_args)
+    elif cmd_args['commands'] == 'rename':
+        rename_op.cmd_run(cmd_args)
     else:
         print("UAI Train Base Tool Only Support General operations, please use python base_tool.py -h to check")
     

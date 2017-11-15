@@ -72,3 +72,9 @@ class LogMessage(object):
 
     def format_exception(self, *args):
         return ("%s%s: " + self.__message) % args % self.__args
+
+def printConsoleOnlyError():
+    global uai_logger
+    LOGGING['handlers']['console']['level'] = 'ERROR'
+    logging.config.dictConfig(LOGGING)
+    uai_logger = logging.getLogger("uaiservice")
