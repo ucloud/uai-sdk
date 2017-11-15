@@ -54,16 +54,16 @@ class BaseUAITrainOp(object):
     def _parse_args(self, args):
         self.pub_key = args['public_key']
         self.pri_key = args['private_key']
-        if args['project_id'] != None: 
+        if 'project_id' in args and args['project_id'] != None:
             self.project_id = args['project_id']
         else:
             self.project_id = ""
-        if args['region'] != None:
+        if 'region' in args and args['region'] != None:
             self.region = args['region']
         else:
             self.region = ""
 
-        if args['zone'] != None:
+        if 'zone' in args and args['zone'] != None:
             self.zone = args['zone']
         else:
             self.zone = ""
