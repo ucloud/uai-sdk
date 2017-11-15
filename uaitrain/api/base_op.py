@@ -65,7 +65,8 @@ class BaseUAITrainAPIOp(object):
             self.cmd_params.pop('Signature')
         self.cmd_params['Signature'] = _verfy_ac(self.priv_key,
                                                  self.cmd_params)
-        print (self.cmd_params)
+        uai_logger.info("Signature: {0}".format(self.cmd_params['Signature']))
+        uai_logger.info(self.cmd_params)
         uai_logger.info("Call http request: {0} ".format(get_request(self.cmd_url, params=self.cmd_params)))
         r = requests.get(self.cmd_url, params=self.cmd_params)
         rsp = json.loads(r.text, 'utf-8')

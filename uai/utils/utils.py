@@ -2,7 +2,6 @@
 import hashlib
 import tarfile
 import json
-
 GATEWAY_DEFAULT='Default'
 
 def _verfy_ac(private_key, params):
@@ -17,7 +16,6 @@ def _verfy_ac(private_key, params):
     sign = hashlib.sha1()
     sign.update(params_data.encode('utf-8')) # must encode to adapt python3
     signature = sign.hexdigest()
-    print("Signature",signature)
     return signature
 
 def val_to_str(val):
