@@ -314,7 +314,7 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
     def _build_userimage(self):
         uai_logger.info("Docker login on " + self.dcoker_register)
         retcode = subprocess.check_call(
-            ["docker", "login", "-u", self.uhub_username, "-p", self.uhub_password, self.dcoker_register],
+            ["docker", "login", "-u", self.uhub_username, "-p", self.uhub_password, "-e", "x", self.dcoker_register],
             stderr=subprocess.STDOUT)
         if retcode != 0:
             raise RuntimeError("Error login to uhub, Please check your username and password, or try with sudo")
@@ -380,3 +380,4 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         self.cpu_image = cpu_image_name
 
         self._build_userimage()
+        

@@ -15,6 +15,7 @@
 
 import argparse
 
+from uaitrain.operation.pack_docker_image.self_def_pack_op import SelfDefUAITrainDockerImagePackOp
 from uaitrain.operation.create_train_job.base_create_op import BaseUAITrainCreateTrainJobOp
 from uaitrain.operation.stop_train_job.base_stop_op import BaseUAITrainStopTrainJobOp
 from uaitrain.operation.delete_train_job.base_delete_op import BaseUAITrainDeleteTrainJobOp
@@ -31,6 +32,7 @@ if __name__ == '__main__':
 
     subparsers = parser.add_subparsers(dest='commands', help='commands')
 
+    pack_op = SelfDefUAITrainDockerImagePackOp(subparsers)
     create_op = BaseUAITrainCreateTrainJobOp(subparsers)
     stop_op = BaseUAITrainStopTrainJobOp(subparsers)
     delete_op = BaseUAITrainDeleteTrainJobOp(subparsers)
@@ -40,7 +42,9 @@ if __name__ == '__main__':
     conf_op = BaseUAITrainTrainJobConfOp(subparsers)
     cmd_args = vars(parser.parse_args())
 
-    if cmd_args['commands'] == 'create':
+    if cmd_args['commands'] == 'pack':
+        pack_op.cmd_run(cmd_args)
+    elif cmd_args['commands'] == 'create':
         create_op.cmd_run(cmd_args)
     elif cmd_args['commands'] == 'stop':
         stop_op.cmd_run(cmd_args)
