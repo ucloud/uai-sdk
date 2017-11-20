@@ -110,13 +110,13 @@ class UaiCmdTool(object):
              self._cmd_common_request()
 
     def _cmd_common_request(self):
-        if self.cmd_params.has_key('Signature'):
+        if ('Signature' in self.cmd_params) is True:
             self.cmd_params.pop('Signature')
         self.cmd_params['Signature'] = _verfy_ac(self.conf_params['private_key'],
                                                      self.cmd_params)
         uai_logger.info("Call http request: {0} ".format(get_request(self.cmd_url, params=self.cmd_params)))
         r = requests.get(self.cmd_url, params=self.cmd_params)
-        self.rsp = json.loads(r.text, 'utf-8')
+        self.rsp = json.loads(r.text, encoding='utf-8')
         if self.rsp["RetCode"] != 0:
             uai_logger.error("{0} Fail: [{1}]{2}".format(self.cmd_params["Action"], self.rsp["RetCode"], self.rsp["Message"].encode('utf-8')))
             raise RuntimeError("{0} Fail: [{1}]{2}".format(self.cmd_params["Action"], self.rsp["RetCode"], self.rsp["Message"].encode('utf-8')))
@@ -126,13 +126,13 @@ class UaiCmdTool(object):
 
 
     def _cmd_writefile_package(self, filepath):
-        if self.cmd_params.has_key('Signature'):
+        if ('Signature' in self.cmd_params) is True:
             self.cmd_params.pop('Signature')
         self.cmd_params['Signature'] = _verfy_ac(self.conf_params['private_key'],
                                                      self.cmd_params)
         uai_logger.info("Call http request: {0} ".format(get_request(self.cmd_url, params=self.cmd_params)))
         r = requests.get(self.cmd_url, params=self.cmd_params)
-        rsp = json.loads(r.text, 'utf-8')
+        rsp = json.loads(r.text, encoding='utf-8')
         if rsp["RetCode"] != 0:
             uai_logger.error("{0} Fail: [{1}]{2}".format(self.cmd_params["Action"], rsp["RetCode"], rsp["Message"].encode('utf-8')))
             raise RuntimeError(

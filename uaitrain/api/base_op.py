@@ -61,7 +61,7 @@ class BaseUAITrainAPIOp(object):
         pass
 
     def _cmd_common_request(self):
-        if self.cmd_params.has_key('Signature'):
+        if ('Signature' in self.cmd_params) is True:
             self.cmd_params.pop('Signature')
         self.cmd_params['Signature'] = _verfy_ac(self.priv_key,
                                                  self.cmd_params)
@@ -69,7 +69,7 @@ class BaseUAITrainAPIOp(object):
         uai_logger.info(self.cmd_params)
         uai_logger.info("Call http request: {0} ".format(get_request(self.cmd_url, params=self.cmd_params)))
         r = requests.get(self.cmd_url, params=self.cmd_params)
-        rsp = json.loads(r.text, 'utf-8')
+        rsp = json.loads(r.text, encoding='utf-8')
         if rsp['RetCode'] != 0:
             uai_logger.error("{0} Fail: [{1}]{2}".format(self.cmd_params[PARAM_ACTION], rsp['RetCode'],
                                                          rsp['Message'].encode('utf-8')))
