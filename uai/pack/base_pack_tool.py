@@ -53,7 +53,7 @@ class UaiPackTool(object):
 
     def _analysis_args(self):
         self.config.load_params()
-        if self.config.params.has_key("ai_arch_v"):
+        if "ai_arch_v" in self.config.params:
             if self.platform != self.config.params["ai_arch_v"].lower().split('-')[0]:
                 raise RuntimeError("ai_arch_v should be one version of " + self.platform)
 

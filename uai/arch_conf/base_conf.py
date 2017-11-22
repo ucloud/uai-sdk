@@ -102,13 +102,13 @@ class ArchJsonConf(object):
 
     def load_params(self):
         self.params = vars(self.parser.parse_args())
-        if self.params.has_key('cpu'):
+        if 'cpu' in self.params:
             if self.params['cpu'] < 1 or self.params["cpu"] > 8:
                 raise RuntimeError('cpu should be int between 1 to 8, but now:{0}'.format(self.params['cpu']))
-        if self.params.has_key('memory'):
+        if 'memory' in self.params:
             if self.params['memory'] < 1 or self.params["memory"] > 8:
                 raise RuntimeError('memory should be int between 1 to 8, but now:{0}'.format(self.params['memory']))
-        if self.params.has_key('deploy_weight'):
+        if 'deploy_weight' in self.params:
             if int(self.params['deploy_weight']) < 1 or int(self.params["deploy_weight"]) > 100:
                 raise RuntimeError('deploy_weight should be int between 1 to 100, but now:{0}'.format(self.params['deploy_weight']))
 
