@@ -290,7 +290,7 @@ class UaiCmdTool(object):
              self._cmd_common_request()
 
     def _cmd_common_request(self):
-        if self.cmd_params.has_key('Signature'):
+        if 'Signature' in self.cmd_params:
             self.cmd_params.pop('Signature')
         self.cmd_params['Signature'] = _verfy_ac(self.conf_params['private_key'],
                                                      self.cmd_params)
