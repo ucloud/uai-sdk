@@ -177,19 +177,13 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
         if succ is False:
             raise RuntimeError("Error get Training Resouce Type")
 
-        if self.node_type == "1-P40":
-            data_set = result['DataSet']
-            for data in data_set:
-                if data['AcceleratorVersion'] == 'p40' and data['AcceleratorAmount'] == 1:
-                    return data['NodeId']
-        elif self.node_type == "2-P40":
-            for data in data_set:
-                if data['AcceleratorVersion'] == 'p40' and data['AcceleratorAmount'] == 2:
-                    return data['NodeId']
-        elif self.node_type == "4-P40":
-            for data in data_set:
-                if data['AcceleratorVersion'] == 'p40' and data['AcceleratorAmount'] == 4:
-                    return data['NodeId']
+        nodeStr = self.node_type.lower().split("-")
+        accV = nodeStr[1]
+        accNum = nodeStr[0]
+        data_set = result['DataSet']
+        for data in data_set:
+            if accV == data['AcceleratorVersion'].lower() and int(accNum) == int(data['AcceleratorAmount']):
+                return data['NodeId']
 
         print("Required Type {0} not exist", self.node_type)
         print("Now only support {0}", result['DataSet'])
@@ -225,5 +219,5 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
             print("Error call create train job")
             return False
 
-        print('Your Job ID is: {0}'.format(resp['TrainJObID']))
+        print('Your Job ID is: {0}'.format(resp['TrainJobId']))
 
