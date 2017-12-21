@@ -50,12 +50,7 @@ class SelfDefUAITrainDockerImagePackOp(BaseUAITrainDockerImagePackOp):
         Build actual image for training
         '''
         uai_logger.info("Build training docker image")
-        uai_logger.info("Pull base image from " + self.base_image_name)
-        retcode = subprocess.check_call(["docker", "pull", self.base_image_name],
-                                        stderr=subprocess.STDOUT)
-        if retcode != 0:
-            print("Error pull image: {0}, If the image exists in local, Please ignore this".format(self.acc_image))
-            #raise RuntimeError("Error pull image: {0}, Please check your network".format(self.acc_image))
+        print("You should make sure {0} exist".format(self.base_image_name))
 
         uai_logger.info("Create GPU Dockerfile")
         dockerbuf = []
