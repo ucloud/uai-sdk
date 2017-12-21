@@ -54,7 +54,8 @@ class SelfDefUAITrainDockerImagePackOp(BaseUAITrainDockerImagePackOp):
         retcode = subprocess.check_call(["docker", "pull", self.base_image_name],
                                         stderr=subprocess.STDOUT)
         if retcode != 0:
-            raise RuntimeError("Error pull image: {0}, Please check your network".format(self.acc_image))
+            print("Error pull image: {0}, If the image exists in local, Please ignore this".format(self.acc_image))
+            #raise RuntimeError("Error pull image: {0}, Please check your network".format(self.acc_image))
 
         uai_logger.info("Create GPU Dockerfile")
         dockerbuf = []
