@@ -83,8 +83,8 @@ class ImagenetDataSet(object):
 
     dataset = dataset.flat_map(tf.data.TFRecordDataset)
     dataset = dataset.map(lambda value: self.parser(value, is_training),
-                        num_parallel_calls=(num_shards*4))
-    dataset = dataset.prefetch(batch_size)
+                        num_parallel_calls=5)
+    dataset = dataset.prefetch(batch_size * 2)
 
     if is_training:
       # When choosing shuffle buffer sizes, larger sizes result in better
