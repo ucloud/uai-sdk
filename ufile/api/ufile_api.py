@@ -11,46 +11,45 @@ set_log_file()
 retry_max_fail = 3
 
 def DownloadUfileBatch(public_key, private_key, bucket, prefix, save_dir, is_private=True, parall_num=8):
+    limit = parall_num*5
+    marker = None
+    total_num = 0
     handler = getufilelist.GetFileList(public_key, private_key)
-    ret, resp = handler.getfilelist(bucket=bucket, prefix=prefix)
-    if resp.status_code != 200:
-        print("fail to get ufile list. bucket: {0}, prefix: {1}. [Error info]: {2}" .format(bucket, prefix, resp))
-        return False
-
-    file_cnt = len(ret['DataSet'])
-    if file_cnt == 0:
-        print("file cnt is 0, exit.")
-        return
-
-    print("start download ufile. bucket: {0}, prefix: {1}" .format(bucket, prefix))
-    print("file count: {0}" .format(file_cnt))
-
-    cnt = 0
-    file_batch = []
-    files_size = 0
-    finished = 0
-    parall_num = min(parall_num, file_cnt)
-    for i, item in enumerate(ret['DataSet']):
-        cnt = cnt + 1
-        file_batch.append(item['FileName'])
-        size = item['Size'] if 'Size' in item else 0
-        files_size = files_size + size
-
-        if cnt < parall_num and i != file_cnt - 1:
-            continue
-        start = time.time()
-        res = downloadUfileBatch(public_key, private_key, bucket, prefix, file_batch, save_dir, is_private)
-        end = time.time()
-        if res != True:
-            print (res)
+    print("start download ufile. bucket: {0}, prefix: {1}".format(bucket, prefix))
+    while marker != '':
+        ret, resp = handler.getfilelist(bucket=bucket, prefix=prefix, limit=limit, marker=marker)
+        if resp.status_code != 200:
+            print("fail to get ufile list. bucket: {0}, prefix: {1}. [Error info]: {2}" .format(bucket, prefix, resp))
             return False
-        speed = files_size/((end-start)*1000)
-        finished = finished + cnt
-        file_batch = []
+
+        file_cnt = len(ret['DataSet'])
+        if file_cnt == 0:
+            print("file cnt is 0, exit.")
+            return
+
+        total_num += file_cnt
+        marker = ret['NextMarker']
+
         cnt = 0
+        file_batch = []
         files_size = 0
-        print("\rtotal: %d, finished: %d, remain: %d, speed: %.2f KB/s" % (file_cnt, finished, file_cnt-finished, speed))
-    print("download ufile succ. save files into {0}" .format(save_dir))
+        parall_num = min(parall_num, file_cnt)
+        for i, item in enumerate(ret['DataSet']):
+            cnt = cnt + 1
+            file_batch.append(item['FileName'])
+            size = item['Size'] if 'Size' in item else 0
+            files_size = files_size + size
+
+            if cnt < parall_num and i != file_cnt - 1:
+                continue
+            res = downloadUfileBatch(public_key, private_key, bucket, prefix, file_batch, save_dir, is_private)
+            if res != True:
+                print (res)
+                return False
+            file_batch = []
+            cnt = 0
+            files_size = 0
+    print("download ufile succ. file num: {0}, save files into {1}" .format(total_num, save_dir))
     return True
 
 def downloadUfileBatch(public_key, private_key, bucket, prefix, key_list, save_dir, is_private):
@@ -123,7 +122,7 @@ def UploadUfileBatch(public_key, private_key, bucket, prefix, local_dir, parall_
     file_cnt = len(file_list)
     print("start upload to ufile. local dir: {0}, bucket: {1}, prefix: {2}".format(local_dir, bucket, prefix))
     print("file count: {0}".format(file_cnt))
-    print(file_list)
+
     cnt = 0
     file_batch = []
     files_size = 0

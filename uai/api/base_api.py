@@ -30,7 +30,8 @@ class BaseUaiServiceApiOp(object):
         self.cmd_params['Action'] = self.action
         self.cmd_params['PublicKey'] = self.public_key
         self.cmd_params['Region'] = self.region
-        self.cmd_params['Zone'] = self.zone
+        if self.zone is not False:
+            self.cmd_params['Zone'] = self.zone
         if self.project_id != '':
             self.cmd_params['ProjectId'] = self.project_id
         self.cmd_url = self.UCLOUD_API_URL
