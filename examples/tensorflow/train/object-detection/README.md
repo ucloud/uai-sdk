@@ -1,11 +1,11 @@
 # Object-detection Example
-Object-detection example shows how to run TensorFlow object detection training on UAI Train Platform. The example is based on https://github.com/tensorflow/models/tree/master/research/object\_detection
+Object-detection example shows how to run TensorFlow object detection training on UAI Train Platform. The example is based on https://github.com/tensorflow/models/tree/master/research/object_detection
 
 # Setup
 You should prepare your own training data and pretrained model before running the task. As UAI Train nodes does not provide network access, you should prepare your data locally.
 
 ## Intro
-The object detection example directly use the code in https://github.com/tensorflow/models/tree/master/research/object\_detection. As it depends on the slim package and object\_detection package under tensorflow/models/research/, we provide the Dockerfile to show how to pack these python packages into the docker.
+The object detection example directly use the code in https://github.com/tensorflow/models/tree/master/research/object_detection. As it depends on the slim package and object\_detection package under tensorflow/models/research/, we provide the Dockerfile to show how to pack these python packages into the docker.
 
 ## UAI Example
 We made the following modifications to run the object-detection retraining on UAI Train Platform:
@@ -13,7 +13,7 @@ We made the following modifications to run the object-detection retraining on UA
 1. Provide a Dockerfile named uaitrain.Dockerfile for building the docker
 2. Provide the modified faster\_rcnn\_resnet101\_pets.config
 
-We use the pet detection as the example. The detailed info can be found in https://github.com/tensorflow/models/blob/master/research/object\_detection/g3doc/running\_pets.md
+We use the pet detection as the example. The detailed info can be found in https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_pets.md
 
 ### Preparing the Data
 Please follow the research/object\_detection/g3doc/running\_pets.md to download the training data and the pretrained model. The example use the resnet101 model and the Oxford-IIIT Pets Dataset.
