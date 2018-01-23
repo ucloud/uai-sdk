@@ -80,3 +80,12 @@ We can simply use the following cmd to run the local test.(GPU version)
     sudo nvidia-docker run -it -v /data/object-detect/data/:/data/data -v /data/object-detect/output:/data/output uhub.service.ucloud.cn/uai_dockers/tf-objdetect:uaitrain /bin/bash -c "cd /data && /usr/bin/python /data/object_detection/train.py --pipeline_config_path=/data/data/faster_rcnn_resnet101_pets.config --train_dir=/data/output"
     
 Note: we use use --pipeline\_config\_path=/data/data/faster\_rcnn\_resnet101\_pets.config to tell the train.py script to use the training config under /data/data/ and use --train\_dir=/data/output to tell the training script to output the model into /data/output. (When you are running the train job in UAI Train Platform, we will automatically put data into /data/data before job start and upload data inside /data/output after job finished.)
+
+### Docker Image
+We have provided the pre-build docker image based on TensorFlow-1.4, you can get the docker image by:
+
+    # Through UCloud Internal Network
+    docker pull uhub.service.ucloud.cn/uaishare/tf-obj-detect:tf-1.4
+
+    # Through Internel Network
+    docker pull uhub.ucloud.cn/uaishare/tf-obj-detect:tf-1.4

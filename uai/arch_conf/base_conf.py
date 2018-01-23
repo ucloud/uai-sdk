@@ -30,7 +30,7 @@ class ArchJsonConf(object):
         subparsers = self.parser.add_subparsers(dest='commands', help='commands')
 
         # A create command
-        create_parser = subparsers.add_parser('create', help='Create new uai-service')
+        create_parser = subparsers.add_parser('create', help='Create new uai-inference service task')
         self._add_account_args(create_parser)
         self._add_create_args(create_parser)
 
@@ -50,17 +50,17 @@ class ArchJsonConf(object):
         self._add_checkprogress_args(checkprogress_parser)
 
         # A delete command
-        delete_parser = subparsers.add_parser('delete', help='Remove a whole service or a version in a certian service')
+        delete_parser = subparsers.add_parser('delete', help='Remove a whole service task or a version in a certian service task')
         self._add_account_args(delete_parser)
         self._add_delete_args(delete_parser)
         
         # A stop command
-        stop_parser = subparsers.add_parser('stop', help='Stop a whole service or a version in a certian service')
+        stop_parser = subparsers.add_parser('stop', help='Stop a whole service task or a version in a certian service task')
         self._add_account_args(stop_parser)
         self._add_stop_args(stop_parser)
         
         # A start command
-        start_parser = subparsers.add_parser('start', help='Start a version in a certian service')
+        start_parser = subparsers.add_parser('start', help='Start a version in a certian service task')
         self._add_account_args(start_parser)
         self._add_start_args(start_parser)
 
@@ -70,12 +70,12 @@ class ArchJsonConf(object):
         self._add_listservice_args(listservice_parser)
 
         # A list version command
-        listversion_parser = subparsers.add_parser('listversion', help='List versions info of a specified uai service, could specify a certain version by service_version')
+        listversion_parser = subparsers.add_parser('listversion', help='List versions info of a specified service task, could specify a certain version by service_version')
         self._add_account_args(listversion_parser)
         self._add_listversion_args(listversion_parser)
 
         # A modify service name command
-        modifyname_parser = subparsers.add_parser('modifyname', help='Modify service name')
+        modifyname_parser = subparsers.add_parser('modifyname', help='Modify service task name')
         self._add_account_args(modifyname_parser)
         self._add_modifyname_args(modifyname_parser)
         
@@ -134,7 +134,7 @@ class ArchJsonConf(object):
 
     def _add_create_args(self, parser):
         args_parser = parser.add_argument_group(
-            'Uai-Params', 'Uai Service Managment Parameters')
+            'Uai-Params', 'Uai Inference Service Managment Parameters')
         args_parser.add_argument(
             '--service_name',
             type=str,
@@ -144,16 +144,16 @@ class ArchJsonConf(object):
             '--cpu',
             type=int,
             required=True,
-            help='the number of cpu used by each instance of uai service, int between 1 to 8')
+            help='the number of cpu used by each instance of uai inference service, int between 1 to 8')
         args_parser.add_argument(
             '--memory',
             type=int,
             required=True,
-            help='the number of GB memory used by each instance of uai service, int between 1 to 8')
+            help='the number of GB memory used by each instance of uai inference service, int between 1 to 8')
 
     def _add_checkbase_args(self, parser):
         args_parser = parser.add_argument_group(
-            'Uai-Params', 'Uai Service Managment Parameters')
+            'Uai-Params', 'Uai Inference Service Managment Parameters')
         args_parser.add_argument(
             '--os',
             type=str,
@@ -173,7 +173,7 @@ class ArchJsonConf(object):
 
     def _add_availableenv_args(self, parser):
         args_parser = parser.add_argument_group(
-            'Uai-Params', 'Uai Service Managment Parameters')
+            'Uai-Params', 'Uai Inference Service Managment Parameters')
         args_parser.add_argument(
             '--pkg_type',
             type=str,
@@ -265,12 +265,12 @@ class ArchJsonConf(object):
 
     def _add_deploy_args(self, parser):
         args_parser = parser.add_argument_group(
-            'Uai-Params', 'Uai Service Managment Parameters')
+            'Uai-Params', 'Uai Inference Service Managment Parameters')
         args_parser.add_argument(
             '--service_id',
             type=str,
             required=True,
-            help='the uai service id, '
+            help='the uai inference service task id, '
                  'which returned as ServiceID when create success ')
         args_parser.add_argument(
             '--deploy_weight',
@@ -318,131 +318,131 @@ class ArchJsonConf(object):
 
     def _add_checkprogress_args(self, parser):
         args_parser = parser.add_argument_group(
-            'Uai-Params', 'Uai Service Managment Parameters')
+            'Uai-Params', 'Uai Inference Service Managment Parameters')
         args_parser.add_argument(
             '--service_id',
             type=str,
             required=True,
-            help='the uai service id, '
+            help='the uai inference service task id, '
                  'which returned as ServiceID when create success ')
         args_parser.add_argument(
             '--service_version',
             type=str,
             required=True,
-            help='the version number of uai service, '
+            help='the version number of uai service task, '
                  'which returned as SrvVersion when deploy success. ')
 
 
     def _add_delete_args(self, parser):
         args_parser = parser.add_argument_group(
-            'Uai-Params', 'Uai Service Managment Parameters')
+            'Uai-Params', 'Uai Inference Service Managment Parameters')
         args_parser.add_argument(
             '--service_id',
             type=str,
             required=True,
-            help='the uai service id, '
+            help='the uai inference service task id, '
                  'which returned as ServiceID when create success ')
 
         args_parser.add_argument(
             '--paas_id',
             type=str,
             required=False,
-            help='the paas id of uai service, '
+            help='the paas id of uai service task, '
                  'which returned as SrvPaasID when create success ')
 
         args_parser.add_argument(
             '--service_version',
             type=str,
             required=False,
-            help='the version number of uai service, '
+            help='the version number of uai service task, '
                  'which returned as SrvVersion when deploy success. '
-                 '(Optional, deleting all versions of uai service when not specified)')
+                 '(Optional, deleting all versions of the uai service task when not specified)')
         
     def _add_stop_args(self, parser):
         args_parser = parser.add_argument_group(
-            'Uai-Params', 'Uai Service Managment Parameters')
+            'Uai-Params', 'Uai Inference Service Managment Parameters')
         args_parser.add_argument(
             '--service_id',
             type=str,
             required=True,
-            help='the uai service id, '
+            help='the uai inference service task id, '
                  'which returned as ServiceID when create success ')
 
         args_parser.add_argument(
             '--paas_id',
             type=str,
             required=True,
-            help='the paas id of uai service, '
+            help='the paas id of uai service task, '
                  'which returned as SrvPaasID when create success ')
 
         args_parser.add_argument(
             '--service_version',
             type=str,
             required=False,
-            help='the version number of uai service, '
+            help='the version number of uai service task, '
                  'which returned as SrvVersion when deploy success. '
-                 '(Optional, deleting all versions of uai service when not specified)')
+                 '(Optional, stopping all versions of the uai service task when not specified)')
         
     def _add_start_args(self, parser):
         args_parser = parser.add_argument_group(
-            'Uai-Params', 'Uai Service Managment Parameters')
+            'Uai-Params', 'Uai Inference Service Managment Parameters')
         args_parser.add_argument(
             '--service_id',
             type=str,
             required=True,
-            help='the uai service id, '
+            help='the uai inference service task id, '
                  'which returned as ServiceID when create success ')
 
         args_parser.add_argument(
             '--paas_id',
             type=str,
             required=True,
-            help='the paas id of uai service, '
+            help='the paas id of uai service task, '
                  'which returned as SrvPaasID when create success ')
 
         args_parser.add_argument(
             '--service_version',
             type=str,
             required=True,
-            help='the version number of uai service, '
+            help='the version number of uai service task, '
                  'which returned as SrvVersion when deploy success.')
 
     def _add_listservice_args(self, parser):
         args_parser = parser.add_argument_group(
-            'Uai-Params', 'Uai Service Managment Parameters')
+            'Uai-Params', 'Uai Inference Service Managment Parameters')
         args_parser.add_argument(
             '--service_id',
             type=str,
             required=False,
-            help='the uai service id, '
+            help='the uai inference service task id, '
                  'which returned as ServiceID when create success '
-                 '(Optional, get all uai services when not specified)')
+                 '(Optional, get all uai service tasks when not specified)')
         
     def _add_listversion_args(self, parser):
         args_parser = parser.add_argument_group(
-            'Uai-Params', 'Uai Service Managment Parameters')
+            'Uai-Params', 'Uai Inference Service Managment Parameters')
         args_parser.add_argument(
             '--service_id',
             type=str,
             required=True,
-            help='the uai service id, '
+            help='the uai inference service task id, '
                  'which returned as ServiceID when create success ')
         args_parser.add_argument(
             '--service_version',
             type=str,
             required=False,
-            help='the uai service version number, '
+            help='the uai service task version number, '
                  'which returned as SrvVersion when deploy success '
-                 '(Optional, get all versions of an uai service when not specified)')
+                 '(Optional, get all versions of an uai service task when not specified)')
 
     def _add_modifyname_args(self, parser):
         args_parser = parser.add_argument_group(
-            'Uai-Params', 'Uai Service Managment Parameters')
+            'Uai-Params', 'Uai Inference Service Managment Parameters')
         args_parser.add_argument(
             '--service_id',
             type=str,
             required=True,
-            help='the uai service id, '
+            help='the uai inference service task id, '
                  'which returned as ServiceID when create success ')
         args_parser.add_argument(
             '--service_name',
@@ -452,24 +452,24 @@ class ArchJsonConf(object):
         
     def _add_modifyweight_args(self, parser):
         args_parser = parser.add_argument_group(
-            'Uai-Params', 'Uai Service Managment Parameters')
+            'Uai-Params', 'Uai Inference Service Managment Parameters')
         args_parser.add_argument(
             '--service_id',
             type=str,
             required=True,
-            help='the uai service id, '
+            help='the uai inference service task id, '
                  'which returned as ServiceID when create success ')
         args_parser.add_argument(
             '--paas_id',
             type=str,
             required=True,
-            help='the paas id of uai service, '
+            help='the paas id of uai service task, '
                  'which returned as SrvPaasID when create success ')
         args_parser.add_argument(
             '--service_version',
             type=str,
             required=True,
-            help='the version number of uai service, '
+            help='the version number of uai service task, '
                  'which returned as SrvVersion when deploy success.')
         args_parser.add_argument(
             '--deploy_weight',

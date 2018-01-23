@@ -32,37 +32,37 @@ def param_filter(params):
     return res_params
 
 def parse_param(subparsers):
-    create_parser = subparsers.add_parser('create', help='Create new uai-service')
+    create_parser = subparsers.add_parser('create', help='Create new uai inference service task')
     create_op = UaiServiceCreateOp(create_parser)
 
     check_parser = subparsers.add_parser('checkprogress', help='check deploy progress')
     check_deploy_op = UaiServiceCheckDeployOp(check_parser)
 
-    delete_parser = subparsers.add_parser('delete', help='Remove a whole service or a version in a certian service')
+    delete_parser = subparsers.add_parser('delete', help='Remove a whole inference service task or a version in a certian service task')
     delete_op = UaiServiceDeleteOp(delete_parser)
 
-    stop_parser = subparsers.add_parser('stop', help='Stop a whole service or a version in a certian service')
+    stop_parser = subparsers.add_parser('stop', help='Stop the whole inference service task or a version in certian task')
     stop_op = UaiServiceStopOp(stop_parser)
 
-    deploy_docker_parser = subparsers.add_parser('deploydocker', help='Deploy a uai service by a certian uhub images')
+    deploy_docker_parser = subparsers.add_parser('deploydocker', help='Deploy a uai inference service task by a certian uhub images')
     deploy_docker_op = UaiServiceDeployOp(deploy_docker_parser)
 
-    deploy_parser = subparsers.add_parser('deploy', help='Deploy a uai service by ufile')
+    deploy_parser = subparsers.add_parser('deploy', help='Deploy a uai inference service task by ufile')
     deploy_op = UaiServiceDeployByUfileOp(deploy_parser)
 
-    start_parser = subparsers.add_parser('start', help='Start a version in a certian service')
+    start_parser = subparsers.add_parser('start', help='Start a version in a certian inference service task')
     start_op = UaiServiceStartOp(start_parser)
 
     listservice_parser = subparsers.add_parser('listservice', help='List serivces info, could specify one by service_id')
     listservice_op = UaiServiceListServiceOp(listservice_parser)
 
-    listversion_parser = subparsers.add_parser('listversion', help='List versions info of a specified uai service, could specify a certain version by service_version')
+    listversion_parser = subparsers.add_parser('listversion', help='List versions info of a specified uai inference service task, could specify a certain version by service_version')
     listversion_op = UaiSrvVersionListOp(listversion_parser)
 
-    modifyname_parser = subparsers.add_parser('modifyname', help='Modify service name')
+    modifyname_parser = subparsers.add_parser('modifyname', help='Modify the inference service task name')
     modifyname_op = UaiServiceModifyServiceNameOp(modifyname_parser)
 
-    modifyweight_parser = subparsers.add_parser('modifyweight', help='Modify service weight for grayscale publishing')
+    modifyweight_parser = subparsers.add_parser('modifyweight', help='Modify the inference service task weight for grayscale publishing')
     modifyweight_op = UaiServiceModifyWeightOp(modifyweight_parser)
 
     checkbase_parser = subparsers.add_parser('checkbase', help='Check base enviroment exists(os, python version, ai framework)')
@@ -140,7 +140,7 @@ def parse_param(subparsers):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='Uai service Commander',
+        description='UAI Inference Platform Commander',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     subparsers = parser.add_subparsers(dest='commands', help='commands')
     cmd_op_dict = parse_param(subparsers)
