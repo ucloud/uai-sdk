@@ -64,3 +64,30 @@ class TFJsonConfLoader(ArchJsonConfLoader):
     
     def get_model_dir(self):
         return self.model_dir
+
+class TFServingJsonConfLoader(ArchJsonConfLoader):
+    def __init__(self, conf):
+        super(TFServingJsonConfLoader, self).__init__(conf)
+
+    def _load(self):
+        super(TFServingJsonConfLoader, self)._load()
+        self.model_dir = self.server_conf['tensorflow']['model_dir']
+        self.input = self.server_conf['tensorflow']['input']
+        self.output = self.server_conf['tensorflow']['output']
+        self.tag = self.server_conf['tensorflow']['tag']
+        self.signature = self.server_conf['tensorflow']['signature']
+
+    def get_model_dir(self):
+        return self.model_dir
+
+    def get_input_set(self):
+        return self.input
+
+    def get_output_set(self):
+        return self.output
+
+    def get_tag_set(self):
+        return self.tag
+
+    def get_signature(self):
+        return self.signature

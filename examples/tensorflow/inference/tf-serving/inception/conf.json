@@ -1,0 +1,19 @@
+{
+    "http_server" : {
+        "exec" : {
+            "main_class": "InceptionModel",
+            "main_file": "inference"
+        },
+        "tensorflow" : {
+            "model_dir" : "./checkpoint_dir/",
+            "tag": ["serve"],
+            "signature": "predict_images",
+            "input": {
+                "name": "images"
+            },
+            "output": {
+                "name": ["classes"]
+            }
+        }
+    }
+}

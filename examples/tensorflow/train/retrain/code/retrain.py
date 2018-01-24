@@ -1197,7 +1197,7 @@ if __name__ == '__main__':
   parser.add_argument(
       '--summaries_dir',
       type=str,
-      default='/tmp/retrain_logs',
+      default='retrain_logs',
       help='Where to save summary logs for TensorBoard.'
   )
   parser.add_argument(
