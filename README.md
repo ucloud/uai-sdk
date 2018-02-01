@@ -42,7 +42,7 @@
 
 3. Install uai-sdk
 
-        $ sudo sh setup.sh install
+        $ sudo python setup.py install
 
 4. Install Flask
 

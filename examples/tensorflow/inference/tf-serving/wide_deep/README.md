@@ -2,7 +2,7 @@
 This example shows how to generate a tf-serving capable model and run the wide&deep service using based on UAI Inference Docker.
 
 ## Build Wide&Deep tf-serving model
-We provide the example code to generate tf-serving compatable model after the training progress. The wide\_deep.py code is modified from https://github.com/tensorflow/models/blob/master/official/wide\_deep/wide\_deep.py. We need to define the input processing func (e.g., serving\_input\_receiver\_fn) and add one line at the end of main() func to export the model:
+We provide the example code to generate tf-serving compatable model after the training progress. The wide\_deep.py code is modified from https://github.com/tensorflow/models/blob/master/official/wide_deep/wide_deep.py. We need to define the input processing func (e.g., serving\_input\_receiver\_fn) and add one line at the end of main() func to export the model:
 
     # used by serving_input_receiver_fn()
     def parse_csv(value):
@@ -25,7 +25,7 @@ We provide the example code to generate tf-serving compatable model after the tr
     	# Save model to create inference.
     	model.export_savedmodel(FLAGS.serving_checkpoint, serving_input_receiver_fn)
     
-Thanks to the estimator interface, the estimator object can directly export tf-serving compatable model through export_savedmodel if we provide the serving\_input\_receiver\_fn func. The serving\_input\_receiver\_fn func defines two variables: 1) the *features* argument for ServingInputReceiver is the data that will be feed to the estimator.model\_fn(); the *receiver\_tensor* is the actual input from inference call. For more details, please refer to https://www.tensorflow.org/programmers\_guide/saved\_model.
+Thanks to the estimator interface, the estimator object can directly export tf-serving compatable model through export_savedmodel if we provide the serving\_input\_receiver\_fn func. The serving\_input\_receiver\_fn func defines two variables: 1) the *features* argument for ServingInputReceiver is the data that will be feed to the estimator.model\_fn(); the *receiver\_tensor* is the actual input from inference call. For more details, please refer to https://www.tensorflow.org/programmers_guide/saved_model.
 
 ### Generate Wide&Deep tf-serving model
 Run the following code to generate the wide&deep model, for more details please refer to https://github.com/tensorflow/models/tree/master/official/wide_deep
@@ -81,12 +81,12 @@ The entry-point file module is inference (Note we must omit the .py suffix). The
 It provides several info for the system to load the model. These infos are necessary to load a tf-serving capable module which is usually a protobuf file e.g. checkpoint\_dir/saved\_model.pb：
 
 1. model\_dir: tell where to find the model file
-2. tag: tell which graph to load from the model file, it should be "serve" here as compatable with tf.saved\_model.tag\_constants.SERVING. (For more details please see: https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/saved\_model/tag\_constants.py)
+2. tag: tell which graph to load from the model file, it should be "serve" here as compatable with tf.saved\_model.tag\_constants.SERVING. (For more details please see: https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/saved_model/tag_constants.py)
 3. signature: use the predefined 'predict' API in Estimator
 4. input: tell the input tensor name
 5. output: tell the output tensor name, both *classes* and *logits* are predefined by the Estimator.
 
-Note: get get the exact input/output tensor name, you should use the saved\_model\_cli to generate them. Please refer to https://www.tensorflow.org/programmers\_guide/saved\_model for more details.
+Note: get get the exact input/output tensor name, you should use the saved\_model\_cli to generate them. Please refer to https://www.tensorflow.org/programmers_guide/saved_model for more details.
 
 ### Build the docker image
 We build the wide&deep inference service docker image based on UCloud AI Inference Docker base image: uhub.service.ucloud.cn/uaishare/cpu_uaiservice\_ubuntu-14.04\_python-2.7.6\_tensorflow-1.4.0:v1.1, you can get it by:
