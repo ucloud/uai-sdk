@@ -2,9 +2,9 @@
 This example shows how to generate a tf-serving capable model and run the mnist inference service using this model based on UAI Inference Docker.
 
 ## Build Mnist tf-serving model
-Use mnist\_saved\_model.py to generate tf-serving capable model. Please refer to https://github.com/tensorflow/serving/blob/master/tensorflow\_serving/example/mnist\_saved\_model.py for more details.
+Use mnist_saved_model.py to generate tf-serving capable model. Please refer to https://github.com/tensorflow/serving/blob/master/tensorflow_serving/example/mnist_saved_model.py for more details.
 
-It uses the tf.saved\_model.builder.SavedModelBuilder.save() to generate a tf-serving capable model
+It uses the tf.saved_model.builder.SavedModelBuilder.save() to generate a tf-serving capable model
 
 ## Build Mnist Inference Service with UAI Inference toolkit
 Building a mnist inference service docker need some preparations:
@@ -51,16 +51,16 @@ The config file in this example is as follow:
     
 The entry-point file module is inference (Note we must omit the .py suffix). The user-defined inference main class is MnistModel.
 
-It provides several info for the system to load the model. These infos are necessary to load a tf-serving capable module which is usually a protobuf file e.g. checkpoint\_dir/saved\_model.pb：
+It provides several info for the system to load the model. These infos are necessary to load a tf-serving capable module which is usually a protobuf file e.g. checkpoint_dir/saved_model.pb：
 
-1. model\_dir: tell where to find the model file
-2. tag: tell which graph to load from the model file, it should be "serve" here as compatable with tf.saved\_model.tag\_constants.SERVING. (For more details please see: https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/saved\_model/tag\_constants.py)
-3. signature: the signature when building the model: see L127 in mnist\_saved\_model.py, the builder add\_meta\_graph\_and\_variables into the graph defining the input and the output with the signature of 'predict_images'
-4. input: tell the input tensor name: see L122 in mnist\_saved\_model.py
-5. output: tell the output tensor name: see L123 in mnist\_saved\_model.py
+1. model_dir: tell where to find the model file
+2. tag: tell which graph to load from the model file, it should be "serve" here as compatable with tf.saved_model.tag_constants.SERVING. (For more details please see: https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/saved_model/tag_constants.py)
+3. signature: the signature when building the model: see L127 in mnist_saved_model.py, the builder add_meta_graph_and_variables into the graph defining the input and the output with the signature of 'predict_images'
+4. input: tell the input tensor name: see L122 in mnist_saved_model.py
+5. output: tell the output tensor name: see L123 in mnist_saved_model.py
 
 ### Build the docker image
-We build the minst service docker image based on UCloud AI Inference Docker base image: uhub.service.ucloud.cn/uaishare/cpu_uaiservice\_ubuntu-14.04\_python-2.7.6\_tensorflow-1.4.0:v1.1, you can get it by:
+We build the minst service docker image based on UCloud AI Inference Docker base image: uhub.service.ucloud.cn/uaishare/cpu_uaiservice_ubuntu-14.04_python-2.7.6_tensorflow-1.4.0:v1.1, you can get it by:
 
     # In UCloud VM
     sudo docker pull uhub.service.ucloud.cn/uaishare/cpu_uaiservice_ubuntu-14.04_python-2.7.6_tensorflow-1.4.0:v1.1

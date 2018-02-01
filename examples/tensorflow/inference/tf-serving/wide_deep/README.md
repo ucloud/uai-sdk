@@ -2,7 +2,7 @@
 This example shows how to generate a tf-serving capable model and run the wide&deep service using based on UAI Inference Docker.
 
 ## Build Wide&Deep tf-serving model
-We provide the example code to generate tf-serving compatable model after the training progress. The wide\_deep.py code is modified from https://github.com/tensorflow/models/blob/master/official/wide\_deep/wide\_deep.py. We need to define the input processing func (e.g., serving\_input\_receiver\_fn) and add one line at the end of main() func to export the model:
+We provide the example code to generate tf-serving compatable model after the training progress. The wide_deep.py code is modified from https://github.com/tensorflow/models/blob/master/official/wide_deep/wide_deep.py. We need to define the input processing func (e.g., serving_input_receiver_fn) and add one line at the end of main() func to export the model:
 
     # used by serving_input_receiver_fn()
     def parse_csv(value):
@@ -25,14 +25,14 @@ We provide the example code to generate tf-serving compatable model after the tr
     	# Save model to create inference.
     	model.export_savedmodel(FLAGS.serving_checkpoint, serving_input_receiver_fn)
     
-Thanks to the estimator interface, the estimator object can directly export tf-serving compatable model through export_savedmodel if we provide the serving\_input\_receiver\_fn func. The serving\_input\_receiver\_fn func defines two variables: 1) the *features* argument for ServingInputReceiver is the data that will be feed to the estimator.model\_fn(); the *receiver\_tensor* is the actual input from inference call. For more details, please refer to https://www.tensorflow.org/programmers\_guide/saved\_model.
+Thanks to the estimator interface, the estimator object can directly export tf-serving compatable model through export_savedmodel if we provide the serving_input_receiver_fn func. The serving_input_receiver_fn func defines two variables: 1) the *features* argument for ServingInputReceiver is the data that will be feed to the estimator.model_fn(); the *receiver_tensor* is the actual input from inference call. For more details, please refer to https://www.tensorflow.org/programmers_guide/saved_model.
 
 ### Generate Wide&Deep tf-serving model
 Run the following code to generate the wide&deep model, for more details please refer to https://github.com/tensorflow/models/tree/master/official/wide_deep
 
     python wide_deep.py --train_data /PATH_TO/census_data/adult.data --test_data /PATH_TO/census_data/adult.test
     
-Note: To generate the tf-serving model, please use the wide\_deep.py code provided by us. We have made the necessary modifications!!! The output will be in /tmp/census\_data/
+Note: To generate the tf-serving model, please use the wide_deep.py code provided by us. We have made the necessary modifications!!! The output will be in /tmp/census_data/
 
 ## Build Wide&Deep Inference Service with UAI Inference toolkit
 Building a Wide&Deep inference service docker need some preparations:
@@ -78,18 +78,18 @@ The config file in this example is as follow:
     
 The entry-point file module is inference (Note we must omit the .py suffix). The user-defined inference main class is WideDeepModel.
 
-It provides several info for the system to load the model. These infos are necessary to load a tf-serving capable module which is usually a protobuf file e.g. checkpoint\_dir/saved\_model.pb：
+It provides several info for the system to load the model. These infos are necessary to load a tf-serving capable module which is usually a protobuf file e.g. checkpoint_dir/saved_model.pb：
 
-1. model\_dir: tell where to find the model file
-2. tag: tell which graph to load from the model file, it should be "serve" here as compatable with tf.saved\_model.tag\_constants.SERVING. (For more details please see: https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/saved\_model/tag\_constants.py)
+1. model_dir: tell where to find the model file
+2. tag: tell which graph to load from the model file, it should be "serve" here as compatable with tf.saved_model.tag_constants.SERVING. (For more details please see: https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/saved_model/tag_constants.py)
 3. signature: use the predefined 'predict' API in Estimator
 4. input: tell the input tensor name
 5. output: tell the output tensor name, both *classes* and *logits* are predefined by the Estimator.
 
-Note: get get the exact input/output tensor name, you should use the saved\_model\_cli to generate them. Please refer to https://www.tensorflow.org/programmers\_guide/saved\_model for more details.
+Note: get get the exact input/output tensor name, you should use the saved_model_cli to generate them. Please refer to https://www.tensorflow.org/programmers_guide/saved_model for more details.
 
 ### Build the docker image
-We build the wide&deep inference service docker image based on UCloud AI Inference Docker base image: uhub.service.ucloud.cn/uaishare/cpu_uaiservice\_ubuntu-14.04\_python-2.7.6\_tensorflow-1.4.0:v1.1, you can get it by:
+We build the wide&deep inference service docker image based on UCloud AI Inference Docker base image: uhub.service.ucloud.cn/uaishare/cpu_uaiservice_ubuntu-14.04_python-2.7.6_tensorflow-1.4.0:v1.1, you can get it by:
 
     # In UCloud VM
     sudo docker pull uhub.service.ucloud.cn/uaishare/cpu_uaiservice_ubuntu-14.04_python-2.7.6_tensorflow-1.4.0:v1.1
@@ -98,32 +98,32 @@ We build the wide&deep inference service docker image based on UCloud AI Inferen
     sudo docker pull uhub.ucloud.cn/uaishare/cpu_uaiservice_ubuntu-14.04_python-2.7.6_tensorflow-1.4.0:v1.1
     
 #### Preparing code and model
-We have provide the example inference code (wide\_deep/inference.py) and the config file conf.json. You should put them together into wide\_deep/ directory. We also provide the wide&deep model into checkpoint\_dir:
+We have provide the example inference code (wide_deep/inference.py) and the config file conf.json. You should put them together into wide_deep/ directory. We also provide the wide&deep model into checkpoint_dir:
 
     # ls
-    wide\_deep
-    # ls wide\_deep
+    wide_deep
+    # ls wide_deep
     checkpoint_dir conf.json inference.py
 
 #### Preparing dockerfile
-We provide the example dockerfile to pack the inference service docker image. You should put it into the same directory with the wide\_deep package.
+We provide the example dockerfile to pack the inference service docker image. You should put it into the same directory with the wide_deep package.
 
 	# ls
-	wide\_deep/ uaiservice.Dockerfile
+	wide_deep/ uaiservice.Dockerfile
 	
 The dockerfile(uaiservice.Dockerfile) include following contents:
 
     FROM  uhub.service.ucloud.cn/uaishare/cpu_uaiservice_ubuntu-14.04_python-2.7.6_tensorflow-1.4.0:v1.1
 
     EXPOSE 8080
-    ADD ./wide\_deep /ai-ucloud-client-django/
-    ADD ./wide\_deep/conf.json  /ai-ucloud-client-django/conf.json
+    ADD ./wide_deep /ai-ucloud-client-django/
+    ADD ./wide_deep/conf.json  /ai-ucloud-client-django/conf.json
     ENV UAI_SERVICE_CONFIG /ai-ucloud-client-django/conf.json
     CMD cd /ai-ucloud-client-django && gunicorn -c gunicorn.conf.py httpserver.wsgi
 
 1. build the docker image based on UCloud AI Inference Docker base image. (Note if you are using UCloud VM you can use 'uhub.service.ucloud.cn' otherwise you should change it into 'uhub.ucloud.cn'
 2. EXPOSE 8080 port for http service
-3. ADD all code under wide\_deep into /ai-ucloud-client-django/. (Note the root path when the django server start is /ai-ucloud-client-django/)
+3. ADD all code under wide_deep into /ai-ucloud-client-django/. (Note the root path when the django server start is /ai-ucloud-client-django/)
 4. ADD the conf.json into /ai-ucloud-client-django/, The django server will automatically load a json config file to get all running info. For more details of how json file is organized please refer: [Define the Config File](###define-the-config-file)
 5. Set the UAI_SERVICE_CONFIG environment to tell django server to load the config file named 'conf.json'
 6. use gunicorn to run the server
