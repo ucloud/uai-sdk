@@ -62,7 +62,7 @@ The entry-point file module is inference (Note we must omit the .py suffix). The
 It provides several info for the system to load the model. These infos are necessary to load a tf-serving capable module which is usually a protobuf file e.g. checkpoint\_dir/saved\_model.pb：
 
 1. model\_dir: tell where to find the model file
-2. tag: tell which graph to load from the model file, it should be "serve" here as compatable with tf.saved\_model.tag\_constants.SERVING. (For more details please see: https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/saved\_model/tag\_constants.py)
+2. tag: tell which graph to load from the model file, it should be "serve" here as compatable with tf.saved\_model.tag\_constants.SERVING. (For more details please see: https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/saved_model/tag_constants.py)
 3. signature: the signature when building the model: see L155 in inception\_saved\_model.py, the builder add\_meta\_graph\_and\_variables into the graph defining the input and the output with the signature of 'predict_images'
 4. input: tell the input tensor name: see L142 in inception\_saved\_model.py
 5. output: tell the output tensor name: see L144 in inception\_saved\_model.py
