@@ -2,9 +2,9 @@
 This example shows how to generate a tf-serving capable model and run the inception inference service based on UAI Inference Docker.
 
 ## Build Inception tf-serving model
-Use inception\_saved\_model.py to generate tf-serving capable model. Please refer to https://github.com/tensorflow/serving/blob/master/tensorflow_serving/example/inception\_saved\_model.py for more details.
+Use inception_saved_model.py to generate tf-serving capable model. Please refer to https://github.com/tensorflow/serving/blob/master/tensorflow_serving/example/inception_saved_model.py for more details.
 
-Actually, inception\_saved\_model.py rebuild the inception model by including the jpeg data preprocessing steps into the model graph.(See L70, it use images = tf.map\_fn(preprocess\_image, jpegs, dtype=tf.float32) to call preprocess_image() before doing the inference). It uses the tf.saved\_model.builder.SavedModelBuilder.save() to generate a tf-serving capable model
+Actually, inception_saved_model.py rebuild the inception model by including the jpeg data preprocessing steps into the model graph.(See L70, it use images = tf.map_fn(preprocess_image, jpegs, dtype=tf.float32) to call preprocess_image() before doing the inference). It uses the tf.saved_model.builder.SavedModelBuilder.save() to generate a tf-serving capable model
 
 ### Generate tf-serving compatable model
 We can use the following cmd to generate the tf-serving compatable model
@@ -59,16 +59,16 @@ The config file in this example is as follow:
     
 The entry-point file module is inference (Note we must omit the .py suffix). The user-defined inference main class is InceptionModel.
 
-It provides several info for the system to load the model. These infos are necessary to load a tf-serving capable module which is usually a protobuf file e.g. checkpoint\_dir/saved\_model.pb：
+It provides several info for the system to load the model. These infos are necessary to load a tf-serving capable module which is usually a protobuf file e.g. checkpoint_dir/saved_model.pb：
 
-1. model\_dir: tell where to find the model file
-2. tag: tell which graph to load from the model file, it should be "serve" here as compatable with tf.saved\_model.tag\_constants.SERVING. (For more details please see: https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/saved\_model/tag\_constants.py)
-3. signature: the signature when building the model: see L155 in inception\_saved\_model.py, the builder add\_meta\_graph\_and\_variables into the graph defining the input and the output with the signature of 'predict_images'
-4. input: tell the input tensor name: see L142 in inception\_saved\_model.py
-5. output: tell the output tensor name: see L144 in inception\_saved\_model.py
+1. model_dir: tell where to find the model file
+2. tag: tell which graph to load from the model file, it should be "serve" here as compatable with tf.saved_model.tag_constants.SERVING. (For more details please see: https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/saved_model/tag_constants.py)
+3. signature: the signature when building the model: see L155 in inception_saved_model.py, the builder add_meta_graph_and_variables into the graph defining the input and the output with the signature of 'predict_images'
+4. input: tell the input tensor name: see L142 in inception_saved_model.py
+5. output: tell the output tensor name: see L144 in inception_saved_model.py
 
 ### Build the docker image
-We build the inception inference service docker image based on UCloud AI Inference Docker base image: uhub.service.ucloud.cn/uaishare/cpu_uaiservice\_ubuntu-14.04\_python-2.7.6\_tensorflow-1.4.0:v1.1, you can get it by:
+We build the inception inference service docker image based on UCloud AI Inference Docker base image: uhub.service.ucloud.cn/uaishare/cpu_uaiservice_ubuntu-14.04_python-2.7.6_tensorflow-1.4.0:v1.1, you can get it by:
 
     # In UCloud VM
     sudo docker pull uhub.service.ucloud.cn/uaishare/cpu_uaiservice_ubuntu-14.04_python-2.7.6_tensorflow-1.4.0:v1.1
@@ -77,7 +77,7 @@ We build the inception inference service docker image based on UCloud AI Inferen
     sudo docker pull uhub.ucloud.cn/uaishare/cpu_uaiservice_ubuntu-14.04_python-2.7.6_tensorflow-1.4.0:v1.1
     
 #### Preparing code and model
-We have provide the example inference code (inception/inference.py) and the config file conf.json. You should put them together into inception/ directory. You also need to put the [generated model file](#build-inception-tf-serving-model) into checkpoint\_dir:
+We have provide the example inference code (inception/inference.py) and the config file conf.json. You should put them together into inception/ directory. You also need to put the [generated model file](#build-inception-tf-serving-model) into checkpoint_dir:
 
     # ls
     inception
