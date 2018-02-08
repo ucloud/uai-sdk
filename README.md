@@ -53,6 +53,6 @@
 
 ## How to interactive with UCloud UAI Platform
 ### UAI Inference Docs
-https://docs.ucloud.cn/ai/uai-service/use
+https://docs.ucloud.cn/ai/uai-inference/index
 ### UAI Train Docs
 https://docs.ucloud.cn/ai/uai-train/use
