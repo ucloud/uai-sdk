@@ -58,4 +58,4 @@ Performance Result
 | Model                   | Node Type   | images/sec |
 | ------------------------| ----------- | ---------- |
 | `imagenet-resnet-101`   | 1 * P40     | 78         |
-| `imagenet-resnet-101`   | 4 * P40     | 204        |
+| `imagenet-resnet-101`   | 4 * P40     | 347        |

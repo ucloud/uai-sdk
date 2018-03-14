@@ -77,7 +77,7 @@ Node: We put data into /mnt/imagenet/mxnet/train-rec/ and /mnt/imagenet/mxnet/va
 
 #### An pack cmd example is:
 
-    sudo python tf_tool.py pack --public_key=<UCLOUD_PUB_KEY> \ 
+    sudo python mxnet_tool.py pack --public_key=<UCLOUD_PUB_KEY> \ 
     --private_key=<UCLOUD_PRIV_KEY> \
     --code_path=code/ \
     --mainfile_path=train_imagenet.py \

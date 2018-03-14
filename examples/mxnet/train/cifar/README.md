@@ -74,7 +74,7 @@ We assume you fully understand how UAI Train docker image works and has already 
      
 #### An pack cmd example is:
 
-    sudo python tf_tool.py pack --public_key=<UCLOUD_PUB_KEY> \ 
+    sudo python mxnet_tool.py pack --public_key=<UCLOUD_PUB_KEY> \ 
     --private_key=<UCLOUD_PRIV_KEY> \
     --code_path=code/ \
     --mainfile_path=train_cifar10.py \
