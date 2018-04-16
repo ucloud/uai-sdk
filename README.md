@@ -26,11 +26,18 @@
 - Tensorflow（1.2.0 tested）
 - Tensorflow（1.3.0 tested)
 - Tensorflow（1.4.0 tested）
+- Tensorflow（1.5.0 tested)
+- Tensorflow（1.6.0 tested）
 - MXNet(0.9.5 tested)
 - MXNet(1.0.0 tested)
 - Keras(1.2.0 tested)
 - Caffe(1.0.0 tested)
+- Caffe2(Detectron)
 - PyTorch(0.2.0)
+
+### UAI Train Supporting Distributed Training
+- Tensorflow Distributed Training (examples include slim/cifar/wide-deep)
+- MXNet Distributed Training
 
 ## How to install
 1. Install your deep learning python package, such as Tensorflow, MXNet, Keras, Caffe (tested version preferred)
