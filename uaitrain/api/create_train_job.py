@@ -36,6 +36,8 @@ class CreateUAITrainJobOp(BaseUAITrainAPIOp):
             out_ufile_path      string(required) the ufile path of output data
             docker_cmd          string(required) the cmd of run the job
             max_exec_time       int(required) the max exec time of job. if the job don't finish in the time, system will stop the job.
+            work_num            int(optional) the num of server. This param should be greater than 1 for distributed train.
+            dist_ai_frame       int(optional) the frame of distributed train 
             business_group      string(optional) Which business group to run the job
             job_memo            string(optional) the memo of the job
             
@@ -47,7 +49,7 @@ class CreateUAITrainJobOp(BaseUAITrainAPIOp):
     """
 
     def __init__(self, pub_key, priv_key, job_name, work_id, code_uhub_path, data_ufile_path, out_ufile_path,
-                 docker_cmd, max_exec_time, business_group="", job_memo="", project_id="",
+                 docker_cmd, max_exec_time, work_num=1, dist_ai_frame="", business_group="", job_memo="", project_id="",
                  region="", zone=""):
         super(CreateUAITrainJobOp, self).__init__(self.ACTION_NAME,
                                                      pub_key,
@@ -63,12 +65,15 @@ class CreateUAITrainJobOp(BaseUAITrainAPIOp):
         self.cmd_params["DockerCmd"] = docker_cmd
         self.cmd_params["PredictStartTime"] = 0
         self.cmd_params["MaxExecuteTime"] = max_exec_time
+        self.cmd_params["TrainWorkAmount"] = work_num
+        self.cmd_params["DistAIFrame"] = dist_ai_frame
 
         self.cmd_params["TrainPublicKey"] = pub_key
         self.cmd_params["TrainPrivateKey"] = priv_key
 
         self.cmd_params["TrainJobMemo"] = job_memo
         self.cmd_params["BusinessGroup"] = business_group
+
 
     def _check_args(self):
         super(CreateUAITrainJobOp, self)._check_args()
@@ -91,4 +96,7 @@ class CreateUAITrainJobOp(BaseUAITrainAPIOp):
             raise RuntimeError("docker_cmd shoud be <str> and is not nil.")
 
         if self.cmd_params["MaxExecuteTime"] == "" or type(self.cmd_params["MaxExecuteTime"]) != int:
+            raise RuntimeError("max_exec_time shoud be <int> and is not nil.")
+
+        if self.cmd_params["TrainWorkAmount"] == "" or type(self.cmd_params["TrainWorkAmount"]) != int:
             raise RuntimeError("max_exec_time shoud be <int> and is not nil.")
