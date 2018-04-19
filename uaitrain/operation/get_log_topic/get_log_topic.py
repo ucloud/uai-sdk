@@ -17,12 +17,12 @@ import time
 from uai.utils.logger import uai_logger
 from uai.utils.logger import printConsoleOnlyError
 from uaitrain.operation.base_op import BaseUAITrainOp
-from uaitrain.api.get_train_job_running_log import GetUAITrainRunningLogOp
+from uaitrain.api.get_train_log_topic_list import GetUAITrainRunningLogTopicListOp
 from uaitrain.api.get_train_job_list import GetUAITrainJobListOp
 
-class BaseUAITrainGetRealtimeLogOp(BaseUAITrainOp):
+class BaseUAITrainGetLogTopicOp(BaseUAITrainOp):
     def __init__(self, parser):
-        super(BaseUAITrainGetRealtimeLogOp, self).__init__(parser)
+        super(BaseUAITrainGetLogTopicOp, self).__init__(parser)
         printConsoleOnlyError()
 
     def _add_job_info_args(self, job_parser):
@@ -33,23 +33,17 @@ class BaseUAITrainGetRealtimeLogOp(BaseUAITrainOp):
             type=str,
             required=True,
             help='The <job_id> to query')
-        info_parser.add_argument(
-            '--log_topic_id',
-            type=str,
-            required=True,
-            help='The <log_topic_id> to query')
 
     def _add_args(self):
-        parser = self.parser.add_parser('log', help='Get realtime log of UAI Train Job')
+        parser = self.parser.add_parser('topic', help='Get realtime log topic of UAI Train Job')
         self.job_parser = parser
         self._add_account_args(parser)
         self._add_job_info_args(parser)
 
     def _parse_args(self, args):
-        super(BaseUAITrainGetRealtimeLogOp, self)._parse_args(args)
+        super(BaseUAITrainGetLogTopicOp, self)._parse_args(args)
 
         self.job_id = args['job_id']
-        self.log_topic_id = args['log_topic_id']
         return True
 
     def _check_job_running(self):
@@ -74,27 +68,22 @@ class BaseUAITrainGetRealtimeLogOp(BaseUAITrainOp):
         if self._parse_args(args) == False:
             return False
 
-        while True:
-            log_op = GetUAITrainRunningLogOp(
-                pub_key=self.pub_key,
-                priv_key=self.pri_key,
-                job_id=self.job_id,
-                log_topic_id=self.log_topic_id,
-                project_id=self.project_id,
-                region=self.region,
-                zone=self.zone)
+        topic_op = GetUAITrainRunningLogTopicListOp(
+            pub_key=self.pub_key,
+            priv_key=self.pri_key,
+            job_id=self.job_id,
+            project_id=self.project_id,
+            region=self.region,
+            zone=self.zone)
 
-            succ, resp = log_op.call_api()
-            if succ is False:
-                uai_logger.warn("Error get realtime log info. job {0}, check your job_id, it may be not running.".format(self.job_id))
-                time.sleep(10)
-                continue
-            result = resp['RunningLog'] if resp['RunningLog'] is not None else []
-            for log in result:
-                print (log)
+        succ, resp = topic_op.call_api()
+        if succ is False:
+            uai_logger.warn("Error get realtime topic info. job {0}, check your job_id, it may be not running.".format(self.job_id))
+            return False
 
-            if self._check_job_running() is True:
-                time.sleep(10)
-            else:
-                break
+        result = resp['DataSet'] if resp['DataSet'] is not None else []
+        print ("The Topic list is:")
+        for topic in result:
+            print (topic['TopicId'])
+
         return True
