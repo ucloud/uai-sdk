@@ -23,7 +23,7 @@ from uaitrain.operation.list_train_job.base_list_job_op import BaseUAITrainListT
 from uaitrain.operation.info_train_job.info_train_op import BaseUAITrainRunningJobInfoOp
 from uaitrain.operation.rename_train_job.base_rename_op import BaseUAITrainRenameTrainJobOp
 from uaitrain.operation.get_train_job_conf.base_conf_op import BaseUAITrainTrainJobConfOp
-from uaitrain.operation.get_tensorboard_url.get_tensorboard_url import BaseUAITrainGetTensorBoardUrlOp
+from uaitrain.operation.get_log_topic.get_log_topic import BaseUAITrainGetLogTopicOp
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -40,6 +40,7 @@ if __name__ == '__main__':
     info_op = BaseUAITrainRunningJobInfoOp(subparsers)
     rename_op = BaseUAITrainRenameTrainJobOp(subparsers)
     conf_op = BaseUAITrainTrainJobConfOp(subparsers)
+    topic_op = BaseUAITrainGetLogTopicOp(subparsers)
     cmd_args = vars(parser.parse_args())
 
     if cmd_args['commands'] == 'pack':
@@ -58,6 +59,8 @@ if __name__ == '__main__':
         conf_op.cmd_run(cmd_args)
     elif cmd_args['commands'] == 'rename':
         rename_op.cmd_run(cmd_args)
+    elif cmd_args['commands'] == 'topic':
+        topic_op.cmd_run(cmd_args)
     else:
         print("UAI Train Base Tool Only Support General operations, please use python base_tool.py -h to check")
     

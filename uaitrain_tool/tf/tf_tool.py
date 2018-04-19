@@ -26,6 +26,7 @@ from uaitrain.operation.list_bill_info.base_bill_op import BaseUAITrainListBillI
 from uaitrain.operation.rename_train_job.base_rename_op import BaseUAITrainRenameTrainJobOp
 from uaitrain.operation.get_train_job_conf.base_conf_op import BaseUAITrainTrainJobConfOp
 from uaitrain.operation.get_tensorboard_url.get_tensorboard_url import BaseUAITrainGetTensorBoardUrlOp
+from uaitrain.operation.get_log_topic.get_log_topic import BaseUAITrainGetLogTopicOp
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -45,6 +46,7 @@ if __name__ == '__main__':
     rename_op = BaseUAITrainRenameTrainJobOp(subparsers)
     conf_op = BaseUAITrainTrainJobConfOp(subparsers)
     url_op = BaseUAITrainGetTensorBoardUrlOp(subparsers)
+    topic_op = BaseUAITrainGetLogTopicOp(subparsers)
     cmd_args = vars(parser.parse_args())
 
     if cmd_args['commands'] == 'pack':
@@ -69,5 +71,7 @@ if __name__ == '__main__':
         conf_op.cmd_run(cmd_args)
     elif cmd_args['commands'] == 'url':
         url_op.cmd_run(cmd_args)
+    elif cmd_args['commands'] == 'topic':
+        topic_op.cmd_run(cmd_args)
     else:
         print("Unknown CMD, please use python tf_tool.py -h to check")
