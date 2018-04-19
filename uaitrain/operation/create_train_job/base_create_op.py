@@ -13,15 +13,11 @@
 # limitations under the License.
 # ==============================================================================
 
-import sys
-import os
-import argparse
-
 from uai.utils.utils import GATEWAY_DEFAULT
-from uai.utils.logger import uai_logger
 from uaitrain.operation.base_op import BaseUAITrainOp
 from uaitrain.api.create_train_job import CreateUAITrainJobOp
 from uaitrain.api.get_train_available_resource import GetUAITrainAvailableResourceOp
+from uaitrain.api.get_env_pkg import GetUAITrainEnvPkgAPIOp
 
 class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
     def __init__(self, parser):
@@ -116,6 +112,22 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
             required=False,
             help='The ufs mount point for the output')
 
+    def _add_create_dist_args(self, create_parser):
+        dist_parser = create_parser.add_argument_group(
+            'Dist-train Params', '')
+
+        dist_parser.add_argument(
+            '--dist_ai_frame',
+            type=str,
+            required=False,
+            help='The AI framework for dist-train.(eg. tensorflow, mxnet). if you do not use dist-train, ignore it')
+        dist_parser.add_argument(
+            '--node_num',
+            type=int,
+            default=1,
+            required=False,
+            help='The num of node for dist-train. if you do not use dist-train, ignore it')
+
     def _add_args(self):
         parser = self.parser.add_parser('create', help='Create UAI Train Job')
         self.create_parser = parser
@@ -125,6 +137,7 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
         self._add_create_job_args(parser)
         self._add_create_ufile_args(parser)
         self._add_create_ufs_args(parser)
+        self._add_create_dist_args(parser)
 
     def _parse_args(self, args):
         super(BaseUAITrainCreateTrainJobOp, self)._parse_args(args)
@@ -168,6 +181,12 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
         else:
             raise RuntimeError("Need either output_ufile_path or output_ufs_path")
 
+        #dist
+        self.dist_ai_frame = args['dist_ai_frame'] if 'dist_ai_frame' in args else ""
+        self.worker_num = args['node_num']
+        if self.dist_ai_frame != "" and self.worker_num <= 1:
+            raise RuntimeError("The num of node for dist-train {0} should be greater 1, please check param node_num".format(self.dist_ai_frame))
+
         return True
 
     def _check_res(self):
@@ -190,6 +209,29 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
         RuntimeError('Unsupported node_type')
         return -1
 
+    def _get_dist_ai_frame_id(self):
+        pkgtype = "DistAIFrame"
+        api_op = GetUAITrainEnvPkgAPIOp(self.pub_key,
+                                        self.pri_key,
+                                        pkgtype,
+                                        self.project_id,
+                                        self.region,
+                                        self.zone)
+        succ, result = api_op.call_api()
+
+        if succ is False:
+            raise RuntimeError("Error get {0} info from server".format(pkgtype))
+
+        for avpkg in result['PkgSet']:
+            if avpkg["PkgName"] == self.dist_ai_frame:
+                    return avpkg["PkgId"]
+
+        ai_frame_set = [avpkg["PkgId"] for avpkg in result['PkgSet']]
+
+        print("Required Dist-frame {0} not exist", self.dist_ai_frame)
+        print("Now only support {0}", ai_frame_set)
+        raise RuntimeError("Some {0} package is not supported: {1}".format(pkgtype, self.dist_ai_frame))
+
     def cmd_run(self, args):
         if self._parse_args(args) == False:
             return False
@@ -197,6 +239,8 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
         node_id = self._check_res()
         if node_id < 0:
             return False
+
+        ai_frame_id = self._get_dist_ai_frame_id()
 
         create_op = CreateUAITrainJobOp(
             pub_key=self.pub_key,
@@ -208,6 +252,8 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
             out_ufile_path=self.output_path,
             docker_cmd=self.docker_cmd,
             max_exec_time=self.max_exec_time,
+            work_num=self.worker_num,
+            dist_ai_frame=ai_frame_id,
             business_group=self.business_group,
             job_memo=self.job_memo,
             project_id=self.project_id,

@@ -25,6 +25,7 @@ from uaitrain.operation.get_realtime_log.base_log_op import BaseUAITrainGetRealt
 from uaitrain.operation.list_bill_info.base_bill_op import BaseUAITrainListBillInfoOp
 from uaitrain.operation.rename_train_job.base_rename_op import BaseUAITrainRenameTrainJobOp
 from uaitrain.operation.get_train_job_conf.base_conf_op import BaseUAITrainTrainJobConfOp
+from uaitrain.operation.get_log_topic.get_log_topic import BaseUAITrainGetLogTopicOp
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -43,7 +44,7 @@ if __name__ == '__main__':
     bill_op = BaseUAITrainListBillInfoOp(subparsers)
     rename_op = BaseUAITrainRenameTrainJobOp(subparsers)
     conf_op = BaseUAITrainTrainJobConfOp(subparsers)
-
+    topic_op = BaseUAITrainGetLogTopicOp(subparsers)
     cmd_args = vars(parser.parse_args())
 
     if cmd_args['commands'] == 'pack':
@@ -66,6 +67,8 @@ if __name__ == '__main__':
         rename_op.cmd_run(cmd_args)
     elif cmd_args['commands'] == 'conf':
         conf_op.cmd_run(cmd_args)
+    elif cmd_args['commands'] == 'topic':
+        topic_op.cmd_run(cmd_args)
     else:
         print("Unknown CMD, please use python mxnet_tool.py -h to check")
 

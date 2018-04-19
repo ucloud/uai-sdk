@@ -15,11 +15,11 @@
 
 from uaitrain.api.base_op import BaseUAITrainAPIOp
 
-class GetUAITrainRunningLogOp(BaseUAITrainAPIOp):
-    ACTION_NAME = "GetUAITrainRunningLog"
+class GetUAITrainRunningLogTopicListOp(BaseUAITrainAPIOp):
+    ACTION_NAME = "GetUAITrainRunningLogTopicList"
     """
-    GetUAITrainRunningLogOp
-        Compatable with UAI Train GetUAITrainRunningLog API func
+    GetUAITrainRunningLogTopicListOp
+        Compatable with UAI Train GetUAITrainRunningLogTopicList API func
         Input:
             pub_key             string(required) Public key of the user
             priv_key            string(required) Private key of the user
@@ -35,20 +35,17 @@ class GetUAITrainRunningLogOp(BaseUAITrainAPIOp):
             RunningLog    []string                     realtime log that train job produces
     """
 
-    def __init__(self, pub_key, priv_key, job_id, log_topic_id, project_id="", region="", zone=""):
-        super(GetUAITrainRunningLogOp, self).__init__(self.ACTION_NAME,
+    def __init__(self, pub_key, priv_key, job_id, project_id="", region="", zone=""):
+        super(GetUAITrainRunningLogTopicListOp, self).__init__(self.ACTION_NAME,
                                                      pub_key,
                                                      priv_key,
                                                      project_id,
                                                      region,
                                                      zone)
         self.cmd_params["TrainJobId"] = job_id
-        self.cmd_params["LogTopicId"] = log_topic_id
 
     def _check_args(self):
-        super(GetUAITrainRunningLogOp, self)._check_args()
+        super(GetUAITrainRunningLogTopicListOp, self)._check_args()
 
         if type(self.cmd_params["TrainJobId"]) != str or self.cmd_params["TrainJobId"] == "":
             raise RuntimeError("job_id shoud be str and is not nil.")
-        if type(self.cmd_params["LogTopicId"]) != str or self.cmd_params["LogTopicId"] == "":
-            raise RuntimeError("log_topic_id shoud be str and is not nil.")
