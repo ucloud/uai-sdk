@@ -184,9 +184,9 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
         #dist
         self.dist_ai_frame = args['dist_ai_frame'] if 'dist_ai_frame' in args else ""
         self.worker_num = args['node_num']
+
         if self.dist_ai_frame != "" and self.worker_num <= 1:
             raise RuntimeError("The num of node for dist-train {0} should be greater 1, please check param node_num".format(self.dist_ai_frame))
-
         return True
 
     def _check_res(self):
@@ -240,7 +240,7 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
         if node_id < 0:
             return False
 
-        ai_frame_id = self._get_dist_ai_frame_id()
+        ai_frame_id = self._get_dist_ai_frame_id() if self.dist_ai_frame != '' else ''
 
         create_op = CreateUAITrainJobOp(
             pub_key=self.pub_key,
