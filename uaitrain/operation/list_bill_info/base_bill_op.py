@@ -55,8 +55,8 @@ class BaseUAITrainListBillInfoOp(BaseUAITrainOp):
 
     def _parse_args(self, args):
         super(BaseUAITrainListBillInfoOp, self)._parse_args(args)
-        self.begin_time = self._datetime_timestamp(args['begin_time']) if 'begin_time' in args else ''
-        self.end_time = self._datetime_timestamp(args['end_time']) if 'end_time' in args else ''
+        self.begin_time = self._datetime_timestamp(args['begin_time']) if args['begin_time'] is not None else ''
+        self.end_time = self._datetime_timestamp(args['end_time']) if args['end_time'] is not None else ''
 
         self.limit = args['limit']
         self.offset = 1

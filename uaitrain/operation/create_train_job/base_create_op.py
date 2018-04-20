@@ -144,8 +144,8 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
 
         #info
         self.job_name = args['job_name']
-        self.job_memo = args['job_memo'] if 'job_memo' in args else ""
-        self.business_group = args['business_group'] if 'business_group' in args else ""
+        self.job_memo = args['job_memo'] if args['job_memo'] is not None else ""
+        self.business_group = args['business_group'] if args['business_group'] is not None else ""
 
         #config
         self.node_type = args['node_type']
@@ -156,10 +156,10 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
         self.max_exec_time = args['max_exec_time']
 
         #data
-        if 'data_ufile_path' in args:
+        if args['data_ufile_path'] is not None:
             self.data_path = args['data_ufile_path']
-        elif 'data_ufs_path' in args:
-            if 'data_ufs_mount_point' in args:
+        elif args['data_ufs_path'] is not None:
+            if args['data_ufs_mount_point'] is not None:
                 ufs_path = args['data_ufs_path']
                 ufs_mount = args['data_ufs_mount_point']
                 self.data_path = concat_ufs_path(ufs_path, ufs_mount)
@@ -169,10 +169,10 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
             raise RuntimeError("Need either data_ufile_path or data_ufs_path")
 
         #output
-        if 'output_ufile_path' in args:
+        if args['output_ufile_path'] is not None:
             self.output_path = args['output_ufile_path']
-        elif 'output_ufs_path' in args:
-            if 'output_ufs_mount_point' in args:
+        elif args['output_ufs_path'] is not None:
+            if args['output_ufs_mount_point'] is not None:
                 ufs_path = args['output_ufs_path']
                 ufs_mount = args['output_ufs_mount_point']
                 self.output_path = concat_ufs_path(ufs_path, ufs_mount)
@@ -182,10 +182,11 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
             raise RuntimeError("Need either output_ufile_path or output_ufs_path")
 
         #dist
-        self.dist_ai_frame = args['dist_ai_frame'] if 'dist_ai_frame' in args else ""
+        self.dist_ai_frame = args['dist_ai_frame'] if args['dist_ai_frame'] is not None else ""
         self.worker_num = args['node_num']
         if self.dist_ai_frame != "" and self.worker_num <= 1:
-            raise RuntimeError("The num of node for dist-train {0} should be greater 1, please check param node_num".format(self.dist_ai_frame))
+            raise RuntimeError("The num of node for dist-train should be greater 1, but now is {0}. please check param node_num".format(
+                    self.dist_ai_frame))
 
         return True
 
@@ -240,7 +241,7 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
         if node_id < 0:
             return False
 
-        ai_frame_id = self._get_dist_ai_frame_id()
+        ai_frame_id = self._get_dist_ai_frame_id() if self.dist_ai_frame != '' else ''
 
         create_op = CreateUAITrainJobOp(
             pub_key=self.pub_key,

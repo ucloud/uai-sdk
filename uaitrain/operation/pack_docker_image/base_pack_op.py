@@ -136,7 +136,7 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
     def _parse_args(self, args):
         super(BaseUAITrainDockerImagePackOp, self)._parse_args(args)
 
-        if ('ai_arch_v' in args) is False:
+        if args['ai_arch_v'] in (None, ''):
             print("AI Framework and its version is required, e.g. --ai_arch_v=tensorflow-1.1.0")
             return False
 
