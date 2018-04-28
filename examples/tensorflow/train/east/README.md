@@ -94,7 +94,7 @@ We provide the basic Dockerfile to build the docker image for training east mode
 
     ADD ./EAST/ /data/
 
-You should put the east.Dockerfile into same directory of EAST code:
+You should put the east.Dockerfile into the same directory of EAST code:
 
     /data/east/
     |_ code
