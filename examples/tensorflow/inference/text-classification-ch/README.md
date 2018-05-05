@@ -4,7 +4,7 @@ This example shows how to use CNN/RNN to do text classification (Chinese) infere
 ## Setup
 You should download the current directory into your work place.
 
-You should also follow https://github.com/ucloud/uai-sdk/tree/master/examples/tensorflow/train/text-classification-ch to train a text classification model (CNN/RNN) and download the cnews.vocab.txt. 
+You should also follow https://github.com/ucloud/uai-sdk/tree/master/examples/tensorflow/train/text-classification-ch to train a text classification model (CNN/RNN) and download the cnews.vocab.txt, and put them under code dir.
 
 We put all these files into one directory:
 
@@ -49,14 +49,14 @@ In both TxtClassCNNModel and TxtClassRNNModel, we use tf.train.latest_checkpoint
 Here we use the related path as model files (.index, .meta .data-xxx) are in the same directory of 'checkpoint' file.
 
 ### Define the Config File
-We need to provide the config file to tell the UAI Inference system to get the basic information to load the TxtClassCNNModel and the CNN model. he config file should include following info:
+We need to provide the config file to tell the UAI Inference system to get the basic information to load the TxtClassCNNModel and the CNN model. The config file should include following info:
 
 1. "exec" tells which file is used as the entry-point of the user-defined inference logic and which main class is used. 
 2. "tensorflow" tells which model related info should be parsed by UAI Inference system.
 
 You can find the example config file: txt\_class.conf
 
-### Packing CNN/RNN inference Docker
+### Packing CNN/RNN Inference Docker
 We provide text-cnn-cpu.Dockerfile for you to build the local inference docker image. The dockerfile include following contents:
 
 	FROM uhub.service.ucloud.cn/uaishare/cpu_uaiservice_ubuntu-16.04_python-2.7.6_tensorflow-1.6.0:v1.0
@@ -74,20 +74,20 @@ We provide text-cnn-cpu.Dockerfile for you to build the local inference docker i
 5. Set the UAI_SERVICE_CONFIG environment to tell django server to load the config file named 'conf.json'
 6. use gunicorn to run the server
 
-#### Build your own service docker
-With the above docker file we can now build our own service docker image(Your directory should looks like [Setup](#setup)):
+#### Build Your Own Inference Docker
+With the above docker file we can now build our own inference docker image(Your directory should looks like [Setup](#setup)):
 
     sudo docker build -t txt-class:test -f text-cnn-cpu.Dockerfile .
 
-#### Run CNN inference service locally
+#### Run CNN Inference Service Locally
 We can run the server directly:
 
     sudo docker run -it -p 8080:8080 txt-class:test
 
-#### Test CNN inference service locally
+#### Test CNN Inference Service Locally
 We profile the test example in test.txt and test2.txt. Then we can test service by:
 
 	curl -X POST http://127.0.0.1:8080/service -T test.txt
 
-#### Deploy CNN inference service into UAI Inference Platform
-Please refer to https://docs.ucloud.cn/ai/uai-inference/index for more details
+#### Deploy CNN Inference Service into UAI Inference Platform
+Please refer to https://docs.ucloud.cn/ai/uai-inference/index for more details. You can directly use the docker image build in [Build](#build-your-own-inference-docker)
