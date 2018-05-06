@@ -4,19 +4,20 @@ This example shows how to use FaceNet to do face recognition inference. Here we 
 ## Intro
 UAI Inference platform can serve inference services through HTTP requests. We provide the basic docker image containing a django server which can load the user-defined inference module to do the service. To implement a inference module, you only need to implement two funcs: load\_model and execute. For more details please refer to https://docs.ucloud.cn/ai/uai-inference/guide/principle.
 
-In this example, we provide two inference service examples:
+In this example, we provide three inference service examples:
 
 1. FaceCompareModel: Accept two 'face' images and calculate the distance of these two faces.
 2. FaceEmbedModel: Accept one 'face' image and calculate its embedding using FaceNet Model.
+3. FaceDetectionModel: Accept one image and gives all possibile 'face' bounding boxes.
 
-### Setup
+## Setup
 You should download the current directory into your work place. You should also train a FaceNet model or download one from https://github.com/davidsandberg/facenet, and put it under the code dir.
 
 We put all these files into one directory:
 
 	/data/facenet/inference/
 	|_ code
-	|  |  align
+	|  |_ align
 	|  |  |_ det1.npy
 	|  |  |_ det2.npy
 	|  |  |_ det3.npy
@@ -34,26 +35,28 @@ We put all these files into one directory:
 	|_ facenet-compare.conf
 	|_ facenet-embed-cpu.Dockerfile
 	|_ facenet-embed.conf
+	|_ facenet-mtcnn-cpu.Dockerfile
+	|_ facenet-mtcnn.conf
 
-### UAI Inference Example
-We provide facenet\_inference.py which implements both FaceCompareModel and FaceEmbedModel. Here, we take FaceCompareModel as an example. The implementation of FaceEmbedModel is similar.
+## UAI Inference Example
+We provide facenet\_inference.py which implements all FaceCompareModel, FaceEmbedModel and FaceDetectionModel. Here, we take FaceCompareModel as an example. The implementation of FaceEmbedModel is similar.
 
 For FaceCompareModel, it implements two funcs:
 
 1. load\_model(self), which loads the FaceNet model from checkpoint\_dir. 
 
-2. execute(self, data, batch_size), which handles the inference requests. The django server will invoke FaceCompareModel->execute when it receive requests. It will process the input 'data' array one by and by invoking self.compare(data[i]) to calculate the distance of the face pair and generate the result list. We format each distance float into string object. (You can format it into json also)
+2. execute(self, data, batch_size), which handles the inference requests. The django server will invoke FaceCompareModel->execute when it receive requests. It will process the input 'data' array one by one which invokes self.compare(data[i]) to calculate the distance of the face pair and generate the result list. We format each distance float into string object. (You can format it into json also)
 
-#### Define the Config File
+### Define the Config File
 We need to provide the config file to tell the UAI Inference system to get the basic information to load the FaceCompareModel/FaceEmbedModel and the FaceNet model. The config file should include following info:
 
 1. "exec" tells which file is used as the entry-point of the user-defined inference logic and which main class is used. 
 2. "tensorflow" tells which model related info should be parsed by UAI Inference system.
 
-You can find the example config file of: facenet-compare.conf and facenet-embed.conf
+You can find the example config file of: facenet-compare.conf, facenet-embed.conf and facenet-mtcnn.conf
 
-#### Packing Inference Docker
-We provide facenet-compare-cpu.Dockerfile and facenet-embed-cpu.Dockerfile for you to build the local inference docker image. Take facenet-compare-cpu.Dockerfile as an example:
+### Packing Inference Docker
+We provide facenet-compare-cpu.Dockerfile, facenet-embed-cpu.Dockerfile and facenet-mtcnn-cpu.Dockerfile for you to build the local inference docker image. Take facenet-compare-cpu.Dockerfile as an example:
 
 	FROM uhub.service.ucloud.cn/uaishare/cpu_uaiservice_ubuntu-16.04_python-2.7.6_tensorflow-1.6.0:v1.0
 
@@ -70,14 +73,16 @@ We provide facenet-compare-cpu.Dockerfile and facenet-embed-cpu.Dockerfile for y
 5. Set the UAI_SERVICE_CONFIG environment to tell django server to load the config file named 'conf.json'
 6. use gunicorn to run the server
 
-#### Build Your Own Inference Docker
+### Build Your Own Inference Docker
 With the above docker file we can now build your own inference docker image(Your directory should looks like [Setup](#setup)):
 
     sudo docker build -t face-compare:test -f facenet-compare-cpu.Dockerfile .
 
     sudo docker build -t face-embed:test -f facenet-embed-cpu.Dockerfile .
 
-#### Run FaceNet Inference Service Locally
+    sudo docker build -t face-mtcnn:test -f facenet-mtcnn-cpu.Dockerfile .
+
+### Run FaceNet Inference Service Locally
 We can run the face-compare server as
 
     sudo docker run -it -p 8080:8080 face-compare:test
@@ -86,6 +91,10 @@ You can run the face-embed server as
 
     sudo docker run -it -p 8080:8080 face-embed:test
 
+You can run the face-mtcnn server as 
+
+    sudo docker run -it -p 8080:8080 face-mtcnn:test
+
 ### Test FaceNet Inference Service Locally
 Both FaceCompareModel and FaceEmbedModel take json obj as input. The format looks like this:
 
@@ -93,6 +102,8 @@ Both FaceCompareModel and FaceEmbedModel take json obj as input. The format look
 		'cnt': cnt, 
 		'images': [image1, image2],
 	}
+
+FaceDetectionModel directly accepts image object as input (png or jpeg)
 
 #### Generate Json Request Data
 We provide two tools to generate json input:
@@ -128,5 +139,11 @@ You should generate your test.json fisrt. Then you can start the service and tes
 
 	$ curl -X POST http://127.0.0.1:8080/service -T test.json
 
-### Deploy FaceNet Inference Service into UAI Inference Platform
+3. For face-mtcnn:
+
+	$ curl -X POST http://127.0.0.1:8080/service -T x.jpeg
+
+**Note: We set http request timeout to 10 seconds in the gunicorn. You can change it by modify /ai-ucloud-client-django/gunicorn.conf.py (inside docker img) to change the timeout setting.**
+
+## Deploy FaceNet Inference Service into UAI Inference Platform
 Please refer to https://docs.ucloud.cn/ai/uai-inference/index for more details. You can directly use the docker image build in [Build](#build-your-own-inference-docker)

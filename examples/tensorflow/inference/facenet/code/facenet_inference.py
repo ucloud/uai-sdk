@@ -32,6 +32,7 @@ import copy
 import argparse
 import facenet
 import json
+import align.detect_face
 
 from uai.arch.tf_model import TFAiUcloudModel
 
@@ -54,10 +55,10 @@ class FaceCompareModel(TFAiUcloudModel):
     embeddings = tf.get_default_graph().get_tensor_by_name("embeddings:0")
     phase_train_placeholder = tf.get_default_graph().get_tensor_by_name("phase_train:0")
 
-    self.images_placeholder=images_placeholder
-    self.embeddings=embeddings
-    self.phase_train_placeholder=phase_train_placeholder
-    self.sess = sess
+    self._images_placeholder=images_placeholder
+    self._embeddings=embeddings
+    self._phase_train_placeholder=phase_train_placeholder
+    self._sess = sess
 
   def preprocess(self, data):
     json_data = json.load(data)
@@ -76,10 +77,10 @@ class FaceCompareModel(TFAiUcloudModel):
 
   def compare(self, data):
     images = self.preprocess(data)
-    images_placeholder = self.images_placeholder
-    phase_train_placeholder = self.phase_train_placeholder
-    sess = self.sess
-    embeddings = self.embeddings
+    images_placeholder = self._images_placeholder
+    phase_train_placeholder = self._phase_train_placeholder
+    sess = self._sess
+    embeddings = self._embeddings
 
     feed_dict = {images_placeholder: images, phase_train_placeholder:False }
     emb = sess.run(embeddings, feed_dict=feed_dict)
@@ -123,10 +124,10 @@ class FaceEmbedModel(TFAiUcloudModel):
     embeddings = tf.get_default_graph().get_tensor_by_name("embeddings:0")
     phase_train_placeholder = tf.get_default_graph().get_tensor_by_name("phase_train:0")
 
-    self.images_placeholder=images_placeholder
-    self.embeddings=embeddings
-    self.phase_train_placeholder=phase_train_placeholder
-    self.sess = sess
+    self._images_placeholder=images_placeholder
+    self._embeddings=embeddings
+    self._phase_train_placeholder=phase_train_placeholder
+    self._sess = sess
 
   def preprocess(self, data):
     json_data = json.load(data)
@@ -145,10 +146,10 @@ class FaceEmbedModel(TFAiUcloudModel):
 
   def cal_embed(self, data):
     images = self.preprocess(data)
-    images_placeholder = self.images_placeholder
-    phase_train_placeholder = self.phase_train_placeholder
-    sess = self.sess
-    embeddings = self.embeddings
+    images_placeholder = self._images_placeholder
+    phase_train_placeholder = self._phase_train_placeholder
+    sess = self._sess
+    embeddings = self._embeddings
 
     feed_dict = {images_placeholder: images, phase_train_placeholder:False }
     emb = sess.run(embeddings, feed_dict=feed_dict)
@@ -165,3 +166,41 @@ class FaceEmbedModel(TFAiUcloudModel):
       results.append(ret)
 
     return results
+
+class FaceDetectionModel(TFAiUcloudModel):
+  """ FaceCompareModel example model
+  """
+  def __init__(self, conf):
+    super(FaceDetectionModel, self).__init__(conf)
+
+  def load_model(self):
+    sess = tf.Session()
+
+    with sess.as_default():
+      # Load the model
+      pnet, rnet, onet = align.detect_face.create_mtcnn(sess, None)
+
+      self._pent = pnet
+      self._rnet = rnet
+      self._onet = onet
+
+  def execute(self, data, batch_size):
+    minsize = 20 # minimum size of face
+    threshold = [ 0.6, 0.7, 0.7 ]  # three steps's threshold
+    factor = 0.709 # scale factor
+
+    pnet = self._pent
+    rnet = self._rnet
+    onet = self._onet
+
+    ret = []
+    for i in range(batch_size):
+      img = Image.open(data[i])
+      img = misc.fromimage(img)
+
+      boundingboxes, _ = align.detect_face.detect_face(img, minsize, pnet, rnet, onet, threshold, factor)
+      boundingboxes = boundingboxes.tolist()
+      ret_val = json.dumps(boundingboxes)
+      ret.append(ret_val)
+
+    return ret
