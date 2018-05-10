@@ -167,6 +167,62 @@ class FaceEmbedModel(TFAiUcloudModel):
 
     return results
 
+class FaceEmbedModelAutoBatch(TFAiUcloudModel):
+  """ FaceEmbedModel example model
+  """
+
+  def __init__(self, conf):
+    json.encoder.FLOAT_REPR = lambda o: format(o, '.8f')
+    super(FaceEmbedModelAutoBatch, self).__init__(conf)
+
+  def load_model(self):
+    sess = tf.Session()
+
+    with sess.as_default():
+      # Load the model
+      facenet.load_model(self.model_dir)
+
+    # Get input and output tensors
+    images_placeholder = tf.get_default_graph().get_tensor_by_name("input:0")
+    embeddings = tf.get_default_graph().get_tensor_by_name("embeddings:0")
+    phase_train_placeholder = tf.get_default_graph().get_tensor_by_name("phase_train:0")
+
+    self._images_placeholder=images_placeholder
+    self._embeddings=embeddings
+    self._phase_train_placeholder=phase_train_placeholder
+    self._sess = sess
+
+  def cal_embed(self, images):
+    images_placeholder = self._images_placeholder
+    phase_train_placeholder = self._phase_train_placeholder
+    sess = self._sess
+    embeddings = self._embeddings
+
+    feed_dict = {images_placeholder: images, phase_train_placeholder:False }
+    emb = sess.run(embeddings, feed_dict=feed_dict)
+
+    return emb
+
+  def execute(self, data, batch_size):
+    image_list = []
+    results = []
+    for i in range(batch_size):
+      img = Image.open(data[i])
+      img = misc.fromimage(img)
+      img = misc.imresize(img, (160, 160), interp='bilinear')
+      prewhitened = facenet.prewhiten(img)
+      image_list.append(prewhitened)
+
+    rets = self.cal_embed(image_list)
+
+    for i in range(batch_size):
+      ret = rets[i].tolist()
+      ret = json.dumps(ret)
+      #ret = json.dumps([[ret.__dict__ for ob in lst] for lst in ret])
+      results.append(ret)
+
+    return results
+
 class FaceDetectionModel(TFAiUcloudModel):
   """ FaceCompareModel example model
   """
