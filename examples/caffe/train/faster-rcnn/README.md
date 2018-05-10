@@ -66,7 +66,7 @@ We have already modifed the code for you. All files under code/ are ready to go.
 	#    /data/output is the default output location for UAI platform
       outdir = osp.abspath(osp.join('/data/', 'output/', __C.EXP_DIR, imdb.name))
 
-#### Modify lib/rpn/proposal\_target\_layer.py.py
+#### Modify lib/rpn/anchor\_target\_layer.py
 	# L127: cast idx to int, as numpy > 1.11 does not support float idx
 	bbox_targets[ind, int(start):int(end)] = 	bbox_target_data[ind, 1:]
 	bbox_inside_weights[ind, int(start):int(end)] = cfg.TRAIN.BBOX_INSIDE_WEIGHTS
@@ -109,3 +109,6 @@ The pack cmd will generate executable docker cmd to run the training
 	 
 ### Run on UAI Train Platform
 Please see https://docs.ucloud.cn/ai/uai-train/ for more information and contact our sales from ucloud.cn
+
+## Build Your Own Faster-RCNN Docker Image
+We provide an example in faster-rcnn/docker/ to show how to build a self-defined faster-rcnn docker image from scratch.
