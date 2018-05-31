@@ -86,6 +86,6 @@ class MnistModel(TFAiUcloudModel):
 
     ret = []
     for val in predict_values:
-      ret_val = np.array_str(np.argmax(val)) + '\n'
+      ret_val = str(np.argmax(val).item()) + '\n'
       ret.append(ret_val)
     return ret
