@@ -133,10 +133,30 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         self._add_image_args(pack_parser)
         self._add_code_args(pack_parser)
 
+    def _parse_img_args(self, args):
+        self.uhub_username = args['uhub_username']
+        self.uhub_password = args['uhub_password']
+        self.uhub_registry = args['uhub_registry']
+        self.uhub_imagename = args['uhub_imagename']
+        self.uhub_imagetag = args['uhub_imagetag']
+        self.internal_uhub = args['internal_uhub']
+
+        self.internal_uhub = True if self.internal_uhub == 'true' else False
+
+        if self.internal_uhub is True:
+            self.dcoker_register = DOCKER_INTERNAL_REGISTRY
+
+    def _parse_code_args(self, args):
+        self.code_path = args['code_path']
+        self.mainfile_path = args['mainfile_path']
+        self.train_params = args['train_params']
+        self.test_data_path = args['test_data_path']
+        self.test_output_path = args['test_output_path']
+
     def _parse_args(self, args):
         super(BaseUAITrainDockerImagePackOp, self)._parse_args(args)
 
-        if args['ai_arch_v'] in (None, ''):
+        if ('ai_arch_v' in args) is False:
             print("AI Framework and its version is required, e.g. --ai_arch_v=tensorflow-1.1.0")
             return False
 

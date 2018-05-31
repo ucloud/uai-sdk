@@ -33,8 +33,8 @@ from tensorflow.examples.tutorials.mnist import input_data
 
 from uaitrain.arch.tensorflow import uflag
 
-tf.app.flags.DEFINE_float('--learning_rate', 0.001, 'Initial learning rate')
-tf.app.flags.DEFINE_float('--dropout', 0.9, 'Keep probability for training dropout.')
+tf.app.flags.DEFINE_float('learning_rate', 0.001, 'Initial learning rate')
+tf.app.flags.DEFINE_float('dropout', 0.9, 'Keep probability for training dropout.')
 
 FLAGS = tf.app.flags.FLAGS
 
