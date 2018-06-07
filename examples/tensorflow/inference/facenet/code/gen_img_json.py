@@ -18,6 +18,7 @@ import align.detect_face
 import json
 import base64
 import StringIO
+import imageio
 
 def main(args):
     images = load_and_align_data(args.image_files, args.image_size, args.margin, args.gpu_memory_fraction)
@@ -50,7 +51,7 @@ def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):
     tmp_image_paths=copy.copy(image_paths)
     img_list = []
     for image in tmp_image_paths:
-        img = misc.imread(os.path.expanduser(image), mode='RGB')
+        img = imageio.imread(os.path.expanduser(image), pilmode='RGB')
         img_size = np.asarray(img.shape)[0:2]
         bounding_boxes, _ = align.detect_face.detect_face(img, minsize, pnet, rnet, onet, threshold, factor)
         if len(bounding_boxes) < 1:
