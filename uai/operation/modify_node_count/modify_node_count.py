@@ -57,7 +57,6 @@ class UaiServiceModifySrvVersionNodeCountOp(BaseUaiServiceOp):
         if int(self.node_count) < 2:
             raise ValueError('Node count should not be smaller than 2, current node count: {0}'.format(self.node_count))
 
-
     def _parse_args(self, args):
         super(UaiServiceModifySrvVersionNodeCountOp, self)._parse_args(args)
         self._parse_nodeset_args(args)
