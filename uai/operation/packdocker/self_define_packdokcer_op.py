@@ -45,7 +45,6 @@ class UaiServiceSelfDockerPackOp(UaiServiceDockerPackOp):
             help='The name of config file'
         )
 
-
     def _add_args(self):
         self._add_uhub_args(self.parser)
         self._add_self_args(self.parser)

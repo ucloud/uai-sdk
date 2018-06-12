@@ -24,7 +24,6 @@ class UaiServiceTFDockerPackOp(UaiServiceDockerPackOp, UaiServiceTFTarOp):
         super(UaiServiceTFDockerPackOp, self).__init__(parser)
         self.platform = 'tensorflow'
 
-
     def _add_args(self):
         super(UaiServiceTFDockerPackOp, self)._add_args()
 
