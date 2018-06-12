@@ -31,8 +31,7 @@ class DeployUAIServiceApiOp(BaseUaiServiceApiOp):
 
         self.cmd_params['BimgName'] = bimg_name
 
-        self.cmd_params['UfileBucket'],\
-        self.cmd_params['UfileName'] = self.parse_ufile_url(ufile_url)
+        self.cmd_params['UfileBucket'], self.cmd_params['UfileName'] = self.parse_ufile_url(ufile_url)
         self.cmd_params['UfileURL'] = ufile_url
 
         self._get_pkgs(apt_list, 'AptGetPKGID')

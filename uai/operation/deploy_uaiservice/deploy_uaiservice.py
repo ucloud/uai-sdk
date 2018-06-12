@@ -188,23 +188,3 @@ class UaiServiceDeployByUfileOp(BaseUaiServiceOp):
             time.sleep(10)
 
         return succ, rsp
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
