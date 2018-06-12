@@ -53,8 +53,7 @@ class UaiServiceCreateOp(BaseUaiServiceOp):
             '--gpu',
             type=str,
             required=False,
-            help='The gpu type of created service, required when using gpu(create exclusive service)'
-        )
+            help='The gpu type of created service, required when using gpu(create exclusive service)')
         create_parse.add_argument(
             '--business_group',
             type=str,
@@ -64,7 +63,6 @@ class UaiServiceCreateOp(BaseUaiServiceOp):
     def _add_args(self):
         super(UaiServiceCreateOp, self)._add_args()
         self._add_create_args(self.parser)
-
 
     def _parse_create_args(self, args):
         self.service_name = args['service_name']
