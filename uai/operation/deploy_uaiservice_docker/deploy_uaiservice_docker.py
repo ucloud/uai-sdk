@@ -38,14 +38,12 @@ class UaiServiceDeployByDockerOp(BaseUaiServiceOp):
             type=str,
             required=True,
             help='The name of user image',
-
         )
         docker_deploy_parse.add_argument(
             '--deploy_weight',
             type=int,
             default=10,
             help='the deploy weight of current version',
-
         )
         docker_deploy_parse.add_argument(
             '--srv_version_memo',
