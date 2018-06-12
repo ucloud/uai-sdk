@@ -77,7 +77,6 @@ class UaiServiceDeployByUfileOp(BaseUaiServiceOp):
         super(UaiServiceDeployByUfileOp, self)._add_args()
         self._add_deploy_args(self.parser)
 
-
     def _parse_deploy_args(self, args):
         self.service_id = args['service_id']
         if 'bimg_name' in args and args['bimg_name'] != None:
@@ -92,7 +91,6 @@ class UaiServiceDeployByUfileOp(BaseUaiServiceOp):
             self.bimg_name = parse_unrequired_args('bimg_name', args)
         else:
             raise ValueError('Parameters "os, language, ai_arch_v" and "bimg_name" should not be nil at same time.')
-
 
         self.ufile_url = args['ufile_url']
         self.os_deps = parse_unrequired_args('os_deps', args)
