@@ -18,10 +18,12 @@ from datetime import datetime
 from uai.utils.logger import uai_logger
 from ucloud.ufile import putufile
 from uai.operation.base_operation import BaseUaiServiceOp
+from uai.operation.tar.base_tar_op import UaiServiceTarOp
 
 UFILE_INFO = './ufile_info.log'
+CURRENT_PATH = os.getcwd()
 
-class UaiServicePackOp(BaseUaiServiceOp):
+class UaiServicePackOp(UaiServiceTarOp):
     """ The Base Pack Tool Class with UAI
     """
     def __init__(self, parser):
@@ -30,36 +32,39 @@ class UaiServicePackOp(BaseUaiServiceOp):
         self.conf_params = {}
         self.filelist = []
         self.ufile_info = []
+        self.platform = ''
 
-    def _add_args(self, parser):
-        super(UaiServicePackOp, self)._add_args(parser)
-        code_parse = parser.add_argument_group(
-            'Ufile-Params', 'Ufile Parameters, help to upload file to Ufile automatically')
-        code_parse.add_argument(
+    def _add_ufile_args(self, pack_parser):
+        ufile_parse = pack_parser.add_argument_group(
+            'Ufile-Params', 'Ufile Parameters, help to upload file to Ufile automatically'
+        )
+        ufile_parse.add_argument(
             '--bucket',
             type=str,
             required=True,
             help='the name of ufile bucket')
-        #add other params in subclasses#
 
-    def _parse_args(self):
-        super(UaiServicePackOp, self)._parse_args()
-        if "ai_arch_v" in self.params:
-            if self.platform != self.params["ai_arch_v"].lower().split('-')[0]:
+    def _add_args(self):
+        super(UaiServicePackOp, self)._add_args()
+        self._add_account_args(self.parser)
+        self._add_ufile_args(self.parser)
+
+    def _parse_args(self, args):
+        super(UaiServicePackOp, self)._parse_args(args)
+        self._parse_account_args(args)
+        if "ai_arch_v" in args:
+            if self.platform != args["ai_arch_v"].lower().split('-')[0]:
                 raise RuntimeError("ai_arch_v should be one version of " + self.platform)
-
-        self.bucket = self.params['bucket']
+        self.bucket = args['bucket']
 
     def _upload_to_ufile(self):
-        """ Upload tar file to certain bucket
-        """
         public_key = self.public_key
         private_key = self.private_key
         bucket = self.bucket
 
         uai_logger.debug('Start upload file to the bucket {0}'.format(bucket))
         handler = putufile.PutUFile(public_key, private_key)
-        local_file = os.path.join(self.pack_file_path, self.upload_name)
+        local_file = os.path.join(CURRENT_PATH, self.pack_file_path, self.upload_name)
         local_file = local_file.replace('\\', '/')
         key = self.upload_name
         uai_logger.info('Upload >> key: {0}, local file: {1}'.format(key, local_file))
@@ -78,6 +83,7 @@ class UaiServicePackOp(BaseUaiServiceOp):
         with open(UFILE_INFO, 'w') as f:
             f.write(''.join(self.ufile_info))
 
-    def cmd_run(self, params):
-        super(UaiServicePackOp, self).cmd_run(params)
+    def cmd_run(self, args):
+        self._parse_args(args)
+        super(UaiServicePackOp, self).cmd_run(args)
         self._pack()

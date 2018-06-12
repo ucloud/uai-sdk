@@ -62,3 +62,16 @@ def unpack_tar(tar_file):
 
 def str_to_bool(str):
     return str.lower() in ("true", "t", "yes", "1")
+
+def parse_unrequired_args(argname, args):
+    if argname in args and args[argname] != None:
+        return args[argname]
+    else:
+        return ''
+
+def param_filter(params):
+    res_params = {}
+    for key in params:
+        if params[key] is not None:
+            res_params[key] = params[key]
+    return res_params

@@ -19,9 +19,9 @@ import json
 import tarfile
 from uai.utils.logger import uai_logger
 from uai.operation.base_operation import BaseUaiServiceOp
-from uai.operation.operation import Operation
-class UaiServiceTarOp(Operation):
-    """ The Base Pack Tool Class with UAI
+
+class UaiServiceTarOp(BaseUaiServiceOp):
+    """ The Base Tar Tool Class with UAI
     """
     def __init__(self, parser):
         super(UaiServiceTarOp, self).__init__(parser)
@@ -29,21 +29,14 @@ class UaiServiceTarOp(Operation):
         self.conf_params = {}
         self.filelist = []
 
-    def _add_args(self, parser):
-        super(UaiServiceTarOp, self)._add_args(parser)
-        code_parse = parser.add_argument_group(
+    def _add_code_args(self, tar_parser):
+        code_parse = tar_parser.add_argument_group(
             'Code-Params', 'User Code Storage Info Parameters')
-        # code_parse.add_argument(
-        #     '--ai_frame_type',
-        #     type=str,
-        #     choices=['tensorflow', 'keras', 'mxnet', 'caffe'],
-        #     required=True,
-        #     help='the ai frame type (you can choose from [tensorflow, keras, mxnet, caffe])')
         code_parse.add_argument(
             '--pack_file_path',
             type=str,
             required=True,
-            help='the path to tar files')
+            help='the relative directry of files')
         if hasattr(self, 'pack_source') is True:
             code_parse.add_argument(
                 '--upload_name',
@@ -70,31 +63,33 @@ class UaiServiceTarOp(Operation):
             '--model_dir',
             type=str,
             required=True,
-            help='the model directroy of models')
+            help='the directroy of models, relative to the pack_file_path')
         code_parse.add_argument(
             '--code_files',
             type=str,
             required=True,
             help='the all python files')
-        #add other params in subclasses#
 
-    def _parse_args(self):
-        super(UaiServiceTarOp, self)._parse_args()
+    def _add_args(self):
+        self._add_code_args(self.parser)
 
-        self.pack_file_path = self.params['pack_file_path']
+    def _parse_code_args(self, args):
+        self.pack_file_path = args['pack_file_path']
         if hasattr(self, 'pack_source') is True:
-            self.upload_name = self.params['upload_name']
+            self.upload_name = args['upload_name']
             self.tar_name = self.upload_name
         else:
-            self.tar_name = self.params['tar_name']
-        self.main_file = self.params['main_module']
-        self.main_class = self.params['main_class']
-        self.model_dir = self.params['model_dir']
-        self.code_files = self.params['code_files']
+            self.tar_name = args['tar_name']
+
+        self.main_file = args['main_module']
+        self.main_class =args['main_class']
+        self.model_dir = args['model_dir']
+        self.code_files = args['code_files']
+
+    def _parse_args(self, args):
+        self._parse_code_args(args)
 
     def _get_filelist(self):
-        """ Get list of the files in the package
-        """
         self._get_code_list()
         self._get_model_list()
 
@@ -105,21 +100,15 @@ class UaiServiceTarOp(Operation):
         self.filelist.append('ufile.json')
 
     def _get_model_list(self):
-        """ AI Arch Specific Pack Tool should implement its own _get_filelist
-        """
         raise UserWarning("UaiPackTool._get_model_list Unimplemented")
 
     def _gen_jsonfile(self):
-        """ Reformat the conf params and generate jsonfile
-        """
-        with open(os.path.join(self.pack_file_path, 'ufile.json'), 'w') as f:
+        with open(os.path.join(os.getcwd(), self.pack_file_path, 'ufile.json'), 'w') as f:
             json.dump(self.conf_params, f)
 
     def _pack_file(self):
-        """ Pack files in the target path
-        """
         uai_logger.info('Start packing files in the target tar path.')
-        os.chdir(self.pack_file_path)
+        os.chdir(os.path.join(os.getcwd(), self.pack_file_path))
 
         tar = tarfile.open(self.tar_name, 'w')
         for i in self.filelist:
@@ -137,6 +126,6 @@ class UaiServiceTarOp(Operation):
         self._gen_jsonfile()
         self._pack_file()
 
-    def cmd_run(self, params):
-        super(UaiServiceTarOp, self).cmd_run(params)
+    def cmd_run(self, args):
+        self._parse_args(args)
         self._tar()
