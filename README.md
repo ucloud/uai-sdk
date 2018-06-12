@@ -11,11 +11,22 @@
 ## Supported AI Platform
 
 ### UAI Inference
-- Tensorflow (0.11.0 tested)
-- Tensorflow（1.1.0 tested）
-- Tensorflow（1.2.0 tested）
+#### 1. GPU
+- Tensorflowv (1.6.0 tested)
+- Tensorflowv (1.7.0 tested)
+- Caffe (1.0.0 tested)
+
+#### 2. CPU
+- Tensorflow (1.1.0 tested）
+- Tensorflow (1.2.0 tested）
+- Tensorflow (1.3.0 tested)
+- Tensorflow (1.4.0 tested)
+- Tensorflowv(1.6.0 tested)
+- Tensorflowv(1.7.0 tested)
 - MXNet (0.9.5 tested)
+- MXNet (1.0.0 tested)
 - Keras (1.2.0 tested)
+- Keras (2.0.8 tested)
 - Caffe (1.0.0 tested)
 - Intel-Caffe
 - XGBoost (0.7 tested, python interface only)
