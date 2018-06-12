@@ -59,3 +59,4 @@ class DeployUAIServiceApiOp(BaseUaiServiceApiOp):
     def call_api(self):
         succ, rsp = super(DeployUAIServiceApiOp, self).call_api()
         return succ, rsp
+
