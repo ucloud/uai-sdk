@@ -1,7 +1,21 @@
-import requests
+# Copyright 2017 The UAI-SDK Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
 import json
+import requests
 from uai.utils.utils import _verfy_ac
-from uai.utils.logger import uai_logger
 from uai.utils.retcode_checker import *
 
 class BaseUaiServiceApiOp(object):
@@ -10,10 +24,6 @@ class BaseUaiServiceApiOp(object):
     UCLOUD_API_URL = 'http://api.ucloud.cn'
     PARAMS_DEFAULT_REGION = "cn-bj2"
     PARAMS_DEFAULT_ZONE = "cn-bj2-04"
-
-    # UCLOUD_API_URL = 'http://api.pre.ucloudadmin.com'
-    # PARAMS_DEFAULT_REGION = "pre"
-    # PARAMS_DEFAULT_ZONE = "pre"
 
     PARAMS_DEFAULT_BUSINESSGROUP = "Default"
     PACKAGE_TYPE = {'os': 'OS', 'language': 'Python', 'ai_arch': 'AIFrame', 'os_deps': 'AptGet', 'pip': 'Pip'}
@@ -35,12 +45,9 @@ class BaseUaiServiceApiOp(object):
         if self.project_id != '':
             self.cmd_params['ProjectId'] = self.project_id
         self.cmd_url = self.UCLOUD_API_URL
-        # add other params in subclasses#
-
 
     def _check_args(self, params):
-        #add implements in subclasses#
-        return
+        pass
 
     def _cmd_common_request(self):
         if 'Signature' in self.cmd_params:
@@ -59,14 +66,20 @@ class BaseUaiServiceApiOp(object):
             del self.rsp['Action']
             uai_logger.info("{0} Success: {1}".format(self.cmd_params["Action"], get_response(self.rsp, 0)))
             return True
-        # add other operations in subclasses#
 
-
+    def _get_pkgs(self, pkgids, pkgname):
+        if pkgids == '':
+            self.cmd_params[pkgname + '.' + '0'] = ''
+            return
+        pkgs = pkgids.split(',')
+        i = 0
+        for pkg in pkgs:
+            self.cmd_params[pkgname + '.' + str(i)] = pkg
+            i += 1
+        return
 
     def call_api(self):
         if self._check_args(self.cmd_params) == False:
-            return False, None
-
+            raise RuntimeError("Check API params error, params: {0}".format(self.cmd_params))
         succ = self._cmd_common_request()
         return succ, self.rsp
-

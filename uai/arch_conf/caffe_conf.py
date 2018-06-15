@@ -13,8 +13,8 @@
 # limitations under the License.
 # ==============================================================================
 
-from base_conf import ArchJsonConf
-from base_conf import ArchJsonConfLoader
+from uai.arch_conf.base_conf import ArchJsonConf
+from uai.arch_conf.base_conf import ArchJsonConfLoader
 
 class CaffeJsonConf(ArchJsonConf):
     """ Caffe Json Config class
