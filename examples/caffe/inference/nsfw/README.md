@@ -21,7 +21,8 @@ https://docs.ucloud.cn/ai/uai-inference/guide/principle
 In this example, we provide the inference service example, NsfwModel, which accept one image and returns the probability of it being improper for workplace and workhours (in the aspect of sexual-content related).
 
 ## Setup
-Download the current directory into your workplace. An NSFW caffe model is given (under direction checkpoint_dir). If you intend to use another model, put it under checkpoint_dir and rename the .prototxt and .caffemodel file to the same name. 
+Download the current directory into your workplace. A model is given in:
+https://github.com/yahoo/open_nsfw/tree/master/nsfw_model. Copy the two files to directory checkpoint_dir/ under code/, and rename them to the same name (for the example below: resnet.caffemodel and resnet.prototxt). You may use any other caffe model with the same procedure.
 
 Put all these files into one directory:
 
@@ -30,8 +31,6 @@ Put all these files into one directory:
 	|  |_ checkpoint_dir
 	|  |  |_ resnet.caffemodel
 	|  |  |_ resnet.prototxt
-	|  |  |_ [optional]<yourmodel>.caffemodel
-	|  |  |_ [optional]<yourmodel>.prototxt
 	|  |_ nsfw_inference.py
 	|_ nsfw-cpu.Dockerfile
 	|_ caffe_nsfw.conf
@@ -47,6 +46,19 @@ We need to provide a config file to maintain the service configures. The config 
 
 1. "exec": infers the file used as the entry-point and the class used within the file.
 2. "caffe": infers the directory containing the model files, and the name of the model files. The name is "resnet" by default. You can use another model by changing it to your model's name. Please refer to Setup section to see where to put the model files.
+
+{
+    "http_server" : {
+        "exec" : {
+            "main_class": "NsfwModel",
+            "main_file": "nsfw_inference"
+        },
+        "caffe" : {
+            "model_dir" : "./checkpoint_dir",
+            "model_name" : "resnet"
+        }
+    }
+}
 
 You can find the example config file: caffe_nsfw.conf
 
