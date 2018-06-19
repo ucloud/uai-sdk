@@ -25,7 +25,7 @@ Download the current directory into your workplace. An NSFW caffe model is given
 
 Put all these files into one directory:
 
-	/data/open_nsfw/
+	/data/nsfw/
 	|_ code
 	|  |_ checkpoint_dir
 	|  |  |_ resnet.caffemodel
