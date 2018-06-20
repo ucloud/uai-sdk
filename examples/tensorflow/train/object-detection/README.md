@@ -72,7 +72,7 @@ Now the /data/object-detect/data/ include following files:
 ### Build the Docker images
 We provide the basic Dockerfile to build the docker image for training object-detection model:
 
-    From uhub.service.ucloud.cn/uaishare/cpu_uaiservice_ubuntu-16.04_python-2.7.6_tensorflow-1.6.0:v1.0
+    From uhub.service.ucloud.cn/uaishare/cpu_uaitrain_ubuntu-16.04_python-2.7.6_tensorflow-1.6.0:v1.0
 
     RUN apt-get update
     RUN apt-get install python-tk -y
