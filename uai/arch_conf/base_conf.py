@@ -558,5 +558,3 @@ class ArchJsonConfLoader(object):
 
     def get_main_class(self):
         return self.main_class
-
-
