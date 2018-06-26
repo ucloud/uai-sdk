@@ -16,7 +16,11 @@ We made the following modifications to run the object-detection retraining on UA
 We use the pet detection as the example. The detailed info can be found in https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_pets.md
 
 ### Preparing the Data
-Please follow the research/object\_detection/g3doc/running\_pets.md to download the training data and the pretrained model. The example use the resnet101 model and the Oxford-IIIT Pets Dataset.
+Please follow the research/object\_detection/g3doc/running\_pets.md to download the training data and the pretrained model. 
+The example use the resnet101 model:
+storage.googleapis.com/download.tensorflow.org/models/object_detection/faster_rcnn_resnet101_coco_11_06_2017.tar.gz
+and the Oxford-IIIT Pets Dataset:
+http://www.robots.ox.ac.uk/%7Evgg/data/pets/
 
 #### Create Local Test Data Path
 Suppose you have downloaded the dataset and use the object\_detection/dataset\_tools/create\_pet\_tf\_record.py to generate the tfrecords. We put all the tfrecord, the pet\_label\_map.pbtxt from object\_detection/data/ as well as the resnet101 ckpt into /data/object-detect/data/.
@@ -58,7 +62,7 @@ https://github.com/tensorflow/models/blob/master/research/object_detection/sampl
 Now the /data/object-detect/data/ include following files:
 
     # ls
-    faster_rcnn_resnet101_pets.config  
+    faster_rcnn_resnet101_pets.config  model.ckpt.data-00000-of-00001  model.ckpt.index  model.ckpt.meta  pet_label_map.pbtxt
     pet_faces_train.record-00000-of-00010  pet_faces_train.record-00001-of-00010  pet_faces_train.record-00002-of-00010
     pet_faces_train.record-00003-of-00010  pet_faces_train.record-00004-of-00010  pet_faces_train.record-00005-of-00010
     pet_faces_train.record-00006-of-00010  pet_faces_train.record-00007-of-00010  pet_faces_train.record-00008-of-00010
@@ -67,7 +71,7 @@ Now the /data/object-detect/data/ include following files:
     pet_faces_train.val-00003-of-00010  pet_faces_train.val-00004-of-00010  pet_faces_train.val-00005-of-00010
     pet_faces_train.val-00006-of-00010  pet_faces_train.val-00007-of-00010  pet_faces_train.val-00008-of-00010
     pet_faces_train.val-00009-of-00010
-    model.ckpt.index  model.ckpt.meta  pet_label_map.pbtxt  pet_train_with_masks.record  pet_val_with_masks.record
+    
 
 ### Build the Docker images
 We provide the basic Dockerfile to build the docker image for training object-detection model:
