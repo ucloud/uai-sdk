@@ -18,7 +18,7 @@ We use the pet detection as the example. The detailed info can be found in https
 ### Preparing the Data
 Please follow the research/object\_detection/g3doc/running\_pets.md to download the training data and the pretrained model. 
 The example use the resnet101 model and the Oxford-IIIT Pets Dataset:
-http://www.robots.ox.ac.uk/~Evgg/data/pets/
+http://www.robots.ox.ac.uk/%7Evgg/data/pets/
 
 #### Create Local Test Data Path
 Suppose you have downloaded the dataset and use the object\_detection/dataset\_tools/create\_pet\_tf\_record.py to generate the tfrecords. We put all the tfrecord, the pet\_label\_map.pbtxt from object\_detection/data/ as well as the resnet101 ckpt into /data/object-detect/data/.
