@@ -101,17 +101,14 @@ class ObjectDetectModel(TFAiUcloudModel):
 			if 'detection_masks' in output_dict:
 				output_dict['detection_masks'] = output_dict['detection_masks'][0]
 			
-			pets_in_image = []
+			obj_in_image = []
 			for j in range(output_dict['num_detections']):
 				if (output_dict['detection_scores'][j] > 0.5):
 					# look up in the dictionary for the indices given in this picture
 					res_list = output_dict['detection_boxes'][j].tolist()
 					res_list.append(category_index[output_dict['detection_classes'][j]]["name"])
-					print(str(res_list))
-					pets_in_image.append(res_list)
-					print(str(pets_in_image))
-			res.append(pets_in_image)
-			print(str(res))
+					obj_in_image.append(res_list)
+			res.append(obj_in_image)
 		return res
 	
 	
