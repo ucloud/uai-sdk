@@ -47,11 +47,13 @@ class ObjectDetectModel(TFAiUcloudModel):
 					
 					
 	def execute(self, data, batch_size):
-  
+  	
+		# change params here
 		NUM_CLASSES = 37
+		THRESHOLD = 0.5
 		
 		# now we have a dictionary named category_index, with key as the index and the value the pet cato. name
-		label_map = label_map_util.load_labelmap(os.path.join(self.model_dir, "pet_label_map.pbtxt"))
+		label_map = label_map_util.load_labelmap(os.path.join(self.model_dir, "label_map.pbtxt"))
 		categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES, use_display_name=True)
 		category_index = label_map_util.create_category_index(categories)
 		
@@ -75,19 +77,7 @@ class ObjectDetectModel(TFAiUcloudModel):
 				tensor_name = key + ':0'
 				if tensor_name in all_tensor_names:
 					tensor_dict[key] = tf.get_default_graph().get_tensor_by_name(tensor_name)
-			if 'detection_masks' in tensor_dict:
-				# The following processing is only for single image
-				detection_boxes = tf.squeeze(tensor_dict['detection_boxes'], [0])
-				detection_masks = tf.squeeze(tensor_dict['detection_masks'], [0])
-				# Reframe is required to translate mask from box coordinates to image coordinates and fit the image size.
-				real_num_detection = tf.cast(tensor_dict['num_detections'][0], tf.int32)
-				detection_boxes = tf.slice(detection_boxes, [0, 0], [real_num_detection, -1])
-				detection_masks = tf.slice(detection_masks, [0, 0, 0], [real_num_detection, -1, -1])
-				detection_masks_reframed = utils_ops.reframe_box_masks_to_image_masks(
-										detection_masks, detection_boxes, image_np_expanded.shape[0], image_np_expanded.shape[1])
-				detection_masks_reframed = tf.cast(tf.greater(detection_masks_reframed, 0.5), tf.uint8)
-				# Follow the convention by adding back the batch dimension
-				tensor_dict['detection_masks'] = tf.expand_dims(detection_masks_reframed, 0)
+			
 			image_tensor = tf.get_default_graph().get_tensor_by_name('image_tensor:0')
 
 			# Run inference
@@ -98,19 +88,15 @@ class ObjectDetectModel(TFAiUcloudModel):
 			output_dict['detection_classes'] = output_dict['detection_classes'][0].astype(np.uint8)
 			output_dict['detection_boxes'] = output_dict['detection_boxes'][0]
 			output_dict['detection_scores'] = output_dict['detection_scores'][0]
-			if 'detection_masks' in output_dict:
-				output_dict['detection_masks'] = output_dict['detection_masks'][0]
-			
-			pets_in_image = []
+
+			obj_in_image = []
 			for j in range(output_dict['num_detections']):
-				if (output_dict['detection_scores'][j] > 0.5):
+				if (output_dict['detection_scores'][j] > THRESHOLD):
 					# look up in the dictionary for the indices given in this picture
 					res_list = output_dict['detection_boxes'][j].tolist()
 					res_list.append(category_index[output_dict['detection_classes'][j]]["name"])
-					print(str(res_list))
-					pets_in_image.append(res_list)
-					print(str(pets_in_image))
-			res.append(pets_in_image)
+					obj_in_image.append(res_list)
+			res.append(obj_in_image)
 			print(str(res))
 		return res
 	
