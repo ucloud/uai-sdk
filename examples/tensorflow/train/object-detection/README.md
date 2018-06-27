@@ -16,7 +16,8 @@ We made the following modifications to run the object-detection retraining on UA
 We use the pet detection as the example. The detailed info can be found in https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_pets.md
 
 ### Preparing the Data
-Please follow the research/object\_detection/g3doc/running\_pets.md to download the training data and the pretrained model. 
+Please follow:
+https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_pets.md to download the training data and the pre-trained model: faster_rcnn_resnet101. 
 The example use the resnet101 model and the Oxford-IIIT Pets Dataset:
 http://www.robots.ox.ac.uk/%7Evgg/data/pets/
 Acquire a copy of category dictionary from:
