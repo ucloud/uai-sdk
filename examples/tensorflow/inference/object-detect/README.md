@@ -85,5 +85,5 @@ You can test the mnist-inference server as:
 
 	curl -X POST http://localhost:8080/service -T ${PATH/TOY/YOUR/TESTCASE/DIR/}Persian_cat_1.jpeg
 
-## Deploy Mnist Inference Service into UAI Inference Platform
+## Deploy Object Detect Inference Service into UAI Inference Platform
 Please refer to https://docs.ucloud.cn/ai/uai-inference/index for more details. You can build the docker image build in [Build](#build-your-own-inference-docker) with another tag, or just re-tag the old one.
