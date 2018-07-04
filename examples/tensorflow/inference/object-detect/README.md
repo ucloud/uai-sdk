@@ -12,7 +12,7 @@ In this example, we provide the inference service example: ObjectDetectModel whi
 ## Setup
 Get the pbtxt containing the dictionary that matches indices and categories.
 Acquire an object detection model with images of the categorical objects you wish to detect. Refer to:
-https://github.com/FinchZHU/uai-sdk/new/master/examples/tensorflow/inference/object-detect
+https://github.com/ucloud/uai-sdk/tree/master/examples/tensorflow/train/object-detection
 for training a model of self-sourced dataset and how the pbtxt is formed. Some trained model examples are available at:
 https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
 
@@ -49,7 +49,7 @@ We need to provide the config file to tell the UAI Inference system to get the b
 1. "exec" tells which file is used as the entry-point of the user-defined inference logic and which main class is used. 
 2. "tensorflow" tells which model related info should be loaded by UAI Inference system.
 
-You can find the example config file: object-detect.conf
+You can find the example config file: object-detect.conf. Put these 2 files under the directory listed above.
 
 ### Packing Inference Docker
 We provide object-detect-cpu.Dockerfile for you to build local inference docker image:
