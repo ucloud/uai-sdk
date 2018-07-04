@@ -2,7 +2,7 @@
 Object-detection example shows how to run TensorFlow object detection training on UAI Train Platform. The example is based on https://github.com/tensorflow/models/tree/master/research/object_detection
 
 # Setup
-You should prepare your own training data and pretrained model before running the task. As UAI Train nodes does not provide network access, you should prepare your data locally.
+You should prepare your own training data and pretrained model before running the task. As UAI Train nodes does not provide Internet access, you should prepare your data locally.
 
 ## Intro
 The object detection example directly use the code in https://github.com/tensorflow/models/tree/master/research/object_detection. As it depends on the slim package and object\_detection package under tensorflow/models/research/, we provide the Dockerfile to show how to pack these python packages into the docker.
@@ -30,11 +30,10 @@ In case you intend to use your own image dataset, you should prepare several set
 2. An .xml file containing the ground truth of where the object/objects should be detected, with information of:
     image name;
     image size(height, width);
-    object coordinate(xmin, xmax, ymin, ymax);
-    object pose;
-    object detection difficulty.
+    object coordinate(xmin, xmax, ymin, ymax).
 Refer to the provided pet dataset example for how an xml file looks like.
-A copy of index-category dictionary is needed with the name label_map.pbtxt indicating the matching status of object-category and index used in training:
+
+A copy of index-category dictionary is needed with the name label_map.pbtxt. It indicates the object-categories and index used in training:
     
     item {
         id: 1
@@ -54,18 +53,17 @@ The dataset listed will be later randomly shuffled and divided with 70% data use
 Put all the files under the same directory as:
 
     /data/object-detect-prep/
-				/label_map.pbtxt
-				/annotations/
-						    /trainval.txt
-						    /xmls/
-				 			     /Abyssinian_1.xml
-				 			     /basset_hound_2.xml
-							     /Teacup_1100.xml
-				/images/
-				    	/Abyssinian_1.jpg
-				    	/basset_hound_2.jpg
-				    	/Teacup_1100.png
-
+	|_ label_map.pbtxt
+	|_ annotations
+	|  |_ trainval.txt
+	|  |_ xmls
+	|  |  |_ Abyssinian_1.xml
+	|  |  |_ basset_hound_2.xml
+	|  |  |_ Teacup_1100.xml
+	|_ images
+	|  |_ Abyssinian_1.jpg
+	|  |_ basset_hound_2.jpg
+	|  |_ Teacup_1100.png
 
 
 #### Create Local Test Data Path
@@ -131,8 +129,10 @@ Now the /data/object-detect/data/ include following files:
     obj_val.record-00006-of-00010  obj_val.record-00007-of-00010  obj_val.record-00008-of-00010
     obj_val.record-00009-of-00010
 
+These are all the data required for a training.
+
 ### Build the Docker images
-We provide the basic Dockerfile to build the docker image for training object-detection model:
+We provide the basic Dockerfile to build the docker image for training object-detection model written as:
 
     From uhub.service.ucloud.cn/uaishare/gpu_uaitrain_ubuntu-16.04_python-2.7.6_tensorflow-1.6.0:v1.0
 
@@ -144,32 +144,37 @@ We provide the basic Dockerfile to build the docker image for training object-de
     RUN cd /data/ && python setup.py install && cd slim && python setup.py install
 
 
-We should run the docker build under PATH\_TO/tensorflow/models/. To build the docker image, the following steps are performed by the dockerfile commands:
+We should run the docker build under PATH\_TO/tensorflow/models/. To build the docker image, the following steps are performed by the above dockerfile commands:
 
-1. Install python-tk lib
-2. Copy all the files under research/ into /data/
-3. Install the object-detection lib and the slim lib
+1. Use uaitrain tf1.6 version as the base image of the whole docker image.
+2. Update apt-get and install python-tk lib.
+3. Copy all the files under research/ into /data/
+4. Install the object-detection lib and the slim lib from tensorflow/models/research.
 
 We can run the following cmd to build the image:
 
-    # cd PATH_TO/tensorflow/models
-    # cp PATH_TO/uaitrain.Dockerfile ./
-    # sudo docker build -f uaitrain.Dockerfile -t uhub.ucloud.cn/<YOUR_UHUB_REGISTRY>/tf-objdetect:uaitrain .
-    
-You can use any docker-name here if you want. After build the image, we get a docker image named uhub.ucloud.cn/<YOUR_UHUB_REGISTRY>/tf-objdetect:uaitrain.
+    cd PATH_TO/tensorflow/models
+    cp PATH_TO/uaitrain.Dockerfile ./
+    sudo docker build -f uaitrain.Dockerfile -t uhub.ucloud.cn/<YOUR_UHUB_REGISTRY>/tf-objdetect:uaitrain .
+
+These commands switches to the tensorflow/models directory, copy the dockerfile here and build the docker with the dockerfile commands. You can use any docker-name here if you want. After building the image, we get a docker image named uhub.ucloud.cn/<YOUR_UHUB_REGISTRY>/tf-objdetect:uaitrain.
 
 ### Run the train
-We can simply use the following cmd to run the local test.(GPU version)
+We can simply use the following cmd to run the local test.(GPU version) Note that if you use any other data storage directory other than "/data/object-detect/data", you should change the same path in the command accordingly, for the parameter:
+	
+	-v /data/object-detect/data/:/data/data
+	
+replaces the directories, so that when the program redirects to "/data/data/", it actually goes into "/data/object-detect/data/" for the images and xmls. Here is the default command:
 
     sudo nvidia-docker run -it -v /data/object-detect/data/:/data/data -v /data/object-detect/output:/data/output uhub.service.ucloud.cn/uai_dockers/tf-objdetect:uaitrain /bin/bash -c "cd /data && /usr/bin/python /data/object_detection/train.py --pipeline_config_path=/data/data/faster_rcnn_resnet101.config --train_dir=/data/output"
     
-Note: we use use --pipeline\_config\_path=/data/data/faster\_rcnn\_resnet101.config to tell the train.py script to use the training config under /data/data/ and use --train\_dir=/data/output to tell the training script to output the model into /data/output. (When you are running the train job in UAI Train Platform, we will automatically put data into /data/data before job start and upload data inside /data/output after job finished.)
+Note: we use use --pipeline\_config\_path=/data/data/faster\_rcnn\_resnet101.config to tell the train.py script to use the training config under /data/data/ (as stated before, it is actually in /data/object-detect/data, or wherever you change it to) and use --train\_dir=/data/output to tell the training script to output the model into /data/output. (When you are running the train job in UAI Train Platform, we will automatically put data into /data/data before job start and upload data inside /data/output after job finished.)
 
 Here is the command to start the training if it is performed on UAI-Training Platform:
 
 	/data/object_detection/train.py --pipeline_config_path=/data/data/faster_rcnn_resnet101.config --train_dir=/data/output
 
-Let the input path be /data/object-detect/data/ and output path be /data/object-detect/output/.
+Note here that some directory replacement parameters are left out because UAI-Train platform forcingly applies the replacement (to /data/data/ and /data/output/ respectly, so do not use these 2 directories to store data because they will not be found). Let the input path be /data/object-detect/data/, or wherever you put data, and output path be /data/object-detect/output/.
 
 
 ### Results
