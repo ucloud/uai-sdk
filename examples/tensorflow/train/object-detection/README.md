@@ -132,7 +132,12 @@ Now the /data/object-detect/data/ include following files:
 These are all the data required for a training.
 
 ### Build the Docker images
-We provide the basic Dockerfile to build the docker image for training object-detection model written as:
+
+UCloud provides a pre-built docker image for training: objdetect-train-gpu-tf16. You can use the following code to pull it:
+
+	sudo docker pull uhub.ucloud.cn/uai_demo/tf-objdetect-train-gpu-tf16:latest
+
+Or you can do the following to build on your own. We provide the basic Dockerfile to build the docker image for training object-detection model written as:
 
     From uhub.service.ucloud.cn/uaishare/gpu_uaitrain_ubuntu-16.04_python-2.7.6_tensorflow-1.6.0:v1.0
 
@@ -160,7 +165,7 @@ We can run the following cmd to build the image:
 These commands switches to the tensorflow/models directory, copy the dockerfile here and build the docker with the dockerfile commands. You can use any docker-name here if you want. After building the image, we get a docker image named uhub.ucloud.cn/<YOUR_UHUB_REGISTRY>/tf-objdetect:uaitrain.
 
 ### Run the train
-We can simply use the following cmd to run the local test.(GPU version) Note that if you use any other data storage directory other than "/data/object-detect/data", you should change the same path in the command accordingly, for the parameter:
+We can simply use the following cmd to run the local test(GPU version). Make sure you have a GPU and relevant environment to run it on. Note that if you use any other data storage directory other than "/data/object-detect/data", you should change the same path in the command accordingly, for the parameter:
 	
 	-v /data/object-detect/data/:/data/data
 	
