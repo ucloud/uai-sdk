@@ -75,7 +75,7 @@ Do not miss out the dot at the end. This is a docker image with all environments
     
 Then you may run it locally:
 
-    sudo docker run -it -v /data/:/data/data/ -v /data/output/:/data/output/ uhub.ucloud.cn/<YOUR_IMAGE_REPOSITORY_NAME>/retrain-train-gpu:latest /bin/bash -c "/usr/bin/python retrain_v2.py --image_dir /data/flower_photos --output_graph /data/output/frozen_inference_graph.pb --output_labels /data/output/label_map.txt --tfhub_module /data/checkpoint_dir"
+    sudo docker run -it -v /data/:/data/data/ -v /data/output/:/data/output/ uhub.ucloud.cn/<YOUR_IMAGE_REPOSITORY_NAME>/retrain-train-gpu:latest /bin/bash -c "/usr/bin/python /data/retrain_v2.py --image_dir /data/flower_photos --output_graph /data/output/frozen_inference_graph.pb --output_labels /data/output/label_map.txt --tfhub_module /data/checkpoint_dir"
 
 or create a Train job at console: https://console.ucloud.cn/uaitrain/manage and run the image. 
 A detailed guidance on running training image on UAI-Train is given in:https://docs.ucloud.cn/ai/uai-train/tutorial/tf-mnist/train
