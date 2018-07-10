@@ -41,7 +41,7 @@ The main file object_detect_inference.py contains the main class ObjectDetectMod
 
 1. load\_model(self), which loads the given object detection model. 
 
-2. execute(self, data, batch_size), which handles the inference requests. The django server will invoke MnistModel->execute when it receive requests. It will process the input 'data' array one by one which load the image from data[x] and invokes object detect to generate the result list. 
+2. execute(self, data, batch_size), which handles the inference requests. The django server will invoke ObjectDetectModel->execute when it receive requests. It will process the input 'data' array one by one which load the image from data[x] and invokes object detect to generate the result list. 
 
 ### Define the Config File
 We need to provide the config file to tell the UAI Inference system to get the basic information to load the ObjectDetectModel. The config file should include following info:
@@ -76,12 +76,12 @@ With the above docker file we can now build your own inference docker image(Your
 	sudo docker build -t object-detect-infer:test -f object-detect-cpu.Dockerfile .
 
 ### Run Object Detect Inference Service Locally
-You can run the mnist-inference cpu server as:
+You can run the object-detect-inference cpu server as:
 
 	sudo docker run -it -p 8080:8080 object-detect-infer:test
 
 ### Test Object Detect Inference Service Locally
-You can test the mnist-inference server as:
+You can test the object-detect-inference server as:
 
 	curl -X POST http://localhost:8080/service -T ${PATH/TOY/YOUR/TESTCASE/DIR/}Persian_cat_1.jpeg
 
