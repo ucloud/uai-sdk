@@ -2,6 +2,7 @@
 
 ## Intro
 Modern image recognition models have millions of parameters. Training them from scratch requires a lot of labeled training data and a lot of computing power (hundreds of GPU-hours or more). Transfer learning is a technique that shortcuts much of this by taking a piece of a model that has alreay been trained on a related task and reusing it in a new model. In this tutorial, we will reuse the feature extraction capabilities from powerful image classifiers trained on ImageNet and simply train a new classification layer on top. For more information on the approach you can see this paper on Decaf.
+
 Though it's not as good as training the full model, this is surprisingly effective for many applications, works with moderate amounts of training data (thousands, not millions of labeled images), and can be run in as little as thirty minutes on a laptop without a GPU. This tutorial will show you how to run the example script on your own images, and will explain some of the options you have to help control the training process.
 (text above from: https://www.tensorflow.org/hub/tutorials/image_retraining)
 
