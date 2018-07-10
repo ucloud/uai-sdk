@@ -1,5 +1,5 @@
 # Retrain Example
-Retain example includes example script that shows how one can adapt a pretrained network for other classification problems and run the retraining task on UAI Platform. The example is based on https://github.com/tensorflow/tensorflow/tree/master/tensorflow/examples/image\_retraining                                                                                                
+Retain example includes example script that shows how one can adapt a pretrained network for other classification problems and run the retraining task on UAI Platform. The example is based on https://github.com/tensorflow/tensorflow/tree/master/tensorflow/examples/image_retraining                                                                                                
 
 ## Setup
 You should prepare your own image data and pretrained model before running the task. As UAI Train nodes does not provide network access, you should prepare your data locally.
