@@ -24,20 +24,9 @@ class RetrainDetectModel(TFAiUcloudModel):
         self.input_width = retrain_json_conf_loader.get_input_width()
         self.input_height = retrain_json_conf_loader.get_input_height()
 
-    def read_tensor_from_data(self, data, input_height=299,
-                                input_width=299,
-                                input_mean=0,
-                                input_std=255):
-        input_name = "file_reader"
-        output_name = "normalized"
-        image_reader = tf.image.decode_image(data, channels=3)
-
-        float_caster = tf.cast(image_reader, tf.float32)
-        dims_expander = tf.expand_dims(float_caster, 0)
-        resized = tf.image.resize_bilinear(dims_expander, [input_height, input_width])
-        normalized = tf.divide(tf.subtract(resized, [input_mean]), [input_std])
-        sess = tf.Session()
-        result = sess.run(normalized)
+    def read_tensor_from_data(self, data):
+        sess = self._sess_pre
+        result = sess.run(self._normalized_op, {self._input_data: data})
 
         return result
 
@@ -68,24 +57,41 @@ class RetrainDetectModel(TFAiUcloudModel):
         self._output_handler = output_handler
         self._sess = sess
 
+        input_height=self.input_height
+        input_width=self.input_width
+        input_mean=0
+        input_std=255
+        graph_pre = tf.Graph()
+        with graph_pre.as_default():
+            input_data = tf.placeholder(tf.string)
+            image_reader = tf.image.decode_image(input_data, channels=3)
+            float_caster = tf.cast(image_reader, tf.float32)
+            dims_expander = tf.expand_dims(float_caster, 0)
+            resized = tf.image.resize_bilinear(dims_expander, [input_height, input_width])
+            normalized = tf.divide(tf.subtract(resized, [input_mean]), [input_std])
+        sess_pre = tf.Session(graph=graph_pre)
+        self._input_data = input_data
+        self._normalized_op = normalized
+        self._sess_pre =sess_pre
+
     def execute(self, data, batch_size):
 
+        THRESHOLD = 0.5
+        
         sess = self._sess
         output_h = self._output_handler
         input_h = self._input_handler
         res = []
         image = []
         for i in range(batch_size):
-        
-	    height = self.input_height
-	    width = self.input_width
-	    image = self.read_tensor_from_data(data[i].body, input_height=height,input_width=width)
-            
+            height = self.input_height
+            width = self.input_width
+            image = self.read_tensor_from_data(data[i].body)
             predictions, = sess.run(output_h[0], {input_h[0]: image})
-            pred_sorted = predictions.argsort()[::-1][:5]
+            pred_sorted = predictions.argsort()[::-1]
             single_res = []
-
             # We can get top-5 if possible
+            idx = 0
             for type_id in pred_sorted:
                 try:
                     cate = self._label_map[type_id][:-1] if self._label_map[type_id][-1] == "\n" else self._label_map[type_id]
@@ -93,6 +99,10 @@ class RetrainDetectModel(TFAiUcloudModel):
                     print("No label map found, returning type id...")
                     cate = type_id
                 single_res.append([cate, predictions[type_id]])
+
+                idx = idx + 1
+                if idx == 5:
+                    break
 
             res.append(single_res)
 
