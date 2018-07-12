@@ -6,11 +6,11 @@ Modern image recognition models have millions of parameters. Training them from 
 Though it's not as good as training the full model, this is surprisingly effective for many applications, works with moderate amounts of training data (thousands, not millions of labeled images), and can be run in as little as thirty minutes on a laptop without a GPU. This tutorial will show you how to run the example script on your own images, and will explain some of the options you have to help control the training process.
 (text above from: https://www.tensorflow.org/hub/tutorials/image_retraining)
 
-This retrain example shows how to add new layers to an object-detection model for other classification problems and run the retraining task on UAI Platform. The example is based on https://github.com/tensorflow/hub/tree/master/examples/image_retraining. 
+This retrain example shows how to add new layers to an object-classification model for other classification problems and run the retraining task on UAI Platform. The example is based on https://github.com/tensorflow/hub/tree/master/examples/image_retraining. 
 The retrain code is identical to the source code: https://github.com/tensorflow/hub/blob/master/examples/image_retraining/retrain.py
 
 ## UAI-Train Platform
-The training procedure is not far different from the the tensorflow-hub example. We introduces how to run it on UAI-Train platform which might be more efficient and resource-saving than using your own PC. As stated, the UAI-Train is offline from Internet, so you need to cache the object-detection model to local machine. 
+The training procedure is not far different from the the tensorflow-hub example. We introduces how to run it on UAI-Train platform which might be more efficient and resource-saving than using your own PC. As stated, the UAI-Train platform has no access to Internet, so you need to cache the object-classification model to local machine. 
 You are suggested to setup docker and uai-sdk environment as https://docs.ucloud.cn/ai/uai-train/guide/tensorflow, or just try to proceed locally with expectedly lower efficiency.
 
 ### Data Preparation
@@ -23,9 +23,9 @@ The retraining needs two parts of data, model and images. Select a module based 
     |  |  |_ variables
     |  |  |_ assets
     
-Pay attention to what type of models you are caching. The Tensorflow website offers classification and feature vector models. We use the classification module to do object classification/detection. Feature vector model extracts the features of objects and may be useful in many AI cases, but is not used here.
+Pay attention to what type of models you are caching. The Tensorflow website offers classification and feature vector models. We use the classification module to do object classification. Feature vector model extracts the features of objects and may be useful in many AI cases, but is not used here.
 
-Then you need a set of images. Determine what objects to be detected, then find sufficient number of images for each object. Tensorflow offers a dataset of flowers: http://download.tensorflow.org/example_images/flower_photos.tgz. You may also try the dataset from http://www.robots.ox.ac.uk/%7Evgg/data/pets/, but you need to divide the image files into object types. After that, create a directory under data/images for each object, and put all images of this object into this directory, eventually with a root directory like:
+Then you need a set of images. Determine what objects to be classified, then find sufficient number of images for each object. Tensorflow offers a dataset of flowers: http://download.tensorflow.org/example_images/flower_photos.tgz. You may also try the dataset from http://www.robots.ox.ac.uk/%7Evgg/data/pets/, but you need to divide the image files into object types. After that, create a directory under data/images for each object, and put all images of this object into this directory, eventually with a root directory like:
     
     |_ /data/model_and_images
     |  |_ checkpoint_dir
@@ -45,7 +45,7 @@ Then you need a set of images. Determine what objects to be detected, then find 
 
 and so on. Note that the object directory's name must be the name of the object type, while the picture's name does not matter.
 
-We put retrain codes into code/ aside to /data/. In this example we use flowers dataset(You should download the flowers data yourself) and the mobilenet_v1_100_224 object-detection module. The module offered by Tensorflow are normalized to the same file names, so any module you cache results in the same set of file names.
+We put retrain codes into code/ aside to /data/. In this example we use flowers dataset(You should download the flowers data yourself) and the mobilenet_v1_100_224 object-classification module. The module offered by Tensorflow are normalized to the same file names, so any module you cache results in the same set of file names.
 
     # ls /data/
     model_and_images/ code/
@@ -90,7 +90,7 @@ While running on UAI-Train console, set the input directory to UFile: /data/labe
 A detailed guidance on running training image on UAI-Train is given in:https://docs.ucloud.cn/ai/uai-train/tutorial/tf-mnist/train
 
 ### Use the Retrained Model
-Here in uai-sdk we have an example on how to use the retrained model for object classification: https://github.com/ucloud/uai-sdk/tree/master/examples/tensorflow/inference/retrain, where you can reuse the trained model to actually detect or classify something.
+Here in uai-sdk we have an example on how to use the retrained model for object classification: https://github.com/ucloud/uai-sdk/tree/master/examples/tensorflow/inference/retrain, where you can reuse the trained model to actually classify something.
 
 It is also based on, and a demonstration of, a tensorflow example of how these AI tasks can remotely and efficiently run on UAI platform. The original idea is from: https://www.tensorflow.org/hub/tutorials/image_retraining
 
