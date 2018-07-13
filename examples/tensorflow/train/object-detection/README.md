@@ -190,7 +190,7 @@ Note here that some directory replacement parameters are left out because UAI-Tr
 UAI Training produces the trained model containing in several files: some_model.data-00000-of-00001, some_model.meta, some_model.index and checkpoint. For the object detection inference example: 
 https://github.com/ucloud/uai-sdk/edit/master/examples/tensorflow/inference/object-detect/
 A model in the from of frozen_inference_graph.pb is required. Refer to: 
-https://github.com/ucloud/models/blob/master/research/object_detection/g3doc/exporting_models.md
+https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/exporting_models.md
 for exporting such a model file.
 
 
