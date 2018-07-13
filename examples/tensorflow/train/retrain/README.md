@@ -79,18 +79,18 @@ Do not miss out the dot at the end. This is a docker image with all environments
     
 Then you may run it locally:
 
-    sudo docker run -it -v /data/label_and_images/:/data/data/ -v /data/output/:/data/output/ uhub.ucloud.cn/<YOUR_IMAGE_REPOSITORY_NAME>/retrain-train-gpu:latest /bin/bash -c "/usr/bin/python /data/retrain_v2.py --image_dir /data/data/flower_photos --output_graph /data/output/frozen_inference_graph.pb --output_labels /data/output/label_map.txt --tfhub_module /data/checkpoint_dir"
+    sudo docker run -it -v /data/label_and_images/:/data/data/ -v /data/output/:/data/output/ uhub.ucloud.cn/<YOUR_IMAGE_REPOSITORY_NAME>/retrain-train-gpu:latest /bin/bash -c "/usr/bin/python /data/retrain_v2.py --image_dir /data/data/flower_photos --output_graph /data/output/frozen_inference_graph.pb --output_labels /data/output/label_map.txt --tfhub_module /data/data/checkpoint_dir"
 
 You are suggested to create a Train job at console: https://console.ucloud.cn/uaitrain/manage and run the image. Check https://docs.ucloud.cn/ai/uai-train/tutorial/tf-mnist/train for an example of using the console, including how to upload required data to UFile, a file system provided for the UAI-Training and UAI-Inference. 
 
 While running on UAI-Train console, set the input directory to UFile: /data/label_and_images/, and output directory to UFile: /data/output/, and training command to: 
 
-    /data/retrain_v2.py --image_dir /data/data/flower_photos --output_graph /data/output/frozen_inference_graph.pb --output_labels /data/output/label_map.txt --tfhub_module /data/checkpoint_dir
+    /data/retrain_v2.py --image_dir /data/data/flower_photos --output_graph /data/output/frozen_inference_graph.pb --output_labels /data/output/label_map.txt --tfhub_module /data/data/checkpoint_dir
 
 A detailed guidance on running training image on UAI-Train is given in:https://docs.ucloud.cn/ai/uai-train/tutorial/tf-mnist/train
 
 ### Use the Retrained Model
-Here in uai-sdk we have an example on how to use the retrained model for object classification: https://github.com/ucloud/uai-sdk/tree/master/examples/tensorflow/inference/retrain, where you can reuse the trained model to actually classify something.
+Here in uai-sdk we have an example on how to use the retrained model for object classification: https://github.com/ucloud/uai-sdk/tree/master/examples/tensorflow/inference/retrain, where you can re-use the trained model to actually classify something.
 
 It is also based on, and a demonstration of, a tensorflow example of how these AI tasks can remotely and efficiently run on UAI platform. The original idea is from: https://www.tensorflow.org/hub/tutorials/image_retraining
 
