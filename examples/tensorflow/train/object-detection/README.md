@@ -71,7 +71,8 @@ Put all the files under the same directory as:
 
 
 #### Create Local Test Data Path
-Suppose you have downloaded the dataset and use the object\_detection/dataset\_tools/create\_pet\_tf\_record.py to generate the tfrecords.
+Download the dataset and use the object\_detection/dataset\_tools/create\_pet\_tf\_record.py to generate the tfrecords. These record files are information and data of the training images.
+
 We put all the tfrecord, the pet\_label\_map.pbtxt from object\_detection/data/ as well as the resnet101 ckpt into /data/object-detect/data/.
 Note that the tf record file type could be changed in future version of tensorflow examples. Here lies the version of file names and types for the April 30, 2018 release of Models/Research/Object-detect module.
 
@@ -107,13 +108,12 @@ All the modifications are necessary to running the train job on UAI Train Platfo
 uai-sdk/examples/tensorflow/train/object-detection/samples/
 If you are using self-sourced dataset, change the config file to adjust the category count:
 
-    Line 9:
-        num_classes: ${your_category_count}
+    Line 9: num_classes: ${your_category_count}
 
 You can also change the training step counts by setting:
 
-    Line 112:
-        num_steps: ${your_step_count}
+    Line 112: num_steps: ${your_step_count}
+    
 Whereas default is 200,000 steps. For a short training test period, 20 steps is sufficient.
 
 Note that the "/data/data/pet_faces_val.record*" matches the file name and format discussed in Create Local Test Data Path. If the files generated to be tf record are modified in later version of Tensorflow, change the config file accordingly so it matches all the files generated, or kindly refer to the config file offered within the Tensorflow project:
@@ -133,7 +133,7 @@ Now the /data/object-detect/data/ include following files:
     obj_val.record-00006-of-00010  obj_val.record-00007-of-00010  obj_val.record-00008-of-00010
     obj_val.record-00009-of-00010
 
-These are all the data required for a training.
+These are all the data required for training.
 
 ### Build the Docker images
 
@@ -143,7 +143,7 @@ UCloud provides a pre-built docker image for training: objdetect-train-gpu-tf16.
 
 Or you can do the following to build on your own. We provide the basic Dockerfile to build the docker image for training object-detection model written as:
 
-    From uhub.service.ucloud.cn/uaishare/gpu_uaitrain_ubuntu-16.04_python-2.7.6_tensorflow-1.6.0:v1.0
+    From uhub.ucloud.cn/uaishare/gpu_uaitrain_ubuntu-16.04_python-2.7.6_tensorflow-1.6.0:v1.0
 
     RUN apt-get update
     RUN apt-get install python-tk -y
@@ -166,14 +166,14 @@ We can run the following cmd to build the image:
     cp PATH_TO/uaitrain.Dockerfile ./
     sudo docker build -f uaitrain.Dockerfile -t uhub.ucloud.cn/<YOUR_UHUB_REGISTRY>/tf-objdetect:uaitrain .
 
-These commands switches to the tensorflow/models directory, copy the dockerfile here and build the docker with the dockerfile commands. You can use any docker-name here if you want. After building the image, we get a docker image named uhub.ucloud.cn/<YOUR_UHUB_REGISTRY>/tf-objdetect:uaitrain.
+These commands switches to the tensorflow/models directory, copy the dockerfile here and build the docker with the above commands in the Dockerfile. You can use tag the docker with any docker-name here if you want by changing the suffix after <UHUB_REGISTRY>/, so you can manage multiple versions of dockers without confusion. After building the image, we get a docker image named uhub.ucloud.cn/<YOUR_UHUB_REGISTRY>/tf-objdetect:uaitrain, which is the same as the docker provided.
 
 ### Run the train
 We can simply use the following cmd to run the local test(GPU version). Make sure you have a GPU and relevant environment to run it on. Note that if you use any other data storage directory other than "/data/object-detect/data", you should change the same path in the command accordingly, for the parameter:
 	
 	-v /data/object-detect/data/:/data/data
 	
-replaces the directories, so that when the program redirects to "/data/data/", it actually goes into "/data/object-detect/data/" for the images and xmls. Here is the default command:
+replaces the directories, so that when the program goes to "/data/data/", it actually redirects into "/data/object-detect/data/" for the images and xmls. Here is the default command:
 
     sudo nvidia-docker run -it -v /data/object-detect/data/:/data/data -v /data/object-detect/output:/data/output uhub.service.ucloud.cn/uai_dockers/tf-objdetect:uaitrain /bin/bash -c "cd /data && /usr/bin/python /data/object_detection/train.py --pipeline_config_path=/data/data/faster_rcnn_resnet101.config --train_dir=/data/output"
     
