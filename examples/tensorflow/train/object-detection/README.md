@@ -5,15 +5,19 @@ Object-detection example shows how to run TensorFlow object detection training o
 You should prepare your own training data and pretrained model before running the task. As UAI Train nodes does not provide Internet access, you should prepare your data locally.
 
 ## Intro
-The object detection example directly use the code in https://github.com/tensorflow/models/tree/master/research/object_detection. As it depends on the slim package and object\_detection package under tensorflow/models/research/, we provide the Dockerfile to show how to pack these python packages into the docker.
+The object detection example directly use the code in https://github.com/tensorflow/models/tree/master/research/object_detection. As it depends on the slim package and object_detection package under tensorflow/models/research/, we provide the Dockerfile to show how to pack these python packages into the docker.
 
 ## UAI Example
 We made the following modifications to run the object-detection retraining on UAI Train Platform:
 
 1. Provide a Dockerfile named uaitrain.Dockerfile for building the docker
-2. Provide the modified faster\_rcnn\_resnet101\_pets.config
+2. Provide the modified faster_rcnn_resnet101_pets.config
 
-We use the pet detection as the example. The detailed info can be found in https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_pets.md
+We use the pet detection as the example. Clone the tensorflow model module to your local machine:
+
+	git clone https://github.com/tensorflow/models.git
+
+The detailed info can be found in https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_pets.md
 
 ### Preparing the Data
 Please follow:
@@ -184,9 +188,9 @@ Note here that some directory replacement parameters are left out because UAI-Tr
 
 ### Results
 UAI Training produces the trained model containing in several files: some_model.data-00000-of-00001, some_model.meta, some_model.index and checkpoint. For the object detection inference example: 
-https://github.com/FinchZHU/uai-sdk/edit/master/examples/tensorflow/inference/object-detect/
+https://github.com/ucloud/uai-sdk/edit/master/examples/tensorflow/inference/object-detect/
 A model in the from of frozen_inference_graph.pb is required. Refer to: 
-https://github.com/FinchZHU/models/blob/master/research/object_detection/g3doc/exporting_models.md
+https://github.com/ucloud/models/blob/master/research/object_detection/g3doc/exporting_models.md
 for exporting such a model file.
 
 
