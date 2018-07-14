@@ -53,14 +53,16 @@ You can run the following command to generate a docker image named uhub.service.
 sudo docker build -t uhub.service.ucloud.cn/uai_demo/crnn-generate-tfrecords:v1.0 -f crnn-generate-tfrecords.Dockerfile .
 ```
 In the docker image,you can generate tfrecords file locally or on UAI Training Platform .<br>
-If you want to generate tfrecords file locally , you should map ./data and ./output to crnn-generate-tfrecords:v1.0 by the following command.
+If you want to generate tfrecords file locally , you should map ./data and ./output to crnn-generate-tfrecords:v1.0.
+Run the following command to generate tfrecords file locally.
 
 ```
-sudo docker run -it -v /data/data:/data/data -v /data/output:/data/output uhub.service.ucloud.cn/uai_demo/crnn-generate-tfrecords:v1.0
+sudo docker run -it -v /data/data:/data/data -v /data/output:/data/output uhub.service.ucloud.cn/uai_demo/crnn-generate-tfrecords:v1.0 /bin/bash -c "python /data/code/tools/write_text_features.py --dataset_dir /data/data/ --save_dir /data/output"
 ```
-Then you can run the following command to generate tfrecords file locally or on UAI Training Platform .<br>
+If you generate tfrecords file on UAI Training Platform,you should upload files under /data/data/ folder into Ucloud file storage platform such as UFile and UFS.
+You can run the following command to generate tfrecords file on UAI Training Platform .<br>
 ```
-python /data/code/tools/write_text_features.py --dataset_dir /data/data/ --save_dir /data/output
+/data/code/tools/write_text_features.py --dataset_dir /data/data/ --save_dir /data/output
 ```
 If you run the command locally,you can get train_feature.tfrecords,test_feature.tfrecords and validation_feature.tfrecords in /data/output folder.
 If you generate tfrecords file on UAI Training Platform,you can find tfrecords file on Ucloud file storage platform such as UFile and UFS.
