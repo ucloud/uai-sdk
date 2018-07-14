@@ -9,12 +9,12 @@ Code here is an example of how to run CRNN_Tensorflow example on UAI Train platf
 ### Download dataset
 The model is trained on a subet of [Synth 90k](http://www.robots.ox.ac.uk/~vgg/data/text/). You should download and unzip the dataset to get trainning data.
 ### Preparing tfrecords
-Firstly,you need to supply a txt file named sample.txt to specify the relative path to the image data dir and it's corresponding text label. For example
+First, you should provide a txt file named sample.txt to specify the relative path to the image data dir and its corresponding text label. For example
 ```
 /1/2/373_coley_14845.jpg coley
 /1//100_eunice_26759.jpg eunice
 ```
-You can generate tfrecords file in a docker container. I suggest you to generate the docker image by crnn-generate-tfrecords.Dockerfile . You can storage data  according to the following structure . For example,1/2/373_coley_14845.jpg and 1/2/100_eunice_26759.jpg are examples of the training data we extracted from Synth 90k.
+You can generate tfrecords file in a docker container. You can generate the docker image by using crnn-generate-tfrecords.Dockerfile. You can storage data  according to the following structure . For example,1/2/373_coley_14845.jpg and 1/2/100_eunice_26759.jpg are examples of the training data we extracted from Synth 90k.
 
 Because the relative path of the training data is stored in Test/sample.txt and Traing/sample.txt , Training data should be placed in the same directory as the Test and Train folders.<br>
 
@@ -53,7 +53,7 @@ You can run the following command to generate a docker image named uhub.service.
 sudo docker build -t uhub.service.ucloud.cn/uai_demo/crnn-generate-tfrecords:v1.0 -f crnn-generate-tfrecords.Dockerfile .
 ```
 In the docker image,you can generate tfrecords file locally or on UAI Training Platform .<br>
-If you want to generate tfrecords file locally , you should map ./data and ./code to crnn-generate-tfrecords:v1.0 by the following command.
+If you want to generate tfrecords file locally , you should map ./data and ./output to crnn-generate-tfrecords:v1.0 by the following command.
 
 ```
 sudo docker run -it -v /data/data:/data/data -v /data/output:/data/output uhub.service.ucloud.cn/uai_demo/crnn-generate-tfrecords:v1.0
@@ -66,7 +66,7 @@ If you run the command locally,you can get train_feature.tfrecords,test_feature.
 If you generate tfrecords file on UAI Training Platform,you can find tfrecords file on Ucloud file storage platform such as UFile and UFS.
 
 ## Training model 
-Firstly,you can storage data according to the following structure. 
+First, you can put all materials according to the following structure.
 ```
 |_ data/
   |_ data/
@@ -88,11 +88,11 @@ You can build docker image by Dockerfile.
 ```
 sudo docker build -t uhub.service.ucloud.cn/uai_demo/ocr_test:v1.0 -f ocr-cpu.Dockerfile .
 ```
-So you can get a docker image named uhub.service.ucloud.cn/uai_demo/ocr_test:v1.0.You should change 'uai_demo' to 'YOUR_UHUB_REGISTRY'.<br>
+So you can get a docker image named uhub.service.ucloud.cn/uai_demo/ocr_test:v1.0.You should change 'uai_demo' to 'YOUR\_UHUB\_REGISTRY' to build your own docker image.<br>
 About training parameters you can check the global_configuration/config.py for details.<br>
 you can run the following command to train crnn model.<br>
 ```
-python /data/code/tools/train_shadownet.py  --dataset_dir /data/data
+sudo docker run -it uhub.service.ucloud.cn/YOUR_UHUB_REGISTRY/ocr_test:v1.0 /bin/bash -c "python /data/code/tools/train_shadownet.py "
 ```
 If you want to train a model on UAI Train,you should build docker image by ocr-gpu.Dockerfile and upload the following data into Ucloud file storage platform such as UFile and UFS.
 ```
@@ -101,6 +101,11 @@ If you want to train a model on UAI Train,you should build docker image by ocr-g
 	 |_ validation_feature.tfrecords
 	 |_ char_dict.json
 	 |_ ord_map.json
+```
+A detailed guidance on running training image on UAI-Train is given in:https://docs.ucloud.cn/ai/uai-train/tutorial/tf-mnist/train
+On UAI Train platform,you can run the following command to train crnn model.<br>
+```
+/data/code/tools/train_shadownet.py 
 ```
 
 

@@ -6,8 +6,8 @@ UAI Inference platform can serve inference services through HTTP requests. We pr
 
 In this example, we provide the inference service example: ocrModel which accepts one image and gives text detection result.
 
-## 2 Build Inception Inference Service with UAI Inference toolkit
-Building a inception inference service docker need some preparations:
+## 2 Build CRNN Inference Service with UAI Inference toolkit
+Building a CRNN inference service docker need some preparations:
 
 1. Write a simple Inference class to load the model, process the data, and run the inference logic.
 2. Provide a config file to tell UAI Inference system where to load the model
@@ -82,7 +82,7 @@ We need to provide the config file to tell the UAI Inference system to get the b
 
 
 ## 3 Preparing model
-You can use the model you trained on UAI Train Platform.We provide a crnn model in inference/checkpoint_dir/.
+You can use the model you trained on UAI Train Platform. You can also down it according to checkpoint_dir/intro.txt
 ## 4 Preparing directory
 We put all these files into one directory:
 ```
