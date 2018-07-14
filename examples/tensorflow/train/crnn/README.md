@@ -76,16 +76,16 @@ First, you can put all materials according to the following structure.
 |_ data/
   |_ data/
      |_ train_feature.tfrecords
-	 |_ test_feature.tfrecords
-	 |_ validation_feature.tfrecords
-	 |_ char_dict.json
-	 |_ ord_map.json
+     |_ test_feature.tfrecords
+     |_ validation_feature.tfrecords
+     |_ char_dict.json
+     |_ ord_map.json
   |_ code/
      |_ crnnmodel/
-	 |_ data_provoder/
-	 |_ global_configuration/
-	 |_ local_utils/
-	 |_ tools/
+     |_ data_provoder/
+     |_ global_configuration/
+     |_ local_utils/
+     |_ tools/
   |_ ocr-cpu.Dockerfile 
 ```
 You can build docker image by Dockerfile.
@@ -95,19 +95,21 @@ sudo docker build -t uhub.service.ucloud.cn/uai_demo/ocr_test:v1.0 -f ocr-cpu.Do
 ```
 So you can get a docker image named uhub.service.ucloud.cn/uai_demo/ocr_test:v1.0.You should change 'uai_demo' to 'YOUR\_UHUB\_REGISTRY' to build your own docker image.<br>
 About training parameters you can check the global_configuration/config.py for details.<br>
-you can run the following command to train crnn model.<br>
+
+You can run the following command to train crnn model.<br>
 ```
 sudo docker run -it uhub.service.ucloud.cn/YOUR_UHUB_REGISTRY/ocr_test:v1.0 /bin/bash -c "python /data/code/tools/train_shadownet.py "
 ```
 If you want to train a model on UAI Train,you should build docker image by ocr-gpu.Dockerfile and upload the following data into Ucloud file storage platform such as UFile and UFS.
 ```
      |_ train_feature.tfrecords
-	 |_ test_feature.tfrecords
-	 |_ validation_feature.tfrecords
-	 |_ char_dict.json
-	 |_ ord_map.json
+     |_ test_feature.tfrecords
+     |_ validation_feature.tfrecords
+     |_ char_dict.json
+     |_ ord_map.json
 ```
-A detailed guidance on running training image on UAI-Train is given in:https://docs.ucloud.cn/ai/uai-train/tutorial/tf-mnist/train
+A detailed guidance on running training image on UAI-Train is given in:https://docs.ucloud.cn/ai/uai-train/tutorial/tf-mnist/train <br>
+
 On UAI Train platform,you can run the following command to train crnn model.<br>
 ```
 /data/code/tools/train_shadownet.py 
