@@ -16,23 +16,23 @@ You can storage data according to the following structure .
 ```
 /_ data/
   |_ data/
-	 |_ char_dict.json
-	 |_ ord_map.json
+     |_ char_dict.json
+     |_ ord_map.json
      |_ Test/
         |_ sample.txt
      |_ Train/
         |_ sample.txt
      |_ 1/
         |_ 2/
-		   |_ 373_coley_14845.jpg
+           |_ 373_coley_14845.jpg
            |_ 100_eunice_26759.jpg
      |_ ...
   |_ code/
      |_ crnnmodel/
-	 |_ data_provoder/
-	 |_ global_configuration/
-	 |_ local_utils/
-	 |_ tools/
+     |_ data_provoder/
+     |_ global_configuration/
+     |_ local_utils/
+     |_ tools/
   |_ output/
   |_ crnn-generate-tfrecords.Dockerfile
 ```
@@ -44,14 +44,14 @@ You should provide a txt file named sample.txt to specify the relative path to t
 ```
 For example,1/2/373_coley_14845.jpg and 1/2/100_eunice_26759.jpg are examples of the training data we extracted from Synth 90k.
 
-If you want to train your own datasets,you just need to storage you datasets in the same directory as the Test and Train folders and write relative path and labels of image data in Test/sample.txt and Traing/sample.txt.
- Char_dict.json and ord_map.json must be placed in the /data/data folder . All your training image will be scaled into (32, 100, 3) , the dataset will be divided into train, test, validation set and you can change the parameter to control the ratio of them.
- If you want to use your dataset to train CRNN net , there should be only one line character in each of your images.<br>
+If you want to train your own datasets,you just need to storage you datasets in the same directory as the Test and Train folders and write relative path and labels of image data in Test/sample.txt and Traing/sample.txt.<br>
+Char_dict.json and ord_map.json must be placed in the /data/data folder . <br>
+All your training image will be scaled into (32, 100, 3) , the dataset will be divided into train, test, validation set and you can change the parameter to control the ratio of them.If you want to use your dataset to train CRNN net , there should be only one line character in each of your images.<br>
 
 
 
 
-You can run the following command to generate a docker image named uhub.service.ucloud.cn/uai_demo/crnn-generate-tfrecords:v1.0 to generate tfrecords file.You should change 'uai_demo' to 'YOUR_UHUB_REGISTRY'.
+You can run the following command to generate a docker image named uhub.service.ucloud.cn/uai_demo/crnn-generate-tfrecords:v1.0 to generate tfrecords file.You should change 'uai_demo' to 'YOUR_UHUB_REGISTRY' to build your own docker image.
 ```
 sudo docker build -t uhub.service.ucloud.cn/uai_demo/crnn-generate-tfrecords:v1.0 -f crnn-generate-tfrecords.Dockerfile .
 ```
