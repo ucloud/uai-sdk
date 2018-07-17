@@ -23,7 +23,6 @@ import tensorflow as tf
 
 from im2txt import configuration
 from im2txt import show_and_tell_model
-from uaitrain.arch.tensorflow import uflag
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -44,18 +43,15 @@ tf.logging.set_verbosity(tf.logging.INFO)
 
 def main(unused_argv):
   assert FLAGS.input_file_pattern, "--input_file_pattern is required"
-  assert FLAGS.output_dir, "--output_dir is required"
+  assert FLAGS.train_dir, "--train_dir is required"
 
   model_config = configuration.ModelConfig()
-  #model_config.input_file_pattern = FLAGS.input_file_pattern
-  #model_config.inception_checkpoint_file = FLAGS.inception_checkpoint_file
-  model_config.input_file_pattern = FLAGS.data_dir + FLAGS.input_file_pattern
-  model_config.inception_checkpoint_file = FLAGS.work_dir + FLAGS.inception_checkpoint_file
+  model_config.input_file_pattern = FLAGS.input_file_pattern
+  model_config.inception_checkpoint_file = FLAGS.inception_checkpoint_file
   training_config = configuration.TrainingConfig()
 
   # Create training directory.
-  #train_dir = FLAGS.train_dir
-  train_dir = FLAGS.output_dir
+  train_dir = FLAGS.train_dir
   if not tf.gfile.IsDirectory(train_dir):
     tf.logging.info("Creating training directory: %s", train_dir)
     tf.gfile.MakeDirs(train_dir)
