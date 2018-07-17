@@ -8,7 +8,7 @@ Im2txt example shows how to run TensorFlow image captioning training on UAI Trai
 The Show and Tell model is a deep neural network that learns how to describe the content of images. Based on an Inception v3 model, we train it with encoded picture data and corresponding captions. Then we fine-tune it along with the encoding layers to optimize the result. Please refer to the original page for more information on the topic.
 
 ## Intro
-The object detection example directly use the code in https://github.com/tensorflow/models/tree/master/research/im2txt. The training process depends on a natural language package named nltk. We provide a Dockerfile to show how to pack these python packages into the docker.
+The im2txt example directly use the code in https://github.com/tensorflow/models/tree/master/research/im2txt. The training process depends on a natural language package named nltk. We provide a Dockerfile to show how to pack these python packages into the docker.
 
 ## UAI Example
 Other than the source code, a docker file and a config file are offered to help pack a docker, with which you are able to run the training on UAI-Train platform. A note on the training time: to fully train an effective captioning model takes sufficient time even on GPU-packed machines, and is several times slower with CPU, so using the UAI-Train platform is recommanded. However, you can try out the entire process with a few pictures and very few training steps locally if you do not concern over the result.
@@ -54,7 +54,7 @@ UCloud provides a pre-built docker image for training: im2txt-train-gpu:test. Yo
 
 	sudo docker pull uhub.ucloud.cn/uai_demo/im2txt-train-gpu:test
 
-Or you can do the following to build on your own. We provide the basic Dockerfile to build the docker image for training object-detection model written as:
+Or you can do the following to build on your own. We provide the basic Dockerfile to build the docker image for training im2txt model written as:
 
     From uhub.service.ucloud.cn/uaishare/gpu_uaitrain_ubuntu-16.04_python-2.7_tensorflow-1.7.0:v1.0
 
@@ -84,7 +84,7 @@ We can simply use the following command to run the local test(GPU version). Make
 	
 	-v /im2txt/data/:/data/data
 	
-replaces the directories, so that when the program goes to "/data/data/", it actually redirects into "/data/object-detect/data/" for the images and captions. Here is the default command:
+replaces the directories, so that when the program goes to "/data/data/", it actually redirects into "/data/im2txt/data/" for the images and captions. Here is the default command:
 
     sudo nvidia-docker run -it -v /data/im2txt/data/:/data/data -v /data/im2txt/output:/data/output uhub.ucloud.cn/uai_dockers/im2txt-train-gpu:test /bin/bash -c "cd /data && /usr/bin/python /data/train.py --input_file_pattern=/data/data/train-?????-of-00256 --inception_checkpoint_file=/data/data/inception_v3.ckpt --train_dir=/data/output/ --number_of_steps=1000000"
 
