@@ -22,10 +22,10 @@ In case you intend to use your own image dataset, you should prepare several set
 Firstly, separate your images into 2 parts: a greater collection of pictures and captions as the training set, and a smaller collection of pictures as the validation and test set. Put the pictures in 2 separate directories under the same root.
 Then, for each set of pictures, create a json file to record the captions. A json file is in the form of:
 
-  {'images' : [{"id" : 1, "file_name" : "boy-play-skateboard.jpg"},
+  {"images" : [{"id" : 1, "file_name" : "boy-play-skateboard.jpg"},
                {"id" : 2, "file_name" : "man-ski-on-ocean.jpg"}, 
                ...], 
-   'annotations' : [{"image_id" : 1, "caption" : "a boy play skateboard on playground."}, 
+   "annotations" : [{"image_id" : 1, "caption" : "a boy play skateboard on playground."}, 
                     {"image_id" : 2, "caption" : "a man ski on ocean beside boat."}, 
                      ...]
   }
