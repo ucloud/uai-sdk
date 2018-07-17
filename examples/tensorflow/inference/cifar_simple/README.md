@@ -9,8 +9,8 @@ For more details please refer to https://docs.ucloud.cn/ai/uai-inference/guide/p
 
 In this example, we provide the inference service example: cifarModel which accepts one picture and gives picture category.
 
-## 2 Build Inception Inference Service with UAI Inference toolkit
-Building a inception inference service docker need some preparations:
+## 2 Build cifar Inference Service with UAI Inference toolkit
+Building a cifar inference service docker need some preparations:
 
 1. Write a simple Inference class to load the model, process the data, and run the inference logic.
 2. Provide a config file to tell UAI Inference system where to load the model.
@@ -19,15 +19,14 @@ Building a inception inference service docker need some preparations:
 For more details please refer to https://docs.ucloud.cn/ai/uai-inference/index
 
 ### 2.1 Writing Service Code
-We provide the example service code in inference.py. We defined ocrModel which derived from TFAiUcloudModel. 
+We provide the example service code in cifar_infer.py. We defined cifarModel which derived from TFAiUcloudModel. 
 
-In ocrModel we only need to implement load_model funcs and execute funcs:
+In cifarModel we only need to implement load_model funcs and execute funcs:
 
 1. load_model(self),which loads the given model.
     ``` 
     def load_model(self):
 		sess = tf.Session()
-		
 		x = tf.placeholder(dtype=tf.float32, shape=[1, 24, 24, 3], name='input')
 		#inferece
 		pred = tf.argmax(cifar10.inference(x),axis=1)
@@ -53,7 +52,7 @@ then recognize the text. It formats result into list object. (You can format it 
 			y_ = self.output['y_']
 			ret = []
 			for i in range(batch_size):
-			    '''
+                '''
     			1 load data 
     			'''
 				image = Image.open(data[i])
@@ -82,7 +81,7 @@ The config file should include following info:
 
 
 ## 3 Preparing model
-You can use the model you trained on UAI Train Platform. You can also down it according to checkpoint_dir/intro.txt
+You can use the model you trained on UAI Train Platform. You can also download it according to checkpoint_dir/intro.txt
 ## 4 Preparing directory
 We put all these files into one directory:
 ```
