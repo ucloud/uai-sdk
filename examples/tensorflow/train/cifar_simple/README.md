@@ -33,7 +33,7 @@ So you can get a docker image named uhub.service.ucloud.cn/YOUR_UHUB_REGISTRY/ci
 
 You can run the following command to train crnn model locally.<br>
 ```
-sudo docker run -it -v /data/data:/data/data -v data/output:/data/output /bin/bash -c "python /data/code/cifar10_train.py"
+sudo docker run -it -v /data/data:/data/data -v data/output:/data/output uhub.service.ucloud.cn/YOUR_UHUB_REGISTRY/cifar_train_cpu:v1.0 /bin/bash -c "python /data/code/cifar10_train.py"
 ```
 Cifar dataset will be downloaded automatically under /data/data. You can find checkpoint files in /data/output/.
 
