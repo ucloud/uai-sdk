@@ -43,7 +43,8 @@ class ocrModel(TFAiUcloudModel):
 		decoder = data_utils.TextFeatureIO()
 		ret = []
 		for i in range(batch_size):
-			image = np.array(Image.open(data[i]))
+			image = Image.open(data[i])
+			image = cv2.cvtColor(np.asarray(image),cv2.COLOR_RGB2BGR)
 			image = cv2.resize(image, (100, 32))
 			image = np.expand_dims(image, axis=0).astype(np.float32)
 			preds = sess.run(y_, feed_dict={x: image})
