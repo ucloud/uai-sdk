@@ -13,6 +13,16 @@ The im2txt training example directly uses the code in https://github.com/tensorf
 ## Preparation
 Other than the source code, a docker file and a config file are offered to help pack a docker, with which you are able to run the training on UAI-Train platform. A note on the training time: to fully train an effective captioning model takes sufficient time even on GPU-packed machines, and is several times slower with CPU, so using the UAI-Train platform is recommanded. However, you can still try out the entire process locally.
 
+You will also need the nltk package and its language package punkt. Install the nltk package: 
+	
+	sudo pip install -U nltk
+
+Also, install the punkt language pack:
+
+	python -m nltk.downloader nltk
+
+If it does not work, refer to http://www.nltk.org/install.html; http://www.nltk.org/data.html
+
 ### Preparing the Data
 The training requires 2 parts of data: image-caption dataset and an Inception v3 model.
 You should prepare the training data and an Inception v3 model before running the task. As UAI Train nodes does not provide Internet access, you should prepare your data locally (either download or generate).
@@ -37,6 +47,7 @@ For a large set of images, it is seemingly impossible to create json files mannu
 The entire data storage should be:
 
 	|_ data/im2txt
+	|  |_ word_counts.txt
 	|  |_ train_cap.json
 	|  |_ val_cap.json
 	|  |_ train_img
