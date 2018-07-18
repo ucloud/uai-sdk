@@ -66,7 +66,7 @@ The directory contains the following data:
 
 ### Build the Docker images
 
-UCloud provides a pre-built docker image for training: im2txt-train-gpu:test. You can use the following docker code to pull it:
+UCloud provides a pre-built docker image for training: im2txt-train-gpu:test. This is an image of a docker that contains the training code and all environment packages it needs, but not the datasets and the model. You can use the following docker code to pull it:
 
 	sudo docker pull uhub.ucloud.cn/uai_demo/im2txt-train-gpu:test
 
@@ -80,7 +80,7 @@ Or you can do the following to build on your own. We provide the basic Dockerfil
     ADD im2txt /data/im2txt/
     ADD ./train.py /data/
     
-We should run the docker build under PATH_TO/tensorflow/models/. To build the docker image, the following steps are performed by the above dockerfile commands:
+The above dockerfile commands perform several tasks:
 
 1. Use uaitrain-tf1.7 version as the base image of the whole docker image, which contains the tf1.7 package.
 2. Install nltk, the natural language package.
