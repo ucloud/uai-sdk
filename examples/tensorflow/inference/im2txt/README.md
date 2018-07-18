@@ -19,17 +19,17 @@ As soon as you finished retraining a captioning model, get the output model file
 	|_ code
 	|  |_ checkpoint_dir
 	|  |  |_ checkpoint
-  |  |  |_ model.ckpt-3000000.data-00000-of-00001
-  |  |  |_ model.ckpt-3000000.meta
-  |  |  |_ model.ckpt-3000000.index
-  |  |  |_ word_counts.txt
+	|  |  |_ model.ckpt-3000000.data-00000-of-00001
+	|  |  |_ model.ckpt-3000000.meta
+	|  |  |_ model.ckpt-3000000.index
+	|  |  |_ word_counts.txt
 	|  |_ im2txt_inference.py
 	|  |_ im2txt_conf.py
-  |  |_ configuration.py
-  |  |_ inference_wrapper.py
-  |  |_ show_and_tell_model.py
-  |  |_ inference_utils
-  |  |_ ops
+	|  |_ configuration.py
+	|  |_ inference_wrapper.py
+	|  |_ show_and_tell_model.py
+	|  |_ inference_utils
+	|  |_ ops
 	|_ im2txt.conf
 	|_ im2txt-infer-cpu.Dockerfile
 
@@ -50,19 +50,18 @@ We need to provide a config file to feed parameters into the UAI Inference syste
 
 eventually, the conf file is in the form of:
 	
-	{
-	    "http_server" : {
-	        "exec" : {
-	            "main_class": "Im2txtModel",
-	            "main_file": "im2txt_inference"
-	        },
-	        "tensorflow" : {
-		    "model_dir" : "./checkpoint_dir",
-        "checkpoint" : 3000000
-		    "input_width" : 299,
-		    "input_height" : 299
-	        }
-	    }
+	{"http_server" : {
+		"exec" : {
+			"main_class": "Im2txtModel",
+			"main_file": "im2txt_inference"
+		},
+		"tensorflow" : {
+			"model_dir" : "./checkpoint_dir",
+			"checkpoint" : 3000000
+			"input_width" : 299,
+			"input_height" : 299
+			}
+		}
 	}
 
 You can find the example config file: im2txt.conf. Check if this file is under the directory listed above.
@@ -91,7 +90,7 @@ It's alright to ignore these details, but you should ensure these files are in t
 ### Build Your Own Inference Docker
 With the above docker file we can now build your own inference docker image(Your directory should look like [Setup](#setup)):
 
-  sudo docker build -t im2txt:test -f im2txt-infer-cpu.Dockerfile .
+	sudo docker build -t im2txt:test -f im2txt-infer-cpu.Dockerfile .
 
 Note here we use the foresaid docker file and do not miss the dot at the end.
 
