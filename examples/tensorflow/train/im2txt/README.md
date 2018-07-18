@@ -49,7 +49,7 @@ The entire data storage should be:
 ... (small set of images)
 
 
-#### Create Local Test Data Path
+### Create Local Test Data Path
 Prepare the dataset and transform them into tf records using the script: build_mscoco_data.py, and set the parameters to be the directories and file names as above.
 
 Put all the tfrecord and the Inception v3 model checkpoint into /data/im2txt/data/.
@@ -94,7 +94,7 @@ Put the above docker file in the same directory of train.py. Run the following c
 
 These commands build the docker with the above commands in the Dockerfile. You can use tag the docker with any docker-name here if you want by changing the suffix after <UHUB_REGISTRY>/, so you can manage multiple versions of dockers without confusion. After building the image, we get a docker image named uhub.ucloud.cn/<YOUR_UHUB_REGISTRY>/im2txt-train-gpu:test, which is the same as the docker provided.
 
-### Run the train: first phase
+## Run the train: first phase
 
 We can simply use the following command to run the local test(GPU version). Make sure you have a GPU and relevant environment to run it on. Note that if you use any other data storage directory other than "/data/im2txt/data", you should change the same path in the command accordingly. The parameter:
 	
@@ -122,6 +122,6 @@ You can just directly run the above docker image locally or on UAI-Train platfor
 
 In the 2nd phase, the entire model, including inception v3 parameters, are trained altogether to fine-tune the model for more 3000000 - 1000000 = 2000000 steps. The additonal 2000000 round is yet another experiential number before the model starts to overfit. Again, you are free to try out other parameters to examine the result.
 
-### Results
+## Results
 UAI Training produces the trained model containing in several files: some_model.data-00000-of-00001, some_model.meta, some_model.index and checkpoint. Now you can go to: https://github.com/ucloud/uai-sdk/tree/master/examples/tensorflow/inference/im2txt to generate captions for some pictures.
 
