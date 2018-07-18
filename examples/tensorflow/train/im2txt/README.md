@@ -116,7 +116,11 @@ On the training settings, 1000000 rounds of training is experiential to generate
 ### Run the train: second phase
 Or instead, you can continue to fine-tune the model for even better caption results, while consuming a lot more time. For a fine-tune session, repeat the training above, but with some different parameters:
 
-  --input_file_pattern=/data/data/train-?????-of-00256 --train_dir=/data/output/ --number_of_steps=3000000 --train_inception=true
+	Run locally:
+	sudo nvidia-docker run -it -v /data/im2txt/data/:/data/data -v /data/im2txt/output:/data/output uhub.ucloud.cn/uai_dockers/im2txt-train-gpu:test /bin/bash -c "cd /data && /usr/bin/python /data/train.py --input_file_pattern=/data/data/train-?????-of-00256 --train_dir=/data/output/ --number_of_steps=3000000 --train_inception=true"
+
+	Run on UAI-Train:
+	/data/train.py --input_file_pattern=/data/data/train-?????-of-00256 --train_dir=/data/output/ --number_of_steps=3000000 --train_inception=true
 
 You can just directly run the above docker image locally or on UAI-Train platform without tinkering with the datasets.
 
