@@ -36,17 +36,17 @@ For a large set of images, it is seemingly impossible to create json files mannu
 
 The entire data storage should be:
 
-|_ data/im2txt
-|  |_ train_cap.json
-|  |_ val_cap.json
-|  |_ train_img
-|  |  |_ boy-play-skateboard.jpg
-|  |  |_ man-ski-on-ocean.jpg
-... (large set of images)
+	|_ data/im2txt
+	|  |_ train_cap.json
+	|  |_ val_cap.json
+	|  |_ train_img
+	|  |  |_ boy-play-skateboard.jpg
+	|  |  |_ man-ski-on-ocean.jpg
+	... (large set of images)
 
-|  |_ val_img
-|  |  |_ girl-swim-in-pool.jpg
-... (small set of images)
+	|  |_ val_img
+	|  |  |_ girl-swim-in-pool.jpg
+	... (small set of images)
 
 
 ### Create Local Test Data Path
