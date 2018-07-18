@@ -5,21 +5,22 @@ Im2txt example shows how to run TensorFlow image captioning training on UAI Trai
 
 ## Origin
 
-The Show and Tell model is a deep neural network that learns how to describe the content of images. Based on an Inception v3 model, we train it with encoded picture data and corresponding captions. Then we fine-tune it along with the encoding layers to optimize the result. Please refer to the original page for more information on the topic.
+The Show and Tell model is a deep neural network that learns how to describe the content of images. Based on an Inception v3 model, we train the encoding layer with encoded picture data and corresponding captions. Then we fine-tune it along with the Inception v3 parameters to optimize the result. Please refer to the original page for more information and an essay on the topic.
 
 ## Intro
-The im2txt example directly use the code in https://github.com/tensorflow/models/tree/master/research/im2txt. The training process depends on a natural language package named nltk. We provide a Dockerfile to show how to pack these python packages into the docker.
+The im2txt training example directly uses the code in https://github.com/tensorflow/models/tree/master/research/im2txt. The training process depends on a natural language package named nltk. We provide a Dockerfile to show how to pack these python packages into the docker. 
 
-## UAI Example
-Other than the source code, a docker file and a config file are offered to help pack a docker, with which you are able to run the training on UAI-Train platform. A note on the training time: to fully train an effective captioning model takes sufficient time even on GPU-packed machines, and is several times slower with CPU, so using the UAI-Train platform is recommanded. However, you can try out the entire process with a few pictures and very few training steps locally if you do not concern over the result.
+## Preparation
+Other than the source code, a docker file and a config file are offered to help pack a docker, with which you are able to run the training on UAI-Train platform. A note on the training time: to fully train an effective captioning model takes sufficient time even on GPU-packed machines, and is several times slower with CPU, so using the UAI-Train platform is recommanded. However, you can still try out the entire process locally.
 
 ### Preparing the Data
-You should prepare your own training data and an Inception v3 model before running the task. As UAI Train nodes does not provide Internet access, you should prepare your data locally.
-Refer to https://github.com/tensorflow/models/tree/master/research/im2txt as a guide to download a workable dataset and the inception v3 model, or secure a copy of Inception v3 model from other sources and follow the guidance below to build a self-sourced dataset.
+The training requires 2 parts of data: image-caption dataset and an Inception v3 model.
+You should prepare the training data and an Inception v3 model before running the task. As UAI Train nodes does not provide Internet access, you should prepare your data locally (either download or generate).
+You could refer to https://github.com/tensorflow/models/tree/master/research/im2txt to download a workable dataset and the inception v3 model. It is also ok to secure a copy of Inception v3 model from other sources and follow the guidance below to build a self-sourced dataset.
 
 #### Prepare self-sourced dataset
 In case you intend to use your own image dataset, you should prepare several sets of data as input, including images and captions as a json file. 
-Firstly, separate your images into 2 parts: a greater collection of pictures and captions as the training set, and a smaller collection of pictures as the validation and test set. Put the pictures in 2 separate directories under the same root.
+Firstly, separate your images into 2 parts: a greater collection of pictures as the training set, and a smaller collection of pictures as the validation and test set. Put the pictures in 2 separate directories under the same root.
 Then, for each set of pictures, create a json file to record the captions. A json file is in the form of:
 
   {"images" : [{"id" : 1, "file_name" : "boy-play-skateboard.jpg"},
@@ -32,6 +33,21 @@ Then, for each set of pictures, create a json file to record the captions. A jso
 
 You can use any integers as id as long as the image file name matches its captions. generate 2 json files for training set and validation set separately, and name them train_cap.json and val_vap.json (record the file directory and file name for training). 
 For a large set of images, it is seemingly impossible to create json files mannually, so please try to generate json files with scripts, or use the dataset sourced from Internet.
+
+The entire data storage should be:
+
+|_ data/im2txt
+|  |_ train_cap.json
+|  |_ val_cap.json
+|  |_ train_img
+|  |  |_ boy-play-skateboard.jpg
+|  |  |_ man-ski-on-ocean.jpg
+... (large set of images)
+
+|  |_ val_img
+|  |  |_ girl-swim-in-pool.jpg
+... (small set of images)
+
 
 #### Create Local Test Data Path
 Prepare the dataset and transform them into tf records using the script: build_mscoco_data.py, and set the parameters to be the directories and file names as above.
@@ -88,18 +104,23 @@ replaces the directories, so that when the program goes to "/data/data/", it act
 
     sudo nvidia-docker run -it -v /data/im2txt/data/:/data/data -v /data/im2txt/output:/data/output uhub.ucloud.cn/uai_dockers/im2txt-train-gpu:test /bin/bash -c "cd /data && /usr/bin/python /data/train.py --input_file_pattern=/data/data/train-?????-of-00256 --inception_checkpoint_file=/data/data/inception_v3.ckpt --train_dir=/data/output/ --number_of_steps=1000000"
 
-Or, recommandedly, you can run the training on UAI-Train platform: https://docs.ucloud.cn/ai/uai-train/tutorial/tf-mnist/train
+Or, recommandedly, you can run the training on UAI-Train platform. For a guidance: https://docs.ucloud.cn/ai/uai-train/tutorial/tf-mnist/train
 Here is the command to start the training if it is performed on UAI-Training Platform:
 
 	/data/train.py --input_file_pattern=/data/data/train-?????-of-00256 --inception_checkpoint_file=/data/data/inception_v3.ckpt --train_dir=/data/output/ --number_of_steps=1000000
 
 Note here that some directory replacement parameters are left out because UAI-Train platform forcingly applies the replacement (to /data/data/ and /data/output/ respectly, so do not use these 2 directories to store data because they will not be found). Let the input path be /data/im2txt/data/, or wherever you put data, and output path be /data/im2txt/output/. The input tf records and checkpoint and the output model should be in UFile system if you use the UAI-Train system.
 
-On the training settings, 1000000 rounds of training is experiential to generate effective model outputs. The model checkpoint after 1000000 training steps is already good enough for captioning. Refer to: https://github.com/ucloud/uai-sdk/new/master/examples/tensorflow/inference/im2txt for using the model to caption images. Or instead, you can continue to fine-tune the model for even better caption results, but consumes a lot more time. For a fine-tune session, repeat the training above, but with some different parameters:
+On the training settings, 1000000 rounds of training is experiential to generate effective model outputs. The model checkpoint after 1000000 training steps is already good enough for captioning. Refer to: https://github.com/ucloud/uai-sdk/new/master/examples/tensorflow/inference/im2txt for using the model to caption images.
+
+### Run the train: second phase
+Or instead, you can continue to fine-tune the model for even better caption results, while consuming a lot more time. For a fine-tune session, repeat the training above, but with some different parameters:
 
   --input_file_pattern=/data/data/train-?????-of-00256 --train_dir=/data/output/ --number_of_steps=3000000 --train_inception=true
 
-In the 2nd phase, the entire model, including inception v3 parameters, are trained altogether to fine-tune the model for more 3000000 - 1000000 = 2000000 steps. The additonal 2000000 round is yet another experiential number before the model starts to overfit. 
+You can just directly run the above docker image locally or on UAI-Train platform without tinkering with the datasets.
+
+In the 2nd phase, the entire model, including inception v3 parameters, are trained altogether to fine-tune the model for more 3000000 - 1000000 = 2000000 steps. The additonal 2000000 round is yet another experiential number before the model starts to overfit. Again, you are free to try out other parameters to examine the result.
 
 ### Results
 UAI Training produces the trained model containing in several files: some_model.data-00000-of-00001, some_model.meta, some_model.index and checkpoint. Now you can go to: https://github.com/ucloud/uai-sdk/tree/master/examples/tensorflow/inference/im2txt to generate captions for some pictures.
