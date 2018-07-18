@@ -23,13 +23,13 @@ In case you intend to use your own image dataset, you should prepare several set
 Firstly, separate your images into 2 parts: a greater collection of pictures as the training set, and a smaller collection of pictures as the validation and test set. Put the pictures in 2 separate directories under the same root.
 Then, for each set of pictures, create a json file to record the captions. A json file is in the form of:
 
-  {"images" : [{"id" : 1, "file_name" : "boy-play-skateboard.jpg"},
-               {"id" : 2, "file_name" : "man-ski-on-ocean.jpg"}, 
-               ...], 
-   "annotations" : [{"image_id" : 1, "caption" : "a boy play skateboard on playground."}, 
-                    {"image_id" : 2, "caption" : "a man ski on ocean beside boat."}, 
-                     ...]
-  }
+	{"images" : [{"id" : 1, "file_name" : "boy-play-skateboard.jpg"},
+{"id" : 2, "file_name" : "man-ski-on-ocean.jpg"}, 
+...], 
+"annotations" : [{"image_id" : 1, "caption" : "a boy play skateboard on playground."}, 
+{"image_id" : 2, "caption" : "a man ski on ocean beside boat."}, 
+...]
+}
 
 You can use any integers as id as long as the image file name matches its captions. generate 2 json files for training set and validation set separately, and name them train_cap.json and val_vap.json (record the file directory and file name for training). 
 For a large set of images, it is seemingly impossible to create json files mannually, so please try to generate json files with scripts, or use the dataset sourced from Internet.
