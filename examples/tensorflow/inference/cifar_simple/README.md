@@ -30,7 +30,7 @@ In cifarModel we only need to implement load_model funcs and execute funcs:
 		x = tf.placeholder(dtype=tf.float32, shape=[1, 24, 24, 3], name='input')
 		#inferece
 		pred = tf.argmax(cifar10.inference(x),axis=1)
-                #load model
+            #load model
 		saver = tf.train.Saver()
 		params_file = tf.train.latest_checkpoint(self.model_dir)
 		saver.restore(sess=sess, save_path=params_file)
@@ -52,9 +52,9 @@ then recognize the text. It formats result into list object. (You can format it 
 			y_ = self.output['y_']
 			ret = []
 			for i in range(batch_size):
-                               '''
-    			       1 load data 
-    			       '''
+                            '''
+    			1 load data 
+    			'''
 				image = Image.open(data[i])
 				image = cv2.cvtColor(np.asarray(image),cv2.COLOR_RGB2BGR)
 				image = cv2.resize(image, (24, 24))
@@ -63,8 +63,8 @@ then recognize the text. It formats result into list object. (You can format it 
 				image=(image-mean)/max(std,1/np.sqrt(image.size))
 				image = np.expand_dims(image, axis=0).astype(np.float32)
 				'''
-    			        2 inference
-    			        '''
+    			2 inference
+    			'''
 				preds = sess.run(y_, feed_dict={x: image})
 				pred_label=label_dict[preds[0]]
 				ret.append(pred_label)
