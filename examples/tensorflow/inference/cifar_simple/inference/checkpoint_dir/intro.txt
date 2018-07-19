@@ -1,4 +1,4 @@
-下载地址：http://uaidocs.ufile.ucloud.com.cn//cifar_simple/checkpoint_dir/
-通过filemgr-linux64.elf工具下载的下载命令(假设你要将数据下载到/cifar_simple/checkpoint_dir/文件夹)：
-./filemgr-linux64 --action download --bucket uaidocs --key /cifar_simple/checkpoint_dir//checkpoint  --file /cifar_simple/checkpoint_dir/checkpoint
+通过filemgr-linux64.elf工具下载的下载命令(假设你要将数据下载到/data/cifar_simple/checkpoint_dir/文件夹)：
+./filemgr-linux64 --action batch-download  --bucket uaidocs  --pattern /cifar_simple/*  --dir /data/
+
 
