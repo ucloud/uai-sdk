@@ -1,4 +1,4 @@
-# Retrain Example
+# Image2txt Example
 This example show how to run image captioning inference on models trained with retrain method, based on UAI Inference Platform.
 
 ## Origin
