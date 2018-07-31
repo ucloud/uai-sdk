@@ -50,7 +50,7 @@ cifar10.maybe_download_and_extract()
 
 You can run the following command to train cifar model locally.<br>
 ```
-sudo docker run -it -v /data/data:/data/data -v data/output:/data/output uhub.service.ucloud.cn/YOUR_UHUB_REGISTRY/cifar_train_cpu:v1.0 /bin/bash -c "python /data/code/cifar10_train.py"
+sudo docker run -it -v /data/data:/data/data -v data/output:/data/output uhub.service.ucloud.cn/YOUR_UHUB_REGISTRY/cifar_train_cpu:v1.0 /bin/bash -c "python /data/cifar10_train.py"
 ```
 You can find checkpoint files in /data/output/.
 
@@ -61,7 +61,7 @@ A detailed guidance on running training image on UAI-Train is given in:https://d
 
 On UAI Train platform,you can run the following command to train cifar model.<br>
 ```
-/data/code/cifar10_train.py
+/data/cifar10_train.py
 ```
 
 
