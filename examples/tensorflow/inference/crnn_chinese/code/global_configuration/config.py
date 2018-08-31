@@ -27,7 +27,7 @@ __C.TRAIN.TEST_DISPLAY_STEP = 100
 # Set the momentum parameter of the optimizer
 __C.TRAIN.MOMENTUM = 0.9
 # Set the initial learning rate
-__C.TRAIN.LEARNING_RATE = 0.1
+__C.TRAIN.LEARNING_RATE = 0.5
 # Set the GPU resource used during training process
 __C.TRAIN.GPU_MEMORY_FRACTION = 0.85
 # Set the GPU allow growth parameter during tensorflow training process
@@ -44,6 +44,9 @@ __C.TRAIN.LR_DECAY_RATE = 0.5
 __C.TRAIN.CLASSES_NUMS = 3790
 # Set the validation step
 __C.TRAIN.VAL_STEP = 100
+# Set the resize width 
+__C.TRAIN.width = 100
+
 
 # Test options
 __C.TEST = edict()

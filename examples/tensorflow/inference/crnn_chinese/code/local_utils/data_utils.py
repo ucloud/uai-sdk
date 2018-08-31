@@ -15,6 +15,9 @@ import os.path as ops
 import re
 
 from local_utils import establish_char_dict
+from global_configuration import config
+
+CFG = config.cfg
 
 
 class FeatureIO(object):
@@ -230,7 +233,7 @@ class TextFeatureReader(FeatureIO):
                                                # 'labels': tf.FixedLenFeature([], tf.int64),
                                            })
         image = tf.decode_raw(features['images'], tf.uint8)
-        images = tf.reshape(image, [32, 100, 3])
+        images = tf.reshape(image, [32,CFG.TRAIN.width, 3])
         labels = features['labels']
         # labels = tf.one_hot(indices=labels, depth=config.cfg.TRAIN.CLASSES_NUMS)
         labels = tf.cast(labels, tf.int32)

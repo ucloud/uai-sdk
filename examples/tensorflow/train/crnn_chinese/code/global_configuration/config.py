@@ -44,6 +44,9 @@ __C.TRAIN.LR_DECAY_RATE = 0.5
 __C.TRAIN.CLASSES_NUMS = 3790
 # Set the validation step
 __C.TRAIN.VAL_STEP = 100
+# Set the resize width 
+__C.TRAIN.width = 100
+
 
 # Test options
 __C.TEST = edict()

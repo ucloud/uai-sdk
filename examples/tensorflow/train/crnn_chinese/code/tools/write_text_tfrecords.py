@@ -27,7 +27,11 @@ sys.path.append('/data/code')
 
 from data_provider import data_provider
 from local_utils import data_utils
-width = 100
+from global_configuration import config
+CFG = config.cfg
+
+width = CFG.TRAIN.width
+
 
 def init_args():
     """

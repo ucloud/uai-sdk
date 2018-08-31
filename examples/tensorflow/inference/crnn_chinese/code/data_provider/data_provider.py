@@ -19,6 +19,8 @@ except ImportError:
     pass
 
 from data_provider import base_data_provider
+from global_configuration import config
+
 
 
 class TextDataset(base_data_provider.Dataset):
@@ -96,8 +98,7 @@ class TextDataset(base_data_provider.Dataset):
         imagenames_slice = self._epoch_imagenames[start:end]
         labels_slice = self._epoch_labels[start:end]
 
-        images_slice = [cv2.imread(tmp, cv2.IMREAD_UNCHANGED) for tmp in imagenames_slice]
-        images_slice = [cv2.resize(tmp, (100,32)) for tmp in images_slice]
+        images_slice = [cv2.resize(cv2.imread(tmp, cv2.IMREAD_UNCHANGED),(config.cfg.TRAIN.width,32)) for tmp in imagenames_slice]
         images_slice = np.array(images_slice)
         images_slice = self.normalize_images(images_slice, self.__normalization)
 

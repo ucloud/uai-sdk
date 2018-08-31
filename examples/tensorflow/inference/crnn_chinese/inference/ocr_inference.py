@@ -35,7 +35,7 @@ class ocrModel(TFAiUcloudModel):
           super(ocrModel,self).__init__(conf)
       def load_model(self):
           sess=tf.Session()
-          x=tf.placeholder(dtype=tf.float32, shape=[1, 32, 100, 3], name='input')
+          x=tf.placeholder(dtype=tf.float32, shape=[1, 32, config.cfg.TRAIN.width, 3], name='input')
           phase_tensor = tf.constant('test', tf.string)
           net=crnn_model.ShadowNet(phase=phase_tensor, hidden_nums=256, layers_nums=2, seq_length=15, num_classes=config.cfg.TRAIN.CLASSES_NUMS, rnn_cell_type='lstm')
           with tf.variable_scope('shadow'):
@@ -57,7 +57,7 @@ class ocrModel(TFAiUcloudModel):
           for i in range(batch_size):
               image = Image.open(data[i])
               image = cv2.cvtColor(np.asarray(image),cv2.COLOR_RGB2BGR)
-              image = cv2.resize(image, (100, 32))
+              image = cv2.resize(image, (config.cfg.TRAIN.width, 32))
               image = np.expand_dims(image, axis=0).astype(np.float32)
               preds = sess.run(y_, feed_dict={x:image})
               preds = decoder.writer.sparse_tensor_to_str(preds[0])[0]+'\n'
