@@ -71,7 +71,7 @@ In ocrModel we only need to implement load_model funcs and execute funcs:
 				preds = sess.run(y_, feed_dict={x: image})
 				preds = decoder.writer.sparse_tensor_to_str(preds[0])[0]+'\n'
 				ret.append(preds)
-        return ret
+            return ret
     ```
 
 ### 2.2 Define the Config File
