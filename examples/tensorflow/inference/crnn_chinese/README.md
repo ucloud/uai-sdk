@@ -6,8 +6,8 @@ UAI Inference platform can serve inference services through HTTP requests. We pr
 
 In this example, we provide the inference service example: ocrModel which accepts one image and gives text detection result.
 
-## 2 Build Inception Inference Service with UAI Inference toolkit
-Building a inception inference service docker need some preparations:
+## 2 Build CRNN Chinese Inference Service with UAI Inference toolkit
+Building a CRNN Chinese inference service docker need some preparations:
 
 1. Write a simple Inference class to load the model, process the data, and run the inference logic.
 2. Provide a config file to tell UAI Inference system where to load the model
