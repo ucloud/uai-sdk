@@ -37,10 +37,12 @@ sudo docker build -t uhub.service.ucloud.cn/YOUR_UHUB_REGISTRY/cifar_train_gpu:v
 By running the following command locally,cifar dataset will be downloaded into /data/data.
 
 ```
-sudo docker run -it -v /data/data:/data/data  uhub.service.ucloud.cn/YOUR_UHUB_REGISTRY/cifar_train_cpu:v1.0 /bin/bash -c "python /data/data/download.py"
+sudo docker run -it --network=host -v /data/data:/data/data  uhub.service.ucloud.cn/YOUR_UHUB_REGISTRY/cifar_train_cpu:v1.0 /bin/bash -c "cd /data/data && python download.py"
 ```
-download.py should be placed into /data/data.Content of download.py is as follows:
+__init__.py and download.py should be placed into folder "/data/data". Content of __init__.py is empty. Content of download.py is as follow:
 ```
+import sys
+sys.path.append("..")
 import cifar10
 cifar10.maybe_download_and_extract()
 ```
