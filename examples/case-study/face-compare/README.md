@@ -8,7 +8,7 @@ https://docs.ucloud.cn/ai/uai-inference/guide/principle
 In this example, we shows how to build a face-compare application by using MTCNN and FaceNet based on UAI Inference framework. The whole face-compare progress work as follows:
 
 	Input -> face-service -> facenet-mtcnn
-     	                  -> facenet-compare
+     	                -> facenet-compare
 
 1. The Input is a json object containing two Face-PIC. (use gen_example_json.py to transfer 2 PIC files into one json object)
 2. Call face-service to do the distance compare of two faces (from Input)
@@ -70,7 +70,7 @@ You can run the service as follows:
 	sudo docker run -p 8081:8080 face-mtcnn:test
 	sudo docker run -p 8082:8080 face-compare:test
 
-Now we can use following cmd to do a facecompare:
+Now we can use following cmd to do a face compare:
 
     #gen_example_json.py will generate a test.json file
     python gen_example_json.py --image_files img1 img2
