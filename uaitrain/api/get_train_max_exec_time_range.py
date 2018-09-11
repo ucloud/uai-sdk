@@ -19,7 +19,8 @@ from uaitrain.api.base_op import BaseUAITrainAPIOp
 class GetUAITrainMaxExecTimeRangeApiOp(BaseUAITrainAPIOp):
     """
     GetUAITrainMaxExecTimeRangeAPI
-        Desc: get max execute time range of current set
+
+        Identical with UAI Train GetUAITrainMaxExecTimeRange API func
         Output:
             SetName     string      current set name
             Min         int         minimum max execute time when use uai-training

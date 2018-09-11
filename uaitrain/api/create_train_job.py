@@ -22,24 +22,24 @@ class CreateUAITrainJobApiOp(BaseUAITrainAPIOp):
 
         Identical with UAI Train CreateUAITrainJob API func
         Input:
-            TrainJobName               string
-            TrainWorkId                int
-            CodeUhubPath               string
-            DataUfilePath              string
-            InputDataBackendId         int
-            OutputUfilePath            string
-            OutputDataBackendId        int
-            DockerCmd                  string
-            MaxExecuteTime             int
-            TrainWorkAmount            int(not required)
-            TrainModeId                int
-            DistAIFrame                int(not required)
-            TrainPublicKey             string
-            TrainPrivateKey            string
-            TrainJobMemo               string(not required)
-            BusinessGroup              string(not required)
+            TrainJobName               string                   Job name of the job
+            TrainWorkId                int                      Work node id of created job
+            CodeUhubPath               string                   Docker image path
+            DataUfilePath              string                   Input data path
+            InputDataBackendId         int                      Input databackend id
+            OutputUfilePath            string                   Output data path
+            OutputDataBackendId        int                      Output backend id
+            DockerCmd                  string                   Train job execute cmd
+            MaxExecuteTime             int                      Max execute time
+            TrainWorkAmount            int(not required)        Amount of Work node
+            TrainModeId                int                      Train mode id of created job
+            DistAIFrame                int(not required)        Dist AI framework id
+            TrainPublicKey             string                   User public key
+            TrainPrivateKey            string                   User private key
+            TrainJobMemo               string(not required)     Memo of created train job
+            BusinessGroup              string(not required)     Business group of created job
         Output:
-            TrainJobId                 string                 created train job id
+            TrainJobId                 string                   created train job id
     """
     ACTION_NAME = "CreateUAITrainJob"
 

@@ -18,7 +18,7 @@ from uaitrain.api.base_op import BaseUAITrainAPIOp
 
 class GetUAITrainAvailableTrainModeApiOp(BaseUAITrainAPIOp):
     """
-    GetUAITrainAvailableTrainMode
+    GetUAITrainAvailableTrainModeAPI
         Output:
             DataItem        Array, []TrainModeInfo
     """

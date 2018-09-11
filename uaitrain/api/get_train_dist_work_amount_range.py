@@ -18,8 +18,9 @@ from uaitrain.api.base_op import BaseUAITrainAPIOp
 
 class GetUAITrainDistributeWorkAmountRangeApiOp(BaseUAITrainAPIOp):
     """
-    GetUAITrainDistributeWorkAmountRange
-        Desc: get distribute work amount range of current set
+    GetUAITrainDistributeWorkAmountRangeAPI
+
+        Identical with UAI Train GetUAITrainDistributeWorkAmountRange API func
         Output:
             SetName     string      current set name
             Min         int         minimum dist work amount when using dist-training

@@ -18,7 +18,7 @@ from uaitrain.api.base_op import BaseUAITrainAPIOp
 
 class GetUAITrainBillInfoApiOp(BaseUAITrainAPIOp):
     """
-    GetUAITrainBillInfoOp
+    GetUAITrainBillInfoAPI
 
         Identical with UAI Train GetUAITrainBillInfo API func
         Input:

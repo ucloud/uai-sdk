@@ -18,7 +18,7 @@ from uaitrain.api.base_op import BaseUAITrainAPIOp
 
 class GetUAITrainJobListApiOp(BaseUAITrainAPIOp):
     """
-    GetUAITrainJobListOp
+    GetUAITrainJobListAPI
 
         Identical with UAI Train GetUAITrainJobList API func
         Input:

@@ -18,7 +18,7 @@ from uaitrain.api.base_op import BaseUAITrainAPIOp
 
 class GetUAITrainAvailableResourceApiOp(BaseUAITrainAPIOp):
     """
-    GetUAITrainAvailableResourceOp
+    GetUAITrainAvailableResourceAPI
 
         Identical with UAI Train GetUAITrainAvailableResource API func
         Input:
