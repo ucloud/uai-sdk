@@ -41,7 +41,7 @@ Caffe's location in the image: /root/caffe-py-rfcn/caffe/
 Uai django server's location in the image: /ai-ucloud-client-django/
 
 ## UAI Inference Example
-We provide rfcn\_inference.py which implements RFCNModel. For RFCNModel, it implements two funcs:
+We provide rfcn\_inference.py which implements RFCNModel and RFCNNmsModel. For RFCNModel, it implements two funcs:
 
 1. load\_model(self), which loads the RFCN model. We hardcode the model file name in load\_model in this example, you can change it if wanted. 
 
@@ -82,15 +82,22 @@ We provide rfcn-gpu.Dockerfile for you to build local inference docker image.
 8. Set the UAI_SERVICE_CONFIG environment to tell django server to load the config file named 'conf.json'
 9. use gunicorn to run the server
 
+You can also use rfcn-nms-gpu.Dockerfile to build local inference docker image for RFCN with nms included
+
 ### Build Your Own Inference Docker
 With the above docker file we can now build your own inference docker image(Your directory should looks like [Setup](#setup)):
 
 	sudo docker build -t rfcn-inference-gpu:test -f rfcn-gpu.Dockerfile .
+	sudo docker build -t rfcn-nms-inference-gpu:test -f rfcn-nms-gpu.Dockerfile .
 
 ### Run RFCN Inference Service Locally
 You can run the rfcn-inference gpu server as:
 
 	sudo nvidia-docker run -it -p 8080:8080 rfcn-inference-gpu:test
+
+You can run the rfcn-nms-inference gpu server as:
+
+	sudo nvidia-docker run -it -p 8080:8080 rfcn-nms-inference-gpu:test
 
 ### Test RFCN Inference Service Locally
 You can test the rfcn-inference server as:
