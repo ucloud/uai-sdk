@@ -45,7 +45,7 @@ class BaseUAITrainGetTensorBoardUrlOp(BaseUAITrainOp):
         return True
 
     def _check_job_running(self):
-        create_op = GetUAITrainJobListApiOp(
+        job_op = GetUAITrainJobListApiOp(
             pub_key=self.pub_key,
             priv_key=self.pri_key,
             job_id=self.job_id,
@@ -53,7 +53,7 @@ class BaseUAITrainGetTensorBoardUrlOp(BaseUAITrainOp):
             region=self.region,
             zone=self.zone)
 
-        succ, resp = create_op.call_api()
+        succ, resp = job_op.call_api()
         if succ is False:
             uai_logger.error("Error call list train jobs")
             return False

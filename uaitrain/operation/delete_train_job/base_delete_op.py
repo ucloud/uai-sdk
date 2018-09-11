@@ -44,7 +44,7 @@ class BaseUAITrainDeleteTrainJobOp(BaseUAITrainOp):
         if self._parse_args(args) == False:
             return False
 
-        create_op = RemoveUAITrainJobApiOp(
+        delete_op = RemoveUAITrainJobApiOp(
             pub_key=self.pub_key,
             priv_key=self.pri_key,
             job_id=self.job_id,
@@ -52,7 +52,7 @@ class BaseUAITrainDeleteTrainJobOp(BaseUAITrainOp):
             region=self.region,
             zone=self.zone)
 
-        succ, resp = create_op.call_api()
+        succ, resp = delete_op.call_api()
         if succ is False:
             print("Error delete job {0}, err msg: {1}".format(self.job_id, resp['Message']))
             return False

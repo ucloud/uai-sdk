@@ -52,7 +52,7 @@ class BaseUAITrainRenameTrainJobOp(BaseUAITrainOp):
         if self._parse_args(args) == False:
             return False
 
-        create_op = ModifyUAITrainJobNameApiOp(
+        rename_op = ModifyUAITrainJobNameApiOp(
             pub_key=self.pub_key,
             priv_key=self.pri_key,
             job_id=self.job_id,
@@ -61,7 +61,7 @@ class BaseUAITrainRenameTrainJobOp(BaseUAITrainOp):
             region=self.region,
             zone=self.zone)
 
-        succ, resp = create_op.call_api()
+        succ, resp = rename_op.call_api()
         if succ is False:
             print("Error call rename train job {0}".format(self.job_id))
             return False

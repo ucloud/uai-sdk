@@ -19,6 +19,8 @@ from uaitrain.api.base_op import BaseUAITrainAPIOp
 class GetUAITrainAvailableDistAIFrameApiOp(BaseUAITrainAPIOp):
     """
     GetUAITrainAvailableDistAIFrameworkAPI
+
+        Identical with UAI Train GetUAITrainAvailableDistAIFramework API func
         Input:
             TrainModeId     int     train mode info
         Output:

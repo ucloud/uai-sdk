@@ -45,7 +45,7 @@ class BaseUAITrainStopTrainJobOp(BaseUAITrainOp):
         if self._parse_args(args) == False:
             return False
 
-        create_op = StopUAITrainJobApiOp(
+        stop_op = StopUAITrainJobApiOp(
             pub_key=self.pub_key,
             priv_key=self.pri_key,
             job_id=self.job_id,
@@ -53,7 +53,7 @@ class BaseUAITrainStopTrainJobOp(BaseUAITrainOp):
             region=self.region,
             zone=self.zone)
 
-        succ, resp = create_op.call_api()
+        succ, resp = stop_op.call_api()
         if succ is False:
             print("Error call stop train job {0}".format(self.job_id))
             return False
