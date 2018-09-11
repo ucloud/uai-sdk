@@ -11,9 +11,10 @@
 ## Supported AI Platform
 
 ### UAI Inference
+** CHECK ON **：[UAI Inference Base Docker Images](https://docs.ucloud.cn/ai/uai-inference/general/dockers)
 #### 1. GPU
-- Tensorflowv (1.6.0 tested)
-- Tensorflowv (1.7.0 tested)
+- Tensorflow (1.6.0 tested)
+- Tensorflow (1.7.0 tested)
 - Caffe (1.0.0 tested)
 
 #### 2. CPU
@@ -21,8 +22,8 @@
 - Tensorflow (1.2.0 tested）
 - Tensorflow (1.3.0 tested)
 - Tensorflow (1.4.0 tested)
-- Tensorflowv(1.6.0 tested)
-- Tensorflowv(1.7.0 tested)
+- Tensorflow (1.6.0 tested)
+- Tensorflow (1.7.0 tested)
 - MXNet (0.9.5 tested)
 - MXNet (1.0.0 tested)
 - Keras (1.2.0 tested)
@@ -32,19 +33,25 @@
 - XGBoost (0.7 tested, python interface only)
 
 ### UAI Train
+** CHECK ON **：[UAI Train Base Docker Images](https://docs.ucloud.cn/ai/uai-train/general/dockers)
 - Tensorflow (0.11.0 tested)
 - Tensorflow（1.1.0 tested）
 - Tensorflow（1.2.0 tested）
 - Tensorflow（1.3.0 tested)
 - Tensorflow（1.4.0 tested）
-- Tensorflow（1.5.0 tested)
-- Tensorflow（1.6.0 tested）
-- MXNet(0.9.5 tested)
-- MXNet(1.0.0 tested)
-- Keras(1.2.0 tested)
-- Caffe(1.0.0 tested)
-- Caffe2(Detectron)
-- PyTorch(0.2.0)
+- Tensorflow（1.5.0, cuda9 tested)
+- Tensorflow（1.6.0, cuda9 tested）
+- Tensorflow (1.7.0, cuda9 tested)
+- Tensorflow (1.8.0, cuda9 tested)
+- Tensorflow (1.9.0, cuda9 tested)
+- MXNet (0.9.5 tested)
+- MXNet (1.0.0, cuda9 tested)
+- Keras (2.0.8 tested)
+- Keras (2.1.6, tf-1.8 testes)
+- Caffe (1.0.0 tested)
+- Caffe2 (Detection)
+- PyTorch (0.2.0)
+- PyTorch (0.4)
 
 ### UAI Train Supporting Distributed Training
 - Tensorflow Distributed Training (examples include slim/cifar/wide-deep)
