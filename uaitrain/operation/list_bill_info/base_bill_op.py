@@ -40,8 +40,15 @@ class BaseUAITrainListBillInfoOp(BaseUAITrainOp):
             '--limit',
             type=int,
             required=False,
-            default=10,
-            help='Number of jobs show in this list')
+            default=0,
+            help='Number of bill infos show in this list')
+        info_parser.add_argument(
+            '--offset',
+            type=int,
+            required=False,
+            default=0,
+            help='Offset of first bill info to show in this list')
+
 
     def _add_args(self):
         parser = self.parser.add_parser('bill', help='Get bill info of UAI Train Job')
@@ -55,7 +62,7 @@ class BaseUAITrainListBillInfoOp(BaseUAITrainOp):
         self.end_time = self._datetime_timestamp(args['end_time']) if 'end_time' in args else ''
 
         self.limit = args['limit']
-        self.offset = 1
+        self.offset = args['offset']
         return True
 
     def _datetime_timestamp(self, dt):

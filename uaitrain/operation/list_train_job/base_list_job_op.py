@@ -38,8 +38,15 @@ class BaseUAITrainListTrainJobOp(BaseUAITrainOp):
             '--limit',
             type=int,
             required=False,
-            default=10,
+            default=0,
             help='Number of jobs show in this list')
+
+        info_parser.add_argument(
+            '--offset',
+            type=int,
+            required=False,
+            default=0,
+            help='Offset of first job to show in this list')
 
     def _add_args(self):
         parser = self.parser.add_parser('list', help='List UAI Train Job')
@@ -52,7 +59,7 @@ class BaseUAITrainListTrainJobOp(BaseUAITrainOp):
 
         self.job_id = args['job_id']
         self.limit = args['limit']
-        self.offset = 1
+        self.offset = args['offset']
         return True
 
     def _format_jobinfo(self, job):
