@@ -16,12 +16,13 @@
 import subprocess
 
 from uai.utils.logger import uai_logger
+
 from uaitrain.operation.pack_docker_image.base_pack_op import BaseUAITrainDockerImagePackOp
 from uaitrain.operation.pack_docker_image.base_pack_op import TMP_DOCKER_FILE
 from uaitrain.operation.pack_docker_image.base_pack_op import DOCKER_RUN_CMD_FILE
+from uaitrain.operation.pack_docker_image.base_pack_op import DOCKER_TAG_SUFFIX
 
 class SelfDefUAITrainDockerImagePackOp(BaseUAITrainDockerImagePackOp):
-    """docstring for ClassName"""
     def __init__(self, parser):
         super(SelfDefUAITrainDockerImagePackOp, self).__init__(parser)
 
@@ -111,5 +112,3 @@ class SelfDefUAITrainDockerImagePackOp(BaseUAITrainDockerImagePackOp):
             return False
 
         self._build_userimage()
-        
-        

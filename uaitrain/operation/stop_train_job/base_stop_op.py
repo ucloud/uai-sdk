@@ -13,15 +13,9 @@
 # limitations under the License.
 # ==============================================================================
 
-import sys
-import os
-import argparse
-import json
-import subprocess
-
-from uai.utils.logger import uai_logger
 from uaitrain.operation.base_op import BaseUAITrainOp
-from uaitrain.api.stop_train_job import StopUAITrainJobOp
+from uaitrain.api.stop_train_job import StopUAITrainJobApiOp
+
 
 class BaseUAITrainStopTrainJobOp(BaseUAITrainOp):
     def __init__(self, parser):
@@ -44,16 +38,14 @@ class BaseUAITrainStopTrainJobOp(BaseUAITrainOp):
 
     def _parse_args(self, args):
         super(BaseUAITrainStopTrainJobOp, self)._parse_args(args)
-
         self.job_id = args['job_id']
         return True
-
 
     def cmd_run(self, args):
         if self._parse_args(args) == False:
             return False
 
-        create_op = StopUAITrainJobOp(
+        create_op = StopUAITrainJobApiOp(
             pub_key=self.pub_key,
             priv_key=self.pri_key,
             job_id=self.job_id,
@@ -67,3 +59,4 @@ class BaseUAITrainStopTrainJobOp(BaseUAITrainOp):
             return False
 
         print("Success stop job {0}".format(self.job_id))
+        return True

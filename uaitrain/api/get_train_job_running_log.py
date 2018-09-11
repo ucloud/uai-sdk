@@ -15,40 +15,29 @@
 
 from uaitrain.api.base_op import BaseUAITrainAPIOp
 
-class GetUAITrainRunningLogOp(BaseUAITrainAPIOp):
-    ACTION_NAME = "GetUAITrainRunningLog"
-    """
-    GetUAITrainRunningLogOp
-        Compatable with UAI Train GetUAITrainRunningLog API func
-        Input:
-            pub_key             string(required) Public key of the user
-            priv_key            string(required) Private key of the user
-            project_id          int(optional)    Project ID of the job
-            region              string(optional) Which Region to run the job
-            zone                string(optional) Which Zone in the Region to run the job
-            job_id              string(required) Job id of the job
 
-        Output:
-            RetCode       int(required)                Op return code: 0: success, others: error code
-            Action        string(required)             Action name
-            Message       string(not required)         Message: error description
-            RunningLog    []string                     realtime log that train job produces
+class GetUAITrainRunningLogApiOp(BaseUAITrainAPIOp):
     """
+    GetUAITrainRunningLogAPI
+
+        Identical with UAI Train GetUAITrainRunningLog API func
+        Input:
+            TrainJobId          string(required)            Job id of the job
+            LogTopicId          string(required)            log topic id
+        Output:
+            RunningLog          []string                     realtime log that train job produces
+    """
+    ACTION_NAME = "GetUAITrainRunningLog"
 
     def __init__(self, pub_key, priv_key, job_id, log_topic_id, project_id="", region="", zone=""):
-        super(GetUAITrainRunningLogOp, self).__init__(self.ACTION_NAME,
-                                                     pub_key,
-                                                     priv_key,
-                                                     project_id,
-                                                     region,
-                                                     zone)
+        super(GetUAITrainRunningLogApiOp, self).__init__(self.ACTION_NAME, pub_key, priv_key, project_id, region, zone)
         self.cmd_params["TrainJobId"] = job_id
         self.cmd_params["LogTopicId"] = log_topic_id
 
     def _check_args(self):
-        super(GetUAITrainRunningLogOp, self)._check_args()
+        super(GetUAITrainRunningLogApiOp, self)._check_args()
 
-        if type(self.cmd_params["TrainJobId"]) != str or self.cmd_params["TrainJobId"] == "":
-            raise RuntimeError("job_id shoud be str and is not nil.")
-        if type(self.cmd_params["LogTopicId"]) != str or self.cmd_params["LogTopicId"] == "":
-            raise RuntimeError("log_topic_id shoud be str and is not nil.")
+        if self.cmd_params["TrainJobId"] == "" or type(self.cmd_params["TrainJobId"]) != str:
+            raise ValueError("TrainJobId should be <str> and should not be nil.")
+        if self.cmd_params["LogTopicId"] == "" or type(self.cmd_params["LogTopicId"]) != str:
+            raise ValueError("LogTopicId should be <str> and should not be nil.")

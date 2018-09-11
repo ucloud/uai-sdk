@@ -15,8 +15,8 @@
 
 from uaitrain.operation.pack_docker_image.base_pack_op import BaseUAITrainDockerImagePackOp
 
+
 class MXNetUAITrainDockerImagePackOp(BaseUAITrainDockerImagePackOp):
-    """docstring for ClassName"""
     def __init__(self, parser):
         super(MXNetUAITrainDockerImagePackOp, self).__init__(parser)
         self.ai_arch = "mxnet"
@@ -34,6 +34,3 @@ class MXNetUAITrainDockerImagePackOp(BaseUAITrainDockerImagePackOp):
             self.user_gpu_image + " " + "/bin/bash -c " + \
             "\"cd /data && /usr/bin/python " + pycmd + " " + "--num_gpus=1 --work_dir=/data --data_dir=/data/data --output_dir=/data/output --log_dir=/data/output\""
         return gpu_docker_cmd
-
-
-        

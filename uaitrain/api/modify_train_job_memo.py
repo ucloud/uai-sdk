@@ -15,42 +15,28 @@
 
 from uaitrain.api.base_op import BaseUAITrainAPIOp
 
-class ModifyUAITrainJobMemoOp(BaseUAITrainAPIOp):
-    ACTION_NAME = "ModifyUAITrainJobMemo"
-    """
-    ModifyUAITrainJobMemoOp
-        Compatable with UAI Train ModifyUAITrainJobMemo API func
-        Input:
-            pub_key             string(required) Public key of the user
-            priv_key            string(required) Private key of the user
-            project_id          int(optional)    Project ID of the job
-            region              string(optional) Which Region to run the job
-            zone                string(optional) Which Zone in the Region to run the job
-            job_id              string(optional) the id of train job
-            job_memo            string(optional) the memo of train job
-            
-        Output:
-            RetCode       int(required)                Op return code: 0: success, others: error code
-            Action        string(required)             Action name
-            Message       string(not required)         Message: error description
 
+class ModifyUAITrainJobMemoApiOp(BaseUAITrainAPIOp):
     """
+    ModifyUAITrainJobMemoAPI
+
+        Identical with UAI Train ModifyUAITrainJobMemo API func
+        Input:
+            TrainJobId           string(required)        the id of train job
+            TrainJobMemo         string(required)        the memo of train job
+    """
+    ACTION_NAME = "ModifyUAITrainJobMemo"
 
     def __init__(self, pub_key, priv_key, job_id, job_memo, project_id="", region="", zone=""):
-        super(ModifyUAITrainJobMemoOp, self).__init__(self.ACTION_NAME,
-                                                     pub_key,
-                                                     priv_key,
-                                                     project_id,
-                                                     region,
-                                                     zone)
+        super(ModifyUAITrainJobMemoApiOp, self).__init__(self.ACTION_NAME, pub_key, priv_key, project_id, region, zone)
         self.cmd_params["TrainJobId"] = job_id
         self.cmd_params["TrainJobMemo"] = job_memo
 
     def _check_args(self):
-        super(ModifyUAITrainJobMemoOp, self)._check_args()
+        super(ModifyUAITrainJobMemoApiOp, self)._check_args()
 
         if self.cmd_params["TrainJobId"] == "" or type(self.cmd_params["TrainJobId"]) != str:
-            raise RuntimeError("job_id shoud be <str> and is not nil.")
+            raise ValueError("TrainJobId should be <str> and should not be nil")
 
         if self.cmd_params["TrainJobMemo"] == "" or type(self.cmd_params["TrainJobMemo"]) != str:
-            raise RuntimeError("job_memo shoud be <str> and is not nil.")
+            raise ValueError("TrainJobMemo should be <str> and should not be nil")

@@ -20,7 +20,7 @@ from uaitrain.operation.create_train_job.base_create_op import BaseUAITrainCreat
 from uaitrain.operation.stop_train_job.base_stop_op import BaseUAITrainStopTrainJobOp
 from uaitrain.operation.delete_train_job.base_delete_op import BaseUAITrainDeleteTrainJobOp
 from uaitrain.operation.list_train_job.base_list_job_op import BaseUAITrainListTrainJobOp
-from uaitrain.operation.info_train_job.info_train_op import BaseUAITrainRunningJobInfoOp
+from uaitrain.operation.info_train_job.info_train_op import BaseUAITrainRunningInfoOp
 from uaitrain.operation.get_realtime_log.base_log_op import BaseUAITrainGetRealtimeLogOp
 from uaitrain.operation.list_bill_info.base_bill_op import BaseUAITrainListBillInfoOp
 from uaitrain.operation.rename_train_job.base_rename_op import BaseUAITrainRenameTrainJobOp
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     stop_op = BaseUAITrainStopTrainJobOp(subparsers)
     delete_op = BaseUAITrainDeleteTrainJobOp(subparsers)
     list_op = BaseUAITrainListTrainJobOp(subparsers)
-    info_op = BaseUAITrainRunningJobInfoOp(subparsers)
+    info_op = BaseUAITrainRunningInfoOp(subparsers)
     log_op = BaseUAITrainGetRealtimeLogOp(subparsers)
     bill_op = BaseUAITrainListBillInfoOp(subparsers)
     rename_op = BaseUAITrainRenameTrainJobOp(subparsers)

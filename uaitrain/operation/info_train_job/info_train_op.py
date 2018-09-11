@@ -13,19 +13,13 @@
 # limitations under the License.
 # ==============================================================================
 
-import sys
-import os
-import argparse
-import json
-import subprocess
-
-from uai.utils.logger import uai_logger
 from uaitrain.operation.base_op import BaseUAITrainOp
-from uaitrain.api.get_train_job_running_info import GetUAITrainRunningInfoOp
+from uaitrain.api.get_train_job_running_info import GetUAITrainRunningInfoApiOp
 
-class BaseUAITrainRunningJobInfoOp(BaseUAITrainOp):
+
+class BaseUAITrainRunningInfoOp(BaseUAITrainOp):
     def __init__(self, parser):
-        super(BaseUAITrainRunningJobInfoOp, self).__init__(parser)
+        super(BaseUAITrainRunningInfoOp, self).__init__(parser)
 
     def _add_job_info_args(self, info_parser):
         job_info_parser = info_parser.add_argument_group(
@@ -43,7 +37,7 @@ class BaseUAITrainRunningJobInfoOp(BaseUAITrainOp):
         self._add_job_info_args(parser)
 
     def _parse_args(self, args):
-        super(BaseUAITrainRunningJobInfoOp, self)._parse_args(args)
+        super(BaseUAITrainRunningInfoOp, self)._parse_args(args)
 
         self.job_id = args['job_id']
         return True
@@ -52,7 +46,7 @@ class BaseUAITrainRunningJobInfoOp(BaseUAITrainOp):
         exec_time = resp['ExecTime']
         cost = resp['TotalPrice']
 
-        print('JOB_ID: {0}; ExecTime: {1} secs; Total Cost: {2}'.format(
+        print('JOB_ID: {0}; ExecTime: {1} secs; Total Cost: {2} yuan;'.format(
             job_id,
             exec_time,
             float(cost) / 100))
@@ -61,7 +55,7 @@ class BaseUAITrainRunningJobInfoOp(BaseUAITrainOp):
         if self._parse_args(args) == False:
             return False
 
-        info_op = GetUAITrainRunningInfoOp(
+        info_op = GetUAITrainRunningInfoApiOp(
             pub_key=self.pub_key,
             priv_key=self.pri_key,
             job_id=self.job_id,
@@ -75,3 +69,4 @@ class BaseUAITrainRunningJobInfoOp(BaseUAITrainOp):
             return False
 
         self._format_info(self.job_id, resp)
+        return True

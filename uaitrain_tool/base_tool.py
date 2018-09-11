@@ -20,7 +20,7 @@ from uaitrain.operation.create_train_job.base_create_op import BaseUAITrainCreat
 from uaitrain.operation.stop_train_job.base_stop_op import BaseUAITrainStopTrainJobOp
 from uaitrain.operation.delete_train_job.base_delete_op import BaseUAITrainDeleteTrainJobOp
 from uaitrain.operation.list_train_job.base_list_job_op import BaseUAITrainListTrainJobOp
-from uaitrain.operation.info_train_job.info_train_op import BaseUAITrainRunningJobInfoOp
+from uaitrain.operation.info_train_job.info_train_op import BaseUAITrainRunningInfoOp
 from uaitrain.operation.rename_train_job.base_rename_op import BaseUAITrainRenameTrainJobOp
 from uaitrain.operation.get_train_job_conf.base_conf_op import BaseUAITrainTrainJobConfOp
 from uaitrain.operation.get_log_topic.get_log_topic import BaseUAITrainGetLogTopicOp
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     stop_op = BaseUAITrainStopTrainJobOp(subparsers)
     delete_op = BaseUAITrainDeleteTrainJobOp(subparsers)
     list_op = BaseUAITrainListTrainJobOp(subparsers)
-    info_op = BaseUAITrainRunningJobInfoOp(subparsers)
+    info_op = BaseUAITrainRunningInfoOp(subparsers)
     rename_op = BaseUAITrainRenameTrainJobOp(subparsers)
     conf_op = BaseUAITrainTrainJobConfOp(subparsers)
     topic_op = BaseUAITrainGetLogTopicOp(subparsers)
@@ -63,4 +63,3 @@ if __name__ == '__main__':
         topic_op.cmd_run(cmd_args)
     else:
         print("UAI Train Base Tool Only Support General operations, please use python base_tool.py -h to check")
-    

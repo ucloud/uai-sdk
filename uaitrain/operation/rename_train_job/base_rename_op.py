@@ -13,9 +13,9 @@
 # limitations under the License.
 # ==============================================================================
 
-from uai.utils.logger import uai_logger
 from uaitrain.operation.base_op import BaseUAITrainOp
-from uaitrain.api.modify_train_job_name import ModifyUAITrainJobNameOp
+from uaitrain.api.modify_train_job_name import ModifyUAITrainJobNameApiOp
+
 
 class BaseUAITrainRenameTrainJobOp(BaseUAITrainOp):
     def __init__(self, parser):
@@ -48,12 +48,11 @@ class BaseUAITrainRenameTrainJobOp(BaseUAITrainOp):
         self.job_name = args['job_name']
         return True
 
-
     def cmd_run(self, args):
         if self._parse_args(args) == False:
             return False
 
-        create_op = ModifyUAITrainJobNameOp(
+        create_op = ModifyUAITrainJobNameApiOp(
             pub_key=self.pub_key,
             priv_key=self.pri_key,
             job_id=self.job_id,
@@ -68,3 +67,4 @@ class BaseUAITrainRenameTrainJobOp(BaseUAITrainOp):
             return False
 
         print("Success rename job {0}".format(self.job_id))
+        return True

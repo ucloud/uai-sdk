@@ -15,37 +15,28 @@
 
 from uaitrain.api.base_op import BaseUAITrainAPIOp
 
-GET_UAI_TRAIN_ENV_PKG_ACTION = 'GetUAITrainEnvPkg'
 PARAM_PKG_TYPE = 'PkgType'
+
 
 class GetUAITrainEnvPkgAPIOp(BaseUAITrainAPIOp):
     """
-    GetUAITrainEnvPkgAPIOp
-        Compatable with UAI Train CheckUAITrainBaseImgExists API func
-        Input:
-			PublicKey       string(required) Public key of the user
-            ProjectId       int(optional)    Project ID of the task
-            Region          string(optional) Which Region to run the task
-            Zone            string(optional) Which Zone in the Region to run the task
-            PkgType         string(required) Package Type to check including OS, Python, AIFrame, Accelerator
+    GetUAITrainEnvPkgAPI
 
+        Identical with UAI Train GetUAITrainEnvPkg API func
+        Input:
+            PkgType         string(required)       Package Type to check including OS, Python, AIFrame, Accelerator
         Output:
-            RetCode       int(required)                Op return code: 0: success, others: error code
-            Action        string(required)             Action name
-            Message       string(not required)         Message: error description
-            
+            TotalCount      int                    available pkg count
+            DataSet         Array                  []PkgInfo
     """
+    ACTION_NAME = "GetUAITrainEnvPkg"
+
     def __init__(self, pub_key, priv_key, pkg_type, project_id="", region="", zone=""):
-        super(GetUAITrainEnvPkgAPIOp, self).__init__(GET_UAI_TRAIN_ENV_PKG_ACTION, 
-            pub_key, 
-            priv_key, 
-            project_id,
-            region,
-            zone)
+        super(GetUAITrainEnvPkgAPIOp, self).__init__(self.ACTION_NAME, pub_key, priv_key, project_id, region, zone)
         self.cmd_params[PARAM_PKG_TYPE] = pkg_type
     
     def _check_args(self):
         super(GetUAITrainEnvPkgAPIOp, self)._check_args()
         
-        if self.cmd_params[PARAM_PKG_TYPE] == "":
-            raise RuntimeError("You should specify a pkg_type to search: OS, Python, AIFrame, Accelerator")
+        if self.cmd_params[PARAM_PKG_TYPE] == "" or type(self.cmd_params[PARAM_PKG_TYPE]) != str:
+            raise ValueError("{0} should be <str> and should not be nil".format(PARAM_PKG_TYPE))

@@ -17,8 +17,6 @@ from uaitrain.operation.pack_docker_image.base_pack_op import BaseUAITrainDocker
 
 
 class PytorchUAITrainDockerImagePackOp(BaseUAITrainDockerImagePackOp):
-    """docstring for ClassName"""
-
     def __init__(self, parser):
         super(PytorchUAITrainDockerImagePackOp, self).__init__(parser)
         self.ai_arch = "pytorch"
