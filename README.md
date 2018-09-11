@@ -43,7 +43,6 @@
 - Tensorflow（1.2.0 tested）
 - Tensorflow（1.3.0 tested)
 - Tensorflow（1.4.0 tested）
-<<<<<<< HEAD
 - Tensorflow（1.5.0, cuda9 tested)
 - Tensorflow（1.6.0, cuda9 tested）
 - Tensorflow (1.7.0, cuda9 tested)
@@ -57,17 +56,6 @@
 - Caffe2 (Detection)
 - PyTorch (0.2.0)
 - PyTorch (0.4)
-=======
-- Tensorflow（1.5.0 tested)
-- Tensorflow（1.6.0 tested）
-- Tensorflow（1.7.0 tested）
-- MXNet(0.9.5 tested)
-- MXNet(1.0.0 tested)
-- Keras(1.2.0 tested)
-- Caffe(1.0.0 tested)
-- Caffe2(Detectron)
-- PyTorch(0.2.0)
->>>>>>> 1a432ecdaa1730c25c08c57ae74051da21b4d6b3
 
 ### UAI Train Supporting Distributed Training
 - Tensorflow Distributed Training (examples include slim/cifar/wide-deep)
