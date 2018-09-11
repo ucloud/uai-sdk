@@ -17,16 +17,11 @@ import requests
 import json
 
 from uai.utils.utils import _verfy_ac
-from uai.utils.logger import uai_logger
 from uai.utils.retcode_checker import *
 
 DEFAULT_UCLOUD_API_URL = 'http://api.ucloud.cn'
 DEFAULT_UAI_TRAIN_REGION = 'cn-bj2'
 DEFAULT_UAI_TRAIN_ZONE = 'cn-bj2-04'
-
-# DEFAULT_UCLOUD_API_URL = 'http://api.pre.ucloudadmin.com'
-# DEFAULT_UAI_TRAIN_REGION = 'pre'
-# DEFAULT_UAI_TRAIN_ZONE = 'pre'
 
 PARAM_ACTION = 'Action'
 PARAM_PUBLIC_KEY = 'PublicKey'
@@ -34,8 +29,21 @@ PARAM_PROJECT_ID = 'ProjectId'
 PARAM_REGION = 'Region'
 PARAM_ZONE = 'Zone'
 
+
 class BaseUAITrainAPIOp(object):
-    """ The Base api for uai Train
+    """
+        Base API Class for UAI Train
+
+        General Input and Output for APIs under current Class
+        Input:
+            PublicKey       string(required)        Public key of the user
+            ProjectId       int(optional)           Project ID of the task
+            Region          string(optional)        Which Region to run the task
+            Zone            string(optional)        Which Zone in the Region to run the task
+        Output:
+            RetCode         int(required)           Op return code: 0: success, others: error code
+            Action          string(required)        Action name
+            Message         string(not required)    Message: error description
     """
     def __init__(self, action, pub_key, priv_key, project_id, region, zone):
         self.cmd_params = {}
@@ -76,23 +84,18 @@ class BaseUAITrainAPIOp(object):
             return False, rsp
         else:
             del rsp[PARAM_ACTION]
-            #uai_logger.info("{0} Success: {1}".format(self.cmd_params[PARAM_ACTION], get_response(rsp, 0)))
             return True, rsp
-        # add other operations in subclasses#
 
     def _check_args(self):
         if self.pub_key == "":
             raise RuntimeError("Public Key should not be empty")
-
         if self.priv_key == "":
             raise RuntimeError("Private Key should not be empty")
-
         if self.cmd_params[PARAM_ACTION] == "":
             raise RuntimeError("Action field should not be empty")
 
     def call_api(self):
         self._check_args()
-
         return self._cmd_common_request()
 
     def check_errcode(self):

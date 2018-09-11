@@ -13,13 +13,11 @@
 # limitations under the License.
 # ==============================================================================
 
-import datetime
-
-from uai.utils.utils import GATEWAY_DEFAULT
 from uai.utils.logger import uai_logger
 from uaitrain.operation.base_op import BaseUAITrainOp
-from uaitrain.api.get_train_job_list import GetUAITrainJobListOp
-from uaitrain.api.get_train_job_running_info import GetUAITrainRunningInfoOp
+from uaitrain.api.get_train_job_list import GetUAITrainJobListApiOp
+from uaitrain.api.get_train_job_running_info import GetUAITrainRunningInfoApiOp
+
 
 class BaseUAITrainTrainJobConfOp(BaseUAITrainOp):
     def __init__(self, parser):
@@ -48,10 +46,11 @@ class BaseUAITrainTrainJobConfOp(BaseUAITrainOp):
         return True
 
     def _get_job_bill(self):
-        op = GetUAITrainRunningInfoOp(pub_key=self.pub_key,
-                                     priv_key=self.pri_key,
-                                     project_id=self.project_id,
-                                     job_id=self.job_id)
+        op = GetUAITrainRunningInfoApiOp(
+            pub_key=self.pub_key,
+            priv_key=self.pri_key,
+            project_id=self.project_id,
+            job_id=self.job_id)
 
         succ, res = op.call_api()
         if succ != True:
@@ -97,7 +96,7 @@ class BaseUAITrainTrainJobConfOp(BaseUAITrainOp):
         if self._parse_args(args) == False:
             return False
 
-        create_op = GetUAITrainJobListOp(
+        job_op = GetUAITrainJobListApiOp(
             pub_key=self.pub_key,
             priv_key=self.pri_key,
             job_id=self.job_id,
@@ -105,7 +104,7 @@ class BaseUAITrainTrainJobConfOp(BaseUAITrainOp):
             region=self.region,
             zone=self.zone)
 
-        succ, resp = create_op.call_api()
+        succ, resp = job_op.call_api()
         if succ is False:
             uai_logger.error("Error call list train jobs")
             return False

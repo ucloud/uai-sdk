@@ -16,22 +16,20 @@
 from uaitrain.api.base_op import BaseUAITrainAPIOp
 
 
-class RemoveUAITrainJobApiOp(BaseUAITrainAPIOp):
+class GetUAITrainMaxExecTimeRangeApiOp(BaseUAITrainAPIOp):
     """
-    RemoveUAITrainJobAPI
+    GetUAITrainMaxExecTimeRangeAPI
 
-        Identical with UAI Train RemoveUAITrainJob API func
-        Input:
-            TrainJobId              string(required)        Which train job to remove
+        Identical with UAI Train GetUAITrainMaxExecTimeRange API func
+        Output:
+            SetName     string      current set name
+            Min         int         minimum max execute time when use uai-training
+            Max         int         maximum max execute time when use uai-training
     """
-    ACTION_NAME = "RemoveUAITrainJob"
+    ACTION_NAME = "GetUAITrainMaxExecTimeRange"
 
-    def __init__(self, pub_key, priv_key, job_id, project_id="", region="", zone=""):
-        super(RemoveUAITrainJobApiOp, self).__init__(self.ACTION_NAME, pub_key, priv_key, project_id, region, zone)
-        self.cmd_params["TrainJobId"] = job_id
+    def __init__(self, pub_key, priv_key, project_id="", region="", zone=""):
+        super(GetUAITrainMaxExecTimeRangeApiOp, self).__init__(self.ACTION_NAME, pub_key, priv_key, project_id, region, zone)
 
     def _check_args(self):
-        super(RemoveUAITrainJobApiOp, self)._check_args()
-
-        if self.cmd_params["TrainJobId"] == "" or type(self.cmd_params["TrainJobId"]) != str:
-            raise ValueError("TrainJobId should be <str> and should not be nil")
+        super(GetUAITrainMaxExecTimeRangeApiOp, self)._check_args()

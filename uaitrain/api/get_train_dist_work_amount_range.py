@@ -16,22 +16,20 @@
 from uaitrain.api.base_op import BaseUAITrainAPIOp
 
 
-class RemoveUAITrainJobApiOp(BaseUAITrainAPIOp):
+class GetUAITrainDistributeWorkAmountRangeApiOp(BaseUAITrainAPIOp):
     """
-    RemoveUAITrainJobAPI
+    GetUAITrainDistributeWorkAmountRangeAPI
 
-        Identical with UAI Train RemoveUAITrainJob API func
-        Input:
-            TrainJobId              string(required)        Which train job to remove
+        Identical with UAI Train GetUAITrainDistributeWorkAmountRange API func
+        Output:
+            SetName     string      current set name
+            Min         int         minimum dist work amount when using dist-training
+            Max         int         maximum dist work amount when using dist-training
     """
-    ACTION_NAME = "RemoveUAITrainJob"
+    ACTION_NAME = "GetUAITrainDistributeWorkAmountRange"
 
-    def __init__(self, pub_key, priv_key, job_id, project_id="", region="", zone=""):
-        super(RemoveUAITrainJobApiOp, self).__init__(self.ACTION_NAME, pub_key, priv_key, project_id, region, zone)
-        self.cmd_params["TrainJobId"] = job_id
+    def __init__(self, pub_key, priv_key, project_id="", region="", zone=""):
+        super(GetUAITrainDistributeWorkAmountRangeApiOp, self).__init__(self.ACTION_NAME, pub_key, priv_key, project_id, region, zone)
 
     def _check_args(self):
-        super(RemoveUAITrainJobApiOp, self)._check_args()
-
-        if self.cmd_params["TrainJobId"] == "" or type(self.cmd_params["TrainJobId"]) != str:
-            raise ValueError("TrainJobId should be <str> and should not be nil")
+        super(GetUAITrainDistributeWorkAmountRangeApiOp, self)._check_args()

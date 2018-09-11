@@ -13,8 +13,9 @@
 # limitations under the License.
 # ==============================================================================
 
+
 class BaseUAITrainOp(object):
-    """docstring for BaseUAITrainOp"""
+    """Base Class for UAI Train Op"""
     def __init__(self, parser):
         self.parser = parser
         self._add_args()
@@ -48,10 +49,8 @@ class BaseUAITrainOp(object):
             required=False,
             help='The zone to run the task, could be null')
 
-    def _add_args(self):
-        pass
 
-    def _parse_args(self, args):
+    def _parse_account_args(self, args):
         self.pub_key = args['public_key']
         self.pri_key = args['private_key']
         if 'project_id' in args and args['project_id'] != None:
@@ -62,10 +61,14 @@ class BaseUAITrainOp(object):
             self.region = args['region']
         else:
             self.region = ""
-
         if 'zone' in args and args['zone'] != None:
             self.zone = args['zone']
         else:
             self.zone = ""
-
         return True
+
+    def _add_args(self):
+        self._add_account_args(self.parser)
+
+    def _parse_args(self, args):
+        self._parse_account_args(args)

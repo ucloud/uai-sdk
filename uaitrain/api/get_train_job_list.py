@@ -15,38 +15,34 @@
 
 from uaitrain.api.base_op import BaseUAITrainAPIOp
 
-class GetUAITrainJobListOp(BaseUAITrainAPIOp):
-    ACTION_NAME = "GetUAITrainJobList"
-    """
-    GetUAITrainJobListOp
-        Compatable with UAI Train GetUAITrainJobList API func
-        Input:
-            pub_key             string(required) Public key of the user
-            priv_key            string(required) Private key of the user
-            project_id          int(optional)    Project ID of the job
-            region              string(optional) Which Region to run the job
-            zone                string(optional) Which Zone in the Region to run the job
-            job_id              string(optional) Which train job to get info
-            offset              int(optional) the offset of list
-            limit               int(optional) the max num of returned list, return all job list if isn't set
 
+class GetUAITrainJobListApiOp(BaseUAITrainAPIOp):
+    """
+    GetUAITrainJobListAPI
+
+        Identical with UAI Train GetUAITrainJobList API func
+        Input:
+            TrainJobId              string(optional) Which train job to get info
+            Offset              int(optional) the offset of list
+            Limit               int(optional) the max num of returned list, return all job list if isn't set
         Output:
-            RetCode         int(required)                Op return code: 0: success, others: error code
             TotalCount      string(required)             the count of result
-            Message         string(not required)         Message: error description
             DataSet         []                           the detailed information of train job
     """
+    ACTION_NAME = "GetUAITrainJobList"
 
-    def __init__(self, pub_key, priv_key, job_id="", offset="", limit="", project_id="", region="", zone=""):
-        super(GetUAITrainJobListOp, self).__init__(self.ACTION_NAME,
-                                                     pub_key,
-                                                     priv_key,
-                                                     project_id,
-                                                     region,
-                                                     zone)
+    def __init__(self, pub_key, priv_key, job_id="", offset=0, limit=0, project_id="", region="", zone=""):
+        super(GetUAITrainJobListApiOp, self).__init__(self.ACTION_NAME, pub_key, priv_key, project_id, region, zone)
         self.cmd_params["TrainJobId"] = job_id
         self.cmd_params["Offset"] = offset
         self.cmd_params["Limit"] = limit
 
     def _check_args(self):
-        super(GetUAITrainJobListOp, self)._check_args()
+        super(GetUAITrainJobListApiOp, self)._check_args()
+        if self.cmd_params["Limit"] < 0:
+            raise ValueError("Limit should be positive")
+        if self.cmd_params["Offset"] <0:
+            raise ValueError("Offset should be positive")
+        if self.cmd_params["Limit"] < self.cmd_params["Offset"]:
+            raise ValueError("Limit should be larger than Offset, current Limit: {0}, Offset: {1}".
+                             format(self.cmd_params["Limit"], self.cmd_params["Offset"]) )

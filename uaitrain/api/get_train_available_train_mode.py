@@ -16,22 +16,18 @@
 from uaitrain.api.base_op import BaseUAITrainAPIOp
 
 
-class RemoveUAITrainJobApiOp(BaseUAITrainAPIOp):
+class GetUAITrainAvailableTrainModeApiOp(BaseUAITrainAPIOp):
     """
-    RemoveUAITrainJobAPI
+    GetUAITrainAvailableTrainModeAPI
 
-        Identical with UAI Train RemoveUAITrainJob API func
-        Input:
-            TrainJobId              string(required)        Which train job to remove
+        Identical with UAI Train GetUAITrainAvailableTrainMode API func
+        Output:
+            DataItem        Array, []TrainModeInfo
     """
-    ACTION_NAME = "RemoveUAITrainJob"
+    ACTION_NAME = "GetUAITrainAvailableTrainMode"
 
-    def __init__(self, pub_key, priv_key, job_id, project_id="", region="", zone=""):
-        super(RemoveUAITrainJobApiOp, self).__init__(self.ACTION_NAME, pub_key, priv_key, project_id, region, zone)
-        self.cmd_params["TrainJobId"] = job_id
+    def __init__(self, pub_key, priv_key, project_id="", region="", zone=""):
+        super(GetUAITrainAvailableTrainModeApiOp, self).__init__(self.ACTION_NAME, pub_key, priv_key, project_id, region, zone)
 
     def _check_args(self):
-        super(RemoveUAITrainJobApiOp, self)._check_args()
-
-        if self.cmd_params["TrainJobId"] == "" or type(self.cmd_params["TrainJobId"]) != str:
-            raise ValueError("TrainJobId should be <str> and should not be nil")
+        super(GetUAITrainAvailableTrainModeApiOp, self)._check_args()

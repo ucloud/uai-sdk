@@ -16,27 +16,23 @@
 from uaitrain.api.base_op import BaseUAITrainAPIOp
 
 
-class GetUAITrainAvailableResourceApiOp(BaseUAITrainAPIOp):
+class GetUAITrainAvailableBackendApiOp(BaseUAITrainAPIOp):
     """
-    GetUAITrainAvailableResourceAPI
+    GetUAITrainAvailableBackendAPI
 
-        Identical with UAI Train GetUAITrainAvailableResource API func
+        Identical with UAI Train GetUAITrainAvailableBackend API func
         Input:
-            NodeType           string(optional)         the type of node, default is 'Work' ('Work':train node, 'PS':param node)
-            TrainModeId
+            TrainModeId     int         train mode info
         Output:
-            DataSet            Array                    the detailed information of resource
+            DataItem        Array       []DataBackendInfo
     """
-    ACTION_NAME = "GetUAITrainAvailableResource"
+    ActionName = "GetUAITrainAvailableBackend"
 
-    def __init__(self, train_mode, pub_key, priv_key, node_type='Work', project_id="", region="", zone=""):
-        super(GetUAITrainAvailableResourceApiOp, self).__init__(self.ACTION_NAME, pub_key, priv_key, project_id, region, zone)
-        self.cmd_params["NodeType"] = node_type
+    def __init__(self, train_mode, pub_key, priv_key, project_id="", region="", zone=""):
+        super(GetUAITrainAvailableBackendApiOp, self).__init__(self.ActionName, pub_key, priv_key, project_id, region, zone)
         self.cmd_params["TrainModeId"] = train_mode
 
     def _check_args(self):
-        super(GetUAITrainAvailableResourceApiOp, self)._check_args()
-        if self.cmd_params["NodeType"] != "Work" and self.cmd_params["NodeType"] != "PS":
-            raise ValueError("NodeType should be chosen from 'Work' and 'PS'")
+        super(GetUAITrainAvailableBackendApiOp, self)._check_args()
         if self.cmd_params["TrainModeId"] == "" or type(self.cmd_params["TrainModeId"]) != int:
             raise ValueError("TrainModeId should be <int> and should not be nil")
