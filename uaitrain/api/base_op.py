@@ -36,14 +36,14 @@ class BaseUAITrainAPIOp(object):
 
         General Input and Output for APIs under current Class
         Input:
-            PublicKey       string(required)        Public key of the user
-            ProjectId       int(optional)           Project ID of the task
-            Region          string(optional)        Which Region to run the task
-            Zone            string(optional)        Which Zone in the Region to run the task
+            PublicKey           string(required)            Public key of the user
+            ProjectId           int(optional)               Project ID of the task
+            Region              string(optional)            Which Region to run the task
+            Zone                string(optional)            Which Zone in the Region to run the task
         Output:
-            RetCode         int(required)           Op return code: 0: success, others: error code
-            Action          string(required)        Action name
-            Message         string(not required)    Message: error description
+            RetCode             int                         API return code: 0: success, others: error code
+            Action              string                      Action name
+            Message             string                      Message: error description
     """
     def __init__(self, action, pub_key, priv_key, project_id, region, zone):
         self.cmd_params = {}

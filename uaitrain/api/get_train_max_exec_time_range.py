@@ -22,9 +22,12 @@ class GetUAITrainMaxExecTimeRangeApiOp(BaseUAITrainAPIOp):
 
         Identical with UAI Train GetUAITrainMaxExecTimeRange API func
         Output:
-            SetName     string      current set name
-            Min         int         minimum max execute time when use uai-training
-            Max         int         maximum max execute time when use uai-training
+            RetCode                 int                      API return code: 0: success, others: error code
+            Action                  string                   Action name
+            Message                 string                   Message: error description
+            SetName                 string                   current set name
+            Min                     int                      minimum max execute time when use uai-training
+            Max                     int                      maximum max execute time when use uai-training
     """
     ACTION_NAME = "GetUAITrainMaxExecTimeRange"
 

@@ -22,7 +22,14 @@ class GetUAITrainAvailableTrainModeApiOp(BaseUAITrainAPIOp):
 
         Identical with UAI Train GetUAITrainAvailableTrainMode API func
         Output:
-            DataItem        Array, []TrainModeInfo
+            RetCode             int             API return code: 0: success, others: error code
+            Action              string          Action name
+            Message             string          Message: error description
+            DataItem            Array           []TrainModeInfo
+
+        TrainModeInfo:
+            TrainModeId         int             Id of current train mode
+            TrainModeName       string          Name of current train mode
     """
     ACTION_NAME = "GetUAITrainAvailableTrainMode"
 

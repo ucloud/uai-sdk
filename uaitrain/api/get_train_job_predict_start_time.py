@@ -22,9 +22,12 @@ class GetUAITrainJobStartPredictApiOp(BaseUAITrainAPIOp):
 
         Identical with UAI Train GetUAITrainJobStartPredict API func
         Input:
-            TrainJobId          string(required)        Job id of the job
+            TrainJobId              string(required)        Job id of the job
         Output:
-            WaitJobCount        int                     waited job count
+            RetCode                 int                      API return code: 0: success, others: error code
+            Action                  string                   Action name
+            Message                 string                   Message: error description
+            WaitJobCount            int                     waited job count
     """
     ACTION_NAME = "GetUAITrainJobStartPredict"
 

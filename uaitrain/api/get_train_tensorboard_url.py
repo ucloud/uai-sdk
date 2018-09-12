@@ -22,9 +22,12 @@ class GetUAITrainTensorboardUrlApiOp(BaseUAITrainAPIOp):
 
         Identical with UAI Train GetUAITrainTensorboardUrl API func
         Input:
-            TrainJobId              string              train job id
+            TrainJobId              string                   train job id
         Output:
-            TensorboardURL          string              tensorboard url
+            RetCode                 int                      API return code: 0: success, others: error code
+            Action                  string                   Action name
+            Message                 string                   Message: error description
+            TensorboardURL          string                   tensorboard url
     """
     ACTION_NAME = "GetUAITrainTensorboardUrl"
 

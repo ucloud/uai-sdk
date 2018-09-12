@@ -22,7 +22,11 @@ class StopUAITrainJobApiOp(BaseUAITrainAPIOp):
 
         Identical with UAI Train StopUAITrainJob API func
         Input:
-            TrainJobId              string(required)        Which train job to stop
+            TrainJobId              string(required)         Which train job to stop
+        Output:
+            RetCode                 int                      API return code: 0: success, others: error code
+            Action                  string                   Action name
+            Message                 string                   Message: error description
     """
     ACTION_NAME = "StopUAITrainJob"
     def __init__(self, pub_key, priv_key, job_id, project_id="", region="", zone=""):

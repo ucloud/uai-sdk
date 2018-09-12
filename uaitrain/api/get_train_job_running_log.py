@@ -22,10 +22,13 @@ class GetUAITrainRunningLogApiOp(BaseUAITrainAPIOp):
 
         Identical with UAI Train GetUAITrainRunningLog API func
         Input:
-            TrainJobId          string(required)            Job id of the job
-            LogTopicId          string(required)            log topic id
+            TrainJobId          string(required)             Job id of the job
+            LogTopicId          string(required)             log topic id
         Output:
-            RunningLog          []string                     realtime log that train job produces
+            RetCode                 int                      API return code: 0: success, others: error code
+            Action                  string                   Action name
+            Message                 string                   Message: error description
+            RunningLog              Array                    []string, realtime log that train job produces
     """
     ACTION_NAME = "GetUAITrainRunningLog"
 

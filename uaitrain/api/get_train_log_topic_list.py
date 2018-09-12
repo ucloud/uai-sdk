@@ -22,9 +22,16 @@ class GetUAITrainRunningLogTopicListApiOp(BaseUAITrainAPIOp):
 
         Identical with UAI Train GetUAITrainRunningLogTopicList API func
         Input:
-            TrainJobId          string(required)        Job id of the job
+            TrainJobId              string(required)            Job id of the job
         Output:
-            DataSet             Array                   UAITrainLogTopic
+            RetCode                 int                         API return code: 0: success, others: error code
+            Action                  string                      Action name
+            Message                 string                      Message: error description
+            DataSet                 Array                       []UAITrainLogTopic
+
+        UAITrainLogTopic
+            TopicId             int                     Id of log topic
+            TopicName           string                  Name of log topic
     """
     ACTION_NAME = "GetUAITrainRunningLogTopicList"
 

@@ -28,14 +28,17 @@ class CheckAndGetUAITrainBaseImageApiOp(BaseUAITrainAPIOp):
 
         Identical with UAI Train CheckUAITrainBaseImgExists API func
         Input:
-            OSVersion           int(required)       OS version
-            PythonVersion       int(required)       Python version
-            AIFrameVersion      int(required)       AI Framework and version
-            AcceleratorId       int(required)       Acc device type
+            OSVersion           int(required)               OS version
+            PythonVersion       int(required)               Python version
+            AIFrameVersion      int(required)               AI Framework and version
+            AcceleratorId       int(required)               Acc device type
         Output:
-            TotalCount      string(not required)         Image count
-            BimgName        string array(not required)   Image names
-            BimgPullCmd     string array(not required)   Image pull cmds
+            RetCode             int                         API return code: 0: success, others: error code
+            Action              string                      Action name
+            Message             string                      Message: error description
+            TotalCount          string                      Image count
+            BimgName            Array, []string             Image names
+            BimgPullCmd         Array, []string             Image pull cmds
     """
     ACTION_NAME = "CheckUAITrainBaseImgExists"
     def __init__(self, pub_key, priv_key, os_v, py_v, ai_frame_v, acc_id, project_id="", region="", zone=""):

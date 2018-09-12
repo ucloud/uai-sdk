@@ -22,9 +22,17 @@ class GetUAITrainAvailableBackendApiOp(BaseUAITrainAPIOp):
 
         Identical with UAI Train GetUAITrainAvailableBackend API func
         Input:
-            TrainModeId     int         train mode info
+            TrainModeId         int(required)           train mode info
         Output:
-            DataItem        Array       []DataBackendInfo
+            RetCode             int                     API return code: 0: success, others: error code
+            Action              string                  Action name
+            Message             string                  Message: error description
+            DataItem            Array                   []DataBackendInfo
+
+        DataBackendInfo:
+            DataBackendId       int         Id of current  data backend
+            DataBackendName     string      Name of current  data backend
+            DataBackendRegexp   string      Regexp pattern of current data backend
     """
     ActionName = "GetUAITrainAvailableBackend"
 

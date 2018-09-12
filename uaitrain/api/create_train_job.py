@@ -39,7 +39,10 @@ class CreateUAITrainJobApiOp(BaseUAITrainAPIOp):
             TrainJobMemo               string(not required)     Memo of created train job
             BusinessGroup              string(not required)     Business group of created job
         Output:
-            TrainJobId                 string                   created train job id
+            RetCode                    int                      API return code: 0: success, others: error code
+            Action                     string                   Action name
+            Message                    string                   Message: error description:
+            TrainJobId                 string                   Created train job id
     """
     ACTION_NAME = "CreateUAITrainJob"
 

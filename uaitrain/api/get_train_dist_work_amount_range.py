@@ -22,9 +22,12 @@ class GetUAITrainDistributeWorkAmountRangeApiOp(BaseUAITrainAPIOp):
 
         Identical with UAI Train GetUAITrainDistributeWorkAmountRange API func
         Output:
-            SetName     string      current set name
-            Min         int         minimum dist work amount when using dist-training
-            Max         int         maximum dist work amount when using dist-training
+            RetCode            int                      API return code: 0: success, others: error code
+            Action             string                   Action name
+            Message            string                   Message: error description
+            SetName            string                   current set name
+            Min                int                      minimum dist work amount when using dist-training
+            Max                int                      maximum dist work amount when using dist-training
     """
     ACTION_NAME = "GetUAITrainDistributeWorkAmountRange"
 

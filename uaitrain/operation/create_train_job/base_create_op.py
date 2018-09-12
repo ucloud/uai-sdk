@@ -83,18 +83,7 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
             required=False,
             help='Amount of work server node, default is 1'
         )
-        node_parser.add_argument(
-            '--ps_node',
-            type=str,
-            required=False,
-            help='Name of ps server node, e.g. 1-P40, 4-P40'
-        )
-        node_parser.add_argument(
-            '--ps_amount',
-            type=int,
-            required=False,
-            help='Amount of ps server node'
-        )
+
 
     def _add_execute_info_args(self, parser):
         execute_parser = parser.add_argument_group(
@@ -164,8 +153,6 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
         self.work_amount = args['node_num']
         if self.work_amount <= 0:
             raise ValueError("Parameter node_num should be larger than 0")
-        self.ps_node = parse_unrequired_args('ps_node', args)
-        self.ps_amount = parse_unrequired_args('ps_amount', args)
 
         if self.work_amount > 1:
             self.train_mode = 'Distributed'

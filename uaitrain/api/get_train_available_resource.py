@@ -23,9 +23,24 @@ class GetUAITrainAvailableResourceApiOp(BaseUAITrainAPIOp):
         Identical with UAI Train GetUAITrainAvailableResource API func
         Input:
             NodeType           string(optional)         the type of node, default is 'Work' ('Work':train node, 'PS':param node)
-            TrainModeId
+            TrainModeId        int(required)            id of current train mode
         Output:
-            DataSet            Array                    the detailed information of resource
+            RetCode            int                      API return code: 0: success, others: error code
+            Action             string                   Action name
+            Message            string                   Message: error description
+            DataSet            Array                    []FixedServerNodeInfo
+
+        FixedServerNodeInfo:
+            NodeId              int64                   id of current node
+            NodeName            string                  name of current node
+            NodeType            string                  type of current node
+            DiskSize            int64                   disk size of current node
+            CPU                 int64                   num of cpu
+            Memory              int64                   memory of current node
+            AcceleratorName     string                  name of accelerator
+            AcceleratorVersion  string                  version of accelerator
+            AcceleratorAmount   int64                   amount of accelerator
+            UnitPrice           int64                   unit price of current node
     """
     ACTION_NAME = "GetUAITrainAvailableResource"
 

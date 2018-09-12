@@ -22,9 +22,16 @@ class GetUAITrainAvailableDistAIFrameApiOp(BaseUAITrainAPIOp):
 
         Identical with UAI Train GetUAITrainAvailableDistAIFramework API func
         Input:
-            TrainModeId     int     train mode info
+            TrainModeId         int(required)          train mode info
         Output:
-            DataItem        Array, []DistAIFrameInfo
+            RetCode             int                    API return code: 0: success, others: error code
+            Action              string                 Action name
+            Message             string                 Message: error description
+            DataItem            Array                  []DistAIFrameInfo
+
+        DistAIFrameInfo:
+            DistAIFrameId       int         Id of current dist-ai-framework
+            DistAIFrameName     string      Name of current dist-ai-framework
     """
     ACTION_NAME = "GetUAITrainAvailableDistAIFramework"
 

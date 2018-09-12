@@ -24,10 +24,19 @@ class GetUAITrainEnvPkgAPIOp(BaseUAITrainAPIOp):
 
         Identical with UAI Train GetUAITrainEnvPkg API func
         Input:
-            PkgType         string(required)       Package Type to check including OS, Python, AIFrame, Accelerator
+            PkgType             string(required)       Package Type to check including OS, Python, AIFrame, Accelerator
         Output:
-            TotalCount      int                    available pkg count
-            DataSet         Array                  []PkgInfo
+            RetCode             int                    API return code: 0: success, others: error code
+            Action              string                 Action name
+            Message             string                 Message: error description
+            TotalCount          int                    Available pkg count
+            DataSet             Array                  []PkgInfo
+
+        PkgInfo:
+            PkgId               int64                  Id of current package
+            PkgName             string                 Name of current package
+            PkgVersion          string                 Version of current package
+            PkgType             string                 Type of current package
     """
     ACTION_NAME = "GetUAITrainEnvPkg"
 

@@ -22,12 +22,59 @@ class GetUAITrainJobListApiOp(BaseUAITrainAPIOp):
 
         Identical with UAI Train GetUAITrainJobList API func
         Input:
-            TrainJobId              string(optional) Which train job to get info
-            Offset              int(optional) the offset of list
-            Limit               int(optional) the max num of returned list, return all job list if isn't set
+            TrainJobId          string(optional)            Which train job to get info
+            Offset              int(optional)               the offset of list
+            Limit               int(optional)               the max num of returned list, return all job list if isn't set
         Output:
-            TotalCount      string(required)             the count of result
-            DataSet         []                           the detailed information of train job
+            RetCode             int                         API return code: 0: success, others: error code
+            Action              string                      Action name
+            Message             string                      Message: error description
+            TotalCount          string(required)            the count of result
+            DataSet             Array                       UAITrainJob
+
+        UAITrainJob:
+            TrainJobId          string                      Id of train job
+            TrainJobName        string                      Name of train job
+            TrainJobMemo        string                      Memo of train job
+            BusinessGroup       string                      business group of train job
+            ResourceId          string                      resource id of train job
+            CreateTime          int64                       create time of train job
+            Status              string                      status of train job
+            TrainWorkSrv        []FixedServerNodeInfo       work server info
+            TrainPSSrv          []FixedServerNodeInfo       ps server info
+            StartTime           int64                       start train time of current train job
+            EndTime             int64                       end train time of current train job
+            MaxExecuteTime      int64                       max train time
+            BillType            string                      bill type id of current train job
+            BillUnit            string                      bill unit of current train job, e.g: cent
+            BillUnitPrice       int64                       bill unit price of current train job
+            BillTotalPrice      int64                       total price of current train job
+            CodeUhubPath        string                      path of docker image for training
+            DataUfilePath       string                      input data path
+            OutputUfilePath     string                      output data path
+            DockerCmd           string                      docker run cmd
+            LogTensorboardURL   string                      tensorboard url of current train job
+            LogFileURL          string                      address of log files
+            LogFileBucket       string                      bucket of log files
+            DataType            string                      input data backend type
+            OutputType          string                      output data backend type
+            DistAIFrameItem     DistAIFrameInfo             dist ai frame info
+
+        FixedServerNodeInfo:
+            NodeId              int64                       id of current node
+            NodeName            string                      name of current node
+            NodeType            string                      type of current node
+            DiskSize            int64                       disk size of current node
+            CPU                 int64                       num of cpu
+            Memory              int64                       memory of current node
+            AcceleratorName     string                      name of accelerator
+            AcceleratorVersion  string                      version of accelerator
+            AcceleratorAmount   int64                       amount of accelerator
+            UnitPrice           int64                       unit price of current node
+
+        DistAIFrameInfo:
+            DistAIFrameId       int                         Id of current dist-ai-framework
+            DistAIFrameName     string                      Name of current dist-ai-framework
     """
     ACTION_NAME = "GetUAITrainJobList"
 

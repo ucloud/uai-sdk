@@ -22,8 +22,12 @@ class ModifyUAITrainJobMemoApiOp(BaseUAITrainAPIOp):
 
         Identical with UAI Train ModifyUAITrainJobMemo API func
         Input:
-            TrainJobId           string(required)        the id of train job
-            TrainJobMemo         string(required)        the memo of train job
+            TrainJobId           string(required)            the id of train job
+            TrainJobMemo         string(required)            the memo of train job
+        Output:
+            RetCode                 int                      API return code: 0: success, others: error code
+            Action                  string                   Action name
+            Message                 string                   Message: error description
     """
     ACTION_NAME = "ModifyUAITrainJobMemo"
 

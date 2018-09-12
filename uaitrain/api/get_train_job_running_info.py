@@ -22,10 +22,13 @@ class GetUAITrainRunningInfoApiOp(BaseUAITrainAPIOp):
 
         Identical with UAI Train GetUAITrainRunningInfo API func
         Input:
-            TrainJobId       string(required)             Job id of the job
+            TrainJobId              string(required)         Job id of the job
         Output:
-            ExecTime         int(not required)            the time that the train job has run
-            TotalPrice       int(not required)            the price that the train job has speed
+            RetCode                 int                      API return code: 0: success, others: error code
+            Action                  string                   Action name
+            Message                 string                   Message: error description
+            ExecTime                int                      the time that the train job has run
+            TotalPrice              int                      the price that the train job has spent
     """
     ACTION_NAME = "GetUAITrainRunningInfo"
 

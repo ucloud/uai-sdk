@@ -22,15 +22,26 @@ class GetUAITrainBillInfoApiOp(BaseUAITrainAPIOp):
 
         Identical with UAI Train GetUAITrainBillInfo API func
         Input:
-            BeginTime       string(required)        the start time of bill
-            EndTime         string(required)        the end time of bill
-            Offset          int(optional)           the offset of list
-            Limit           int(optional)           the max num of returned list, return all bill list if isn't set
+            BeginTime               string(required)        the start time of bill
+            EndTime                 string(required)        the end time of bill
+            Offset                  int(optional)           the offset of list
+            Limit                   int(optional)           the max num of returned list, return all bill list if isn't set
         Output:
-            TotalCount              string(required)          the count of result
-            TotalExecuteTime        int(required)             total exec time of all train job
-            TotalPrice              int(required)             total price of all train job
-            DataSet                 []                        the detailed bill information of train job
+            RetCode                 int                      API return code: 0: success, others: error code
+            Action                  string                   Action name
+            Message                 string                   Message: error description
+            TotalCount              string(required)         the count of result
+            TotalExecuteTime        int(required)            total exec time of all train job
+            TotalPrice              int(required)            total price of all train job
+            DataSet                 Array                    []BillTransactionInfo, the detailed bill information of train job
+
+        BillTransactionInfo:
+            TrainJobId              string                  Id of current train job
+            TrainJobName            string                  Name of current train job
+            TrainJobStatus          string                  Status of current train job
+            BillUnitPrice           int64                   Unit price of current  train job, unit: cent
+            ExecuteTime             int64                   Execute time of current job, unit: second
+            TotalPrice              int64                   Total bill price of current job, unit: cent
     """
     ACTION_NAME = "GetUAITrainBillInfo"
 

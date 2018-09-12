@@ -22,7 +22,11 @@ class RemoveUAITrainJobApiOp(BaseUAITrainAPIOp):
 
         Identical with UAI Train RemoveUAITrainJob API func
         Input:
-            TrainJobId              string(required)        Which train job to remove
+            TrainJobId              string(required)         Which train job to remove
+        Output:
+            RetCode                 int                      API return code: 0: success, others: error code
+            Action                  string                   Action name
+            Message                 string                   Message: error description
     """
     ACTION_NAME = "RemoveUAITrainJob"
 
