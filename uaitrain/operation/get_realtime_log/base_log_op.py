@@ -17,8 +17,9 @@ import time
 from uai.utils.logger import uai_logger
 from uai.utils.logger import printConsoleOnlyError
 from uaitrain.operation.base_op import BaseUAITrainOp
-from uaitrain.api.get_train_job_running_log import GetUAITrainRunningLogOp
-from uaitrain.api.get_train_job_list import GetUAITrainJobListOp
+from uaitrain.api.get_train_job_running_log import GetUAITrainRunningLogApiOp
+from uaitrain.api.get_train_job_list import GetUAITrainJobListApiOp
+
 
 class BaseUAITrainGetRealtimeLogOp(BaseUAITrainOp):
     def __init__(self, parser):
@@ -53,7 +54,7 @@ class BaseUAITrainGetRealtimeLogOp(BaseUAITrainOp):
         return True
 
     def _check_job_running(self):
-        job_op = GetUAITrainJobListOp(
+        job_op = GetUAITrainJobListApiOp(
             pub_key=self.pub_key,
             priv_key=self.pri_key,
             job_id=self.job_id,
@@ -75,7 +76,7 @@ class BaseUAITrainGetRealtimeLogOp(BaseUAITrainOp):
             return False
 
         while True:
-            log_op = GetUAITrainRunningLogOp(
+            log_op = GetUAITrainRunningLogApiOp(
                 pub_key=self.pub_key,
                 priv_key=self.pri_key,
                 job_id=self.job_id,

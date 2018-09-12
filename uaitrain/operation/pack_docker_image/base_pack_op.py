@@ -13,16 +13,12 @@
 # limitations under the License.
 # ==============================================================================
 
-import sys
-import os
-import argparse
-import json
 import subprocess
 
 from uai.utils.logger import uai_logger
 from uaitrain.operation.base_op import BaseUAITrainOp
 from uaitrain.api.get_env_pkg import GetUAITrainEnvPkgAPIOp
-from uaitrain.api.check_and_get_base_image_op import CheckAndGetUAITrainBasesImageAPIOp
+from uaitrain.api.check_and_get_base_image_op import CheckAndGetUAITrainBaseImageApiOp
 
 DOCKER_PUBLIC_REGISTRY = "uhub.ucloud.cn"
 DOCKER_INTERNAL_REGISTRY = "uhub.service.ucloud.cn"
@@ -363,7 +359,7 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         ai_arch_v = self._translate_pkg_to_id('AIFrame', self.ai_arch_v_name)
         acc_id = self._translate_pkg_to_id('Accelerator', self.acc_id_name)
 
-        get_acc_image_op = CheckAndGetUAITrainBasesImageAPIOp(
+        get_acc_image_op = CheckAndGetUAITrainBaseImageApiOp(
             self.pub_key,
             self.pri_key,
             os_v,
@@ -379,7 +375,7 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         acc_image_name = self.check_interHub(acc_image_name)
 
         cpu_acc_id = self._translate_pkg_to_id('Accelerator', 'cpu')
-        get_cpu_image_op = CheckAndGetUAITrainBasesImageAPIOp(
+        get_cpu_image_op = CheckAndGetUAITrainBaseImageApiOp(
             self.pub_key,
             self.pri_key,
             os_v,
@@ -400,4 +396,3 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         self.cpu_image = cpu_image_name
 
         self._build_userimage()
-        

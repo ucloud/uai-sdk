@@ -13,16 +13,11 @@
 # limitations under the License.
 # ==============================================================================
 
-import sys
-import os
-import argparse
-import json
-import subprocess
-
 from uai.utils.logger import uai_logger
 from uaitrain.operation.base_op import BaseUAITrainOp
-from uaitrain.api.get_train_tensorboard_url import GetUAITrainTensorboardUrlOp
-from uaitrain.api.get_train_job_list import GetUAITrainJobListOp
+from uaitrain.api.get_train_tensorboard_url import GetUAITrainTensorboardUrlApiOp
+from uaitrain.api.get_train_job_list import GetUAITrainJobListApiOp
+
 
 class BaseUAITrainGetTensorBoardUrlOp(BaseUAITrainOp):
     def __init__(self, parser):
@@ -50,7 +45,7 @@ class BaseUAITrainGetTensorBoardUrlOp(BaseUAITrainOp):
         return True
 
     def _check_job_running(self):
-        create_op = GetUAITrainJobListOp(
+        job_op = GetUAITrainJobListApiOp(
             pub_key=self.pub_key,
             priv_key=self.pri_key,
             job_id=self.job_id,
@@ -58,7 +53,7 @@ class BaseUAITrainGetTensorBoardUrlOp(BaseUAITrainOp):
             region=self.region,
             zone=self.zone)
 
-        succ, resp = create_op.call_api()
+        succ, resp = job_op.call_api()
         if succ is False:
             uai_logger.error("Error call list train jobs")
             return False
@@ -80,7 +75,7 @@ class BaseUAITrainGetTensorBoardUrlOp(BaseUAITrainOp):
             print ('The job is not running or not exist. job id: {0}'.format(self.job_id))
             return False
 
-        tensor_op = GetUAITrainTensorboardUrlOp(
+        tensor_op = GetUAITrainTensorboardUrlApiOp(
             pub_key=self.pub_key,
             priv_key=self.pri_key,
             job_id=self.job_id,

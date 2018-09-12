@@ -16,27 +16,23 @@
 from uaitrain.api.base_op import BaseUAITrainAPIOp
 
 
-class GetUAITrainJobStartPredictApiOp(BaseUAITrainAPIOp):
+class GetUAITrainMaxExecTimeRangeApiOp(BaseUAITrainAPIOp):
     """
-    GetUAITrainJobStartPredictAPI
+    GetUAITrainMaxExecTimeRangeAPI
 
-        Identical with UAI Train GetUAITrainJobStartPredict API func
-        Input:
-            TrainJobId              string(required)        Job id of the job
+        Identical with UAI Train GetUAITrainMaxExecTimeRange API func
         Output:
             RetCode                 int                      API return code: 0: success, others: error code
             Action                  string                   Action name
             Message                 string                   Message: error description
-            WaitJobCount            int                     waited job count
+            SetName                 string                   current set name
+            Min                     int                      minimum max execute time when use uai-training
+            Max                     int                      maximum max execute time when use uai-training
     """
-    ACTION_NAME = "GetUAITrainJobStartPredict"
+    ACTION_NAME = "GetUAITrainMaxExecTimeRange"
 
-    def __init__(self, pub_key, priv_key, job_id, project_id="", region="", zone=""):
-        super(GetUAITrainJobStartPredictApiOp, self).__init__(self.ACTION_NAME, pub_key, priv_key, project_id, region, zone)
-        self.cmd_params["TrainJobId"] = job_id
+    def __init__(self, pub_key, priv_key, project_id="", region="", zone=""):
+        super(GetUAITrainMaxExecTimeRangeApiOp, self).__init__(self.ACTION_NAME, pub_key, priv_key, project_id, region, zone)
 
     def _check_args(self):
-        super(GetUAITrainJobStartPredictApiOp, self)._check_args()
-
-        if self.cmd_params["TrainJobId"] == "" or type(self.cmd_params["TrainJobId"]) != str:
-            raise ValueError("TrainJobId should be <str> and should not be nil")
+        super(GetUAITrainMaxExecTimeRangeApiOp, self)._check_args()
