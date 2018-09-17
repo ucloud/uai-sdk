@@ -37,7 +37,7 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         pack_parser.add_argument(
             '--os',
             type=str,
-            default='ubuntu',
+            default='ubuntu-14.04.05',
             help='The docker os version')
         pack_parser.add_argument(
             '--python_version',
@@ -47,6 +47,7 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         pack_parser.add_argument(
             '--ai_arch_v',
             type=str,
+            required=True,
             help='The AI framework and its version, e.g., tensorflow-1.1.0')
         pack_parser.add_argument(
             '--acc_type',
@@ -195,7 +196,7 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         if succ is False:
             raise RuntimeError("Error get {0} info from server".format(pkgtype))
 
-        for avpkg in result['PkgSet']:
+        for avpkg in result['DataSet']:
             if pkgtype == 'OS' or pkgtype == 'Python' or pkgtype == 'AIFrame':
                 versionsplit = pkg.rfind('-')
                 if versionsplit > 0:
