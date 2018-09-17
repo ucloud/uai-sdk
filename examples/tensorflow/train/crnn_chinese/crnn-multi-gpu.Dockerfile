@@ -2,3 +2,5 @@ From uhub.service.ucloud.cn/uaishare/gpu_uaitrain_ubuntu-16.04_python-3.6_tensor
 RUN pip install tqdm
 ENV LANG C.UTF-8
 ADD ./code/ /data/
+ADD ./code_multi/tools/ /data/tools/
+

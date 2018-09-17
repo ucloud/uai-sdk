@@ -179,7 +179,7 @@ class ShadowNet(cnn_basenet.CNNBaseModel):
                                 [self._hidden_nums, self._hidden_nums]]
 
                 stack_lstm_layer, _, _ = rnn.stack_bidirectional_dynamic_rnn(
-                    fw_cell_list, bw_cell_list, inputdata, dtype=tf.float32)
+                    fw_cell_list, bw_cell_list, inputdata, parallel_iterations=128, dtype=tf.float32)
 
                 def f1():
                     """
@@ -199,6 +199,7 @@ class ShadowNet(cnn_basenet.CNNBaseModel):
 
                 # [batch, width, 2*n_hidden]
                 [batch_s, _, hidden_nums] = inputdata.get_shape().as_list()
+                batch_s = tf.shape(inputdata)[0]
 
                 # [batch x width, 2*n_hidden]
                 rnn_reshaped = tf.reshape(stack_lstm_layer, [-1, hidden_nums])
