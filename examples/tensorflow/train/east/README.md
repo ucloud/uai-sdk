@@ -1,13 +1,20 @@
 # EAST Example
-EAST example shows how to run tensorflow implementation of [EAST: An Efficient and Accurate Scene Text Detector](https://arxiv.org/abs/1704.03155v2) on UCloud AI Train Platform. The example is based on https://github.com/argman/EAST
+EAST example shows how to run tensorflow implementation of [EAST: An Efficient and Accurate Scene Text Detector](https://arxiv.org/abs/1704.03155v2) on UCloud AI Train Platform. The example is based on https://github.com/argman/EAST. We also provide a multi-gpu distriubted version in this example.
 
 # Setup
 You should prepare your own training data and pretrained model before running the task. As UAI Train nodes does not provide network access, you should prepare your data locally.
 
 ## Intro
-The EAST example directly use the code in https://github.com/argman/EAST. We have provided the pre-build docker image at uhub.service.ucloud.cn/uaishare/tf-east:tf-1.5
+We proivde two versions of EAST:
+  1. Multi-gpu version (multigpu\_train.py). This version is compatable with the original argman's implementation. We only made necessary modifications for it to run in UAI Train platform.
+  2. Multi-gpu Distributed version (distgpu\_train.py). This version is implemented with tf.Estimator API which can run on a distributed environment. It takes tfrecords as its input. You can use icdar\_tfrecord.py to build your own tfrecords.
 
-## UAI Example
+This example directly use most of code in https://github.com/argman/EAST such as model.py, data\_util.py, nets.
+
+## Preparing docker image
+We have provided necessary code for you to build training docker for EAST as well as the dockerfile
+
+### Multi-gpu UAI Example
 We made the following modifications to the EAST code:
 
 1.multigpu\_train.py
@@ -44,10 +51,54 @@ We made the following modifications to the EAST code:
 
 We have provied these two modified files into east/code/.
 
-### Preparing the Data
+#### Build the Docker images
+We provide the basic Dockerfile east.Dockerfile to build the docker image for training east model.
+
+You should put argman's EAST code into working path, and copy the icdar.py and multigpu\_train.py provided in this example to switch the original icdar.py and multigpu\_train.py.
+You also should put the east.Dockerfile into the same directory of EAST code:
+
+    /data/east/
+    |  east.Dockerfile
+    |  EAST
+    |  |_ data_util.py
+    |  |_ icdar.py
+    |  |_ multigpu_train.py
+    |  | ...
+    |  |_ nets/
+
+We should run the docker build under PATH\_TO/east:
+
+    # cd /data/east/
+    # sudo docker build -f east.Dockerfile -t uhub.ucloud.cn/<YOUR_UHUB_REGISTRY>/east:test .
+    
+You can use any docker-name here if you want.
+
+### Distributed EAST training
+We also provide the distributed east version in multigpu\_train.py. It is a fresh implementation of distributed east training except using the same model defined in model.py. You can follow the [Build the Docker Image](#build-the-docker-images) to build your own distributed training docker image and follow the [Prepare tfrecord](#preparing-tfrecords-for-dist-training) to build the tfrecords for distributed training.
+
+#### Build the Docker image
+You should put argman's EAST code into working path, and copy the icdar\_dataset.py and icdar\_tfrecord.py in this example to the same path. You also should put the east-dist.Dockerfile into the same directory of EAST code:
+
+    /data/east/
+    |  east-dist.Dockerfile
+    |  EAST
+    |  |_ data_util.py
+    |  |_ icdar_dataset.py
+    |  |_ distgpu_train.py
+    |  | ...
+    |  |_ nets/
+
+We should run the docker build under PATH\_TO/east:
+
+    # cd /data/east/
+    # sudo docker build -f east-dist.Dockerfile -t uhub.ucloud.cn/<YOUR_UHUB_REGISTRY>/east-dist:test .
+    
+You can use any docker-name here if you want.
+
+## Preparing the Data
 Please follow the https://github.com/argman/EAST/readme.md to download the training data and the pretrained model. The example use the ICDAR dataset and the slim Resnet V1 50 checkpoint.
 
-#### Create Local Test Data Path
+### Create Local Test Data Path
 Suppose you have downloaded the dataset and put both the IMG files and TXT files into one dir (e.g., ICDAR 2015):
 
     # cd /data/east/train-data/
@@ -70,59 +121,30 @@ You also should put resnet\_v1\_50.ckpt in the same dir
     |_ resnet_v1_50.ckpt
     ```
 
-#### Preparing the EAST code for UAI Train
-You should first download the code from https://github.com/argman/EAST/
+### Preparing tfrecords for Dist Training
+We provide icdar_tfrecord.py to generate tfrecords from raw images/txts. You can run it as follows:
 
-    # cd /data/east/code/EAST
-    # ls
-    data_util.py demo_images/ ... training_samples/
+    python icdar_tfrecord.py --training_data_path=<PATH-TO-DATA> --save_dir=./tfrecords --shards=10
 
-Then you should substitte multigpu\_train.py and icdar.py with the one we provied.
+It will generate both train_xxx.tfrecord and validation_xxx.tfrecord. It will take 90% of data into train set and 10% of data into validation set. You can modify the function write\_features to change this rate.
 
-We also have provied the pre-build image for you: uhub.service.ucloud.cn/uaishare/tf-east:tf-1.5
+**Note:** Tfrecord generator is only compatable with python3. If you use python2, the generated tfrecords will be broken.
+
+**Note:** Only distgpu\_train.py is compatable with tfrecords. You can also use distgpu\_train.py in single node training.
 
 
-### Build the Docker images
-We provide the basic Dockerfile to build the docker image for training east model:
-
-    FROM uhub.service.ucloud.cn/uaishare/gpu_uaitrain_ubuntu-16.04_python-2.7.6_tensorflow-1.5.0:v1.0
-
-    RUN apt-get update
-    RUN apt-get install -y python-opencv python-tk
-
-    RUN pip install shapely -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com
-
-    ADD ./EAST/ /data/
-
-You should put the east.Dockerfile into the same directory of EAST code:
-
-    /data/east/
-    |_ code
-    |  |_ east.Dockerfile
-    |  |_ EAST
-    |  |  |_ data_util.py
-    |  |  | ...
-    |  |  | training_samples/
-    |_ train-data
-    |  |_ img_1.jpg
-    |  |  img_2.jpg
-    |  |  ...
-    |  |  img_1000.jpg
-    |  |_ img_1.txt
-    |  |_ ...
-    |_ |_ img_1000.txt
-    |_ resnet_v1_50.ckpt
-
-We should run the docker build under PATH\_TO/east:
-
-    # cd /data/east/code
-    # sudo docker build -f east.Dockerfile -t uhub.ucloud.cn/<YOUR_UHUB_REGISTRY>/east:test .
-    
-You can use any docker-name here if you want.
-
-### Run the train
+## Run the train
 We can simply use the following cmd to run the local test.(GPU version)
 
     sudo nvidia-docker run -it -v /data/east/:/data/data -v /data/east/output:/data/output uhub.service.ucloud.cn/uaishare/tf-east:tf-1.5 /bin/bash -c "cd /data&&python /data/multigpu_train.py --num_gpus=1 --input_size=512 --batch_size_per_gpu=8 --text_scale=512 --training_data_path=train_data --geometry=RBOX --learning_rate=0.0001 --num_readers=24 --pretrained_model_path=resnet_v1_50.ckpt --data_dir=/data/data/ --output_dir=/data/output --checkpoint_path=east_icdar2015_resnet_v1_50_rbox
     
 You can use the same image to run the training on UAI Train Platform. For more details please see https://docs.ucloud.cn/ai/uai-train.
+
+## Training with distributed multi-gpu
+The distgpu\_train.py can be directly used in distributed training envs.
+
+UAI Train Platform can dynamicaaly deploy the training cluster and generate the TF\_CONFIG for each training node. You only need to run the training cmd as:
+
+    /data/distgpu_train.py --batch_size=128 --max_steps=2000
+
+For more details please see https://docs.ucloud.cn/ai/uai-train.

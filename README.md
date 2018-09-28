@@ -63,22 +63,11 @@
 
 ## How to install
 1. Install your deep learning python package, such as Tensorflow, MXNet, Keras, Caffe (tested version preferred)
-2. Install UCloud Ufile SDK (https://docs.ucloud.cn/storage_cdn/ufile/tools)
-
-        $ wget http://sdk.ufile.ucloud.com.cn/python_sdk.tar.gz
-        $ tar zxvf python_sdk.tar.gz
-        $ cd ufile-python
-        $ sudo python setup.py install
-
-3. Install uai-sdk
+2. Install uai-sdk
 
         $ sudo python setup.py install
 
-4. Install Flask
-
-        $ sudo pip install Flask
-
-5. Install all other lib your inference code required
+3. Install all other lib your inference code required
 
 
 ## How to interactive with UCloud UAI Platform
