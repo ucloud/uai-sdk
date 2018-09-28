@@ -59,7 +59,7 @@ You also should put the east.Dockerfile into the same directory of EAST code:
 
     /data/east/
     |  east.Dockerfile
-    |  EAST
+    |  EAST/
     |  |_ data_util.py
     |  |_ icdar.py
     |  |_ multigpu_train.py
@@ -74,14 +74,14 @@ We should run the docker build under PATH\_TO/east:
 You can use any docker-name here if you want.
 
 ### Distributed EAST training
-We also provide the distributed east version in multigpu\_train.py. It is a fresh implementation of distributed east training except using the same model defined in model.py. You can follow the [Build the Docker Image](#build-the-docker-images) to build your own distributed training docker image and follow the [Prepare tfrecord](#preparing-tfrecords-for-dist-training) to build the tfrecords for distributed training.
+We also provide the distributed east version in distgpu\_train.py. It is a fresh implementation of distributed east training except using the same model defined in model.py. You can follow the [Build the Docker Image](#build-the-docker-images) to build your own distributed training docker image and follow the [Prepare tfrecord](#preparing-tfrecords-for-dist-training) to build the tfrecords for distributed training.
 
 #### Build the Docker image
-You should put argman's EAST code into working path, and copy the icdar\_dataset.py and icdar\_tfrecord.py in this example to the same path. You also should put the east-dist.Dockerfile into the same directory of EAST code:
+You should put argman's EAST code into working path, and copy the icdar\_dataset.py and distgpu\_train.py in this example to the same path. You also should put the east-dist.Dockerfile into the same directory of EAST code:
 
     /data/east/
     |  east-dist.Dockerfile
-    |  EAST
+    |  EAST/
     |  |_ data_util.py
     |  |_ icdar_dataset.py
     |  |_ distgpu_train.py
