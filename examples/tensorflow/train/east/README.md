@@ -88,7 +88,27 @@ You should put argman's EAST code into working path, and copy the icdar\_dataset
     |  | ...
     |  |_ nets/
 
-We should run the docker build under PATH\_TO/east:
+We should run the docker build cmd under PATH\_TO/east:
+
+    # cd /data/east/
+    # sudo docker build -f east-dist.Dockerfile -t uhub.ucloud.cn/<YOUR_UHUB_REGISTRY>/east-dist:test .
+    
+You can use any docker-name here if you want.
+
+#### Using Pretrained ResNet50 Net
+You can use the Resnet V1 50 provided by tensorflow slim [slim resnet v1 50](http://download.tensorflow.org/models/resnet_v1_50_2016_08_28.tar.gz) as the pretrained CNN part. We have provided the code to load the slim resnet50 checkpoint in distgpu\_train.py. In order to use it in distributed training, we suggest you to pack the Resnet50 checkpoint file into dockerfile (as the ps nodes can find the checkpoint file directly inside its docker image). You also should put the east-dist.Dockerfile into the same directory of EAST code:
+
+    /data/east/
+    |  east-dist.Dockerfile
+    |  EAST/
+    |  |_ data_util.py
+    |  |_ icdar_dataset.py
+    |  |_ distgpu_train.py
+    |  | ...
+    |  |_ nets/
+    |  |_ resnet_v1_50.ckpt
+
+We should run the docker build cmd under PATH\_TO/east:
 
     # cd /data/east/
     # sudo docker build -f east-dist.Dockerfile -t uhub.ucloud.cn/<YOUR_UHUB_REGISTRY>/east-dist:test .
@@ -146,5 +166,9 @@ The distgpu\_train.py can be directly used in distributed training envs.
 UAI Train Platform can dynamicaaly deploy the training cluster and generate the TF\_CONFIG for each training node. You only need to run the training cmd as:
 
     /data/distgpu_train.py --batch_size=128 --max_steps=2000
+
+To use the pretrained resnet50 model, you can run the training cmd as(Suppose you have packed the resnet ckpt file into docker image as suggested in [Using Pretrained ResNet50 Net](#using-pretrained-resnet50-net)):
+
+    /data/distgpu_train.py --batch_size=128 --max_steps=2000 --pretrained_model_path=./resnet_v1_50.ckpt
 
 For more details please see https://docs.ucloud.cn/ai/uai-train.

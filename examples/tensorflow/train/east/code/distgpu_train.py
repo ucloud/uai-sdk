@@ -129,13 +129,6 @@ def input_fn(data_dir,
 
         return feature_shards, [score_map_shards, geo_map_shards, training_mask_shards]
 
-def restore_slim_v(scaffold, sess):
-    model_path = tf.train.latest_checkpoint(FLAGS.pretrained_model_path)
-    variable_restore_op = slim.assign_from_checkpoint_fn(FLAGS.pretrained_model_path, 
-                    slim.get_trainable_variables(),
-                    ignore_missing_vars=True)
-    variable_restore_op(sess)
-
 def get_mode_fn(num_gpus, variable_strategy, num_workers):
     """Returns a function that will build shadownet model."""
 
@@ -152,7 +145,6 @@ def get_mode_fn(num_gpus, variable_strategy, num_workers):
 
         num_devices = FLAGS.num_gpus
         device_type = 'gpu'
-        tower_batch_size = int(FLAGS.batch_size / num_devices)
 
         reuse_variables = None
         for i in range(num_devices):
@@ -198,6 +190,11 @@ def get_mode_fn(num_gpus, variable_strategy, num_workers):
                         avg_grad = tf.multiply(tf.add_n(grads), 1. / len(grads))
                 gradvars.append((avg_grad, var))
 
+        if FLAGS.pretrained_model_path is not None:
+            tf.train.init_from_checkpoint(FLAGS.pretrained_model_path, {"resnet_v1_50/":"resnet_v1_50/"})
+        # restore only once
+        FLAGS.pretrained_model_path = None
+
         # Device that runs the ops to apply global gradient updates.
         consolidation_device = '/gpu:0' if variable_strategy == 'GPU' else '/cpu:0'
         with tf.device(consolidation_device):
@@ -219,7 +216,7 @@ def get_mode_fn(num_gpus, variable_strategy, num_workers):
                 summary_op=tower_summaries[0])
             train_hooks = [logging_hook, summary_hook]
 
-            optimizer = tf.train.AdadeltaOptimizer(learning_rate=learning_rate)
+            optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
             if FLAGS.sync:
                 optimizer = tf.train.SyncReplicasOptimizer(
                     optimizer, replicas_to_aggregate=num_workers)
@@ -240,9 +237,6 @@ def get_mode_fn(num_gpus, variable_strategy, num_workers):
             ]
             train_op.extend(update_ops)
             train_op = tf.group(*train_op)
-
-        if FLAGS.pretrained_model_path is not None:
-            scaffold = tf.train.Scaffold(init_fn=restore_slim_v)
 
         return tf.estimator.EstimatorSpec(
             mode=mode,
