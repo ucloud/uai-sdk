@@ -666,7 +666,8 @@ def generate_data(im, text_polys, text_tags,
         text_polys[:, :, 1] *= resize_ratio_3_y
         new_h, new_w, _ = im.shape
         score_map, geo_map, training_mask = generate_rbox((new_h, new_w), text_polys, text_tags)
-        
+     
+    im = im[:, :, ::-1]
     score_map = score_map[::4, ::4, np.newaxis].astype(np.float32)
     geo_map = geo_map[::4, ::4, :].astype(np.float32)
     training_mask = training_mask[::4, ::4, np.newaxis].astype(np.float32)
@@ -831,8 +832,8 @@ def write_features(save_dir, shards):
         train_tfrecord_path = os.path.join(save_dir, 'train_feature_{:05d}.tfrecords'.format(loop))
         feature_writer.write_features(tfrecord_path=train_tfrecord_path, 
             imagenames=sub_image_list,
-            text_polyss=text_polys_list,
-            text_tagss=text_tags_list)
+            text_polyss=sub_text_polys_list,
+            text_tagss=sub_text_tags_list)
     # build val tfrecord
     val_cnt_per = int(val_cnt / shards)
     for loop in tqdm.tqdm(range(shards)):
@@ -842,8 +843,8 @@ def write_features(save_dir, shards):
         train_tfrecord_path = os.path.join(save_dir, 'validation_feature_{:05d}.tfrecords'.format(loop))
         feature_writer.write_features(tfrecord_path=train_tfrecord_path, 
             imagenames=sub_image_list,
-            text_polyss=text_polys_list,
-            text_tagss=text_tags_list)
+            text_polyss=sub_text_polys_list,
+            text_tagss=sub_text_tags_list)
 
 
 def build_tfrecord():
