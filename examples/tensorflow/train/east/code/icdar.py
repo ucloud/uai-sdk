@@ -51,7 +51,7 @@ def load_annoataion(p):
     text_tags = []
     if not os.path.exists(p):
         return np.array(text_polys, dtype=np.float32)
-    with open(p, 'r') as f:
+    with open(p, 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
         for line in reader:
             label = line[-1]

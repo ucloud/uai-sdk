@@ -116,7 +116,7 @@ We should run the docker build cmd under PATH\_TO/east:
 You can use any docker-name here if you want.
 
 ## Preparing the Data
-Please follow the https://github.com/argman/EAST/readme.md to download the training data and the pretrained model. The example use the ICDAR dataset and the slim Resnet V1 50 checkpoint.
+Please follow the https://github.com/argman/EAST/readme.md to download the training data and the pretrained model. The example use the ICDAR dataset.
 
 ### Create Local Test Data Path
 Suppose you have downloaded the dataset and put both the IMG files and TXT files into one dir (e.g., ICDAR 2015):
@@ -126,23 +126,24 @@ Suppose you have downloaded the dataset and put both the IMG files and TXT files
     img_1.jpg img_2.jpg ... img_1000.jpg
     img_1.txt img_2.txt ... img_1000.txt
 
-You also should put resnet\_v1\_50.ckpt in the same dir
+### Using raw images for Dist Training
+Distributing raw images/txts to each node in a distributed cluster is costy. We provide a simple way to distribute a tar-pack of raw images/txts to each node and uncompress it before training automatically. You can refer to icdar\_dataset.py to see how tar-pack is decompressed during EastDataSet initialization and how image/txt data is organized into data batches in EastDataSet->make\_batch().
 
-    ```
-    /data/east/
-    |_ train-data
-    |  |_ img_1.jpg
-    |  |  img_2.jpg
-    |  |  ...
-    |  |  img_1000.jpg
-    |  |_ img_1.txt
-    |  |_ ...
-    |_ |_ img_1000.txt
-    |_ resnet_v1_50.ckpt
-    ```
+To compress data, you can use:
 
-### Preparing tfrecords for Dist Training
-We provide icdar_tfrecord.py to generate tfrecords from raw images/txts. You can run it as follows:
+    cd /data/east/
+    tar -czf data.tar.gz train_data/
+
+The resulting data.tar.gz is the compressed tar-pack of raw images/txts. After copying data.tar.gz to each node (The data.tar.gz should be put into the path of os.path.join(FLAGS.data\_dir, FLAGS.train\_dir), then we can use following args to tell icdar\_dataset model how to setup EastDataSet:
+
+    --tarfile=data.tar.gz --tarpath=train_data/
+
+**tarfile** refers to the name of the tar file and the **tarpath** refers to the sub-filedir inside the tar file.
+
+**To use tar-pack data for training, distgpu\_train.py should import icdar_dataset instead of import icdar_tfrecord_dataset**
+
+### Using tfrecords for Dist Training
+You can also use tfrecords as data for distributed training. We provide icdar_tfrecord.py to generate tfrecords from raw images/txts. You can run it as follows:
 
     python icdar_tfrecord.py --training_data_path=<PATH-TO-DATA> --save_dir=./tfrecords --shards=10
 
@@ -150,8 +151,9 @@ It will generate both train_xxx.tfrecord and validation_xxx.tfrecord. It will ta
 
 **Note:** Tfrecord generator is only compatable with python3. If you use python2, the generated tfrecords will be broken.
 
-**Note:** Only distgpu\_train.py is compatable with tfrecords. You can also use distgpu\_train.py in single node training.
+**Note:** Only distgpu\_train.py is compatable with tfrecords. You can also use distgpu\_train.py in single node training. 
 
+**To use tfrecords for training, distgpu\_train.py should import icdar_tfrecord_dataset instead of import icdar_dataset**
 
 ## Run the train
 We can simply use the following cmd to run the local test.(GPU version)
@@ -161,14 +163,14 @@ We can simply use the following cmd to run the local test.(GPU version)
 You can use the same image to run the training on UAI Train Platform. For more details please see https://docs.ucloud.cn/ai/uai-train.
 
 ## Training with distributed multi-gpu
-The distgpu\_train.py can be directly used in distributed training envs.
+The distgpu\_train.py can be directly used in distributed training envs. (By default, it uses tar-pack of raw images/txts as input)
 
 UAI Train Platform can dynamicaaly deploy the training cluster and generate the TF\_CONFIG for each training node. You only need to run the training cmd as:
 
-    /data/distgpu_train.py --batch_size=128 --max_steps=2000
+    /data/distgpu_train.py --batch_size=128 --max_steps=2000 --tarfile=data.tar.gz --tarpath=train_data/
 
 To use the pretrained resnet50 model, you can run the training cmd as(Suppose you have packed the resnet ckpt file into docker image as suggested in [Using Pretrained ResNet50 Net](#using-pretrained-resnet50-net)):
 
-    /data/distgpu_train.py --batch_size=128 --max_steps=2000 --pretrained_model_path=./resnet_v1_50.ckpt
+    /data/distgpu_train.py --batch_size=128 --max_steps=2000 --pretrained_model_path=./resnet_v1_50.ckpt --tarfile=data.tar.gz --tarpath=train_data/
 
 For more details please see https://docs.ucloud.cn/ai/uai-train.

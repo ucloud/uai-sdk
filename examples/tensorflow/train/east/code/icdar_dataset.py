@@ -1,63 +1,64 @@
 import os
 
 import tensorflow as tf
-import icdar_tfrecord
+import numpy as np
+import tarfile
+import icdar
 
-class EastDataSet(object):
-    def __init__(self, data_dir, subset='train', use_distortion=True):
-        self.data_dir = data_dir
-        self.subset = subset
-        self.use_distortion = use_distortion
-        self.feature_reader = icdar_tfrecord.DataFeatureReader()
+tf.app.flags.DEFINE_string('tarfile', 
+                            'data.tar.gz',
+                            'tarfile to uncompress')
+tf.app.flags.DEFINE_string('tarpath', '', 'tarfile inner path')
 
-    def get_filenames(self):
-        if self.subset in ['train']:
-            return [os.path.join(self.data_dir, 'train_feature_{:05d}.tfrecords'.format(i))
-                for i in range(5)]
-        if self.subset in ['validation']:
-            return [os.path.join(self.data_dir, 'validation_feature_{:05d}.tfrecords'.format(i))
-                for i in range(5)]
-        else:
-           raise ValueError('Invalid data subset "%s"' % self.subset)
+FLAGS = tf.app.flags.FLAGS
 
-    def parser(self, serialized_example):
-        image, score_map, geo_map, training_mask = self.feature_reader.parse_single_example(serialized_example)
+TMP_OUTPUT_DIR = "/tmp/"
+initialized = False
 
-        return image, score_map, geo_map, training_mask
+def prepare_data_once(data_dir):
+    def prepare_data():
+        # untar data to tmp                                                                                                                                    
+        src_tar = os.path.join(data_dir, FLAGS.tarfile)                                                                                                        
+        sub_path = FLAGS.tarpath                                                                                                                               
+        output_path = TMP_OUTPUT_DIR                                                                                                                           
+        print(src_tar)                                                                                                                                         
+                
+        global initialized                                                                                                                                               
+        if initialized is False:                                                                                                                          
+            initialized = True
+            with tarfile.open(src_tar, "r:gz") as tar:
+                tar.extractall(output_path)
+            tar.close()
+            print('finish untar')
+
+        data_path = os.path.join(TMP_OUTPUT_DIR, sub_path)
+        return data_path
+
+    return prepare_data
+
+class EastDataSet(object):                                                                                                                                     
+    def __init__(self, data_dir, subset='train', use_distortion=True):                                                                                                        
+        prepare_action = prepare_data_once(data_dir)
+        data_path = prepare_action()
+
+        FLAGS.training_data_path = data_path
+        generator = icdar.get_batch(num_workers=FLAGS.num_readers,
+                                    input_size=FLAGS.input_size,
+                                    batch_size=FLAGS.batch_size)
+
+        self.generator = generator
 
     def make_batch(self, batch_size):
-        """Read the images and labels from 'filenames'."""
-        filenames = self.get_filenames()
-        # Repeat infinitely.
-        #dataset = tf.contrib.data.TFRecordDataset(filenames).repeat()
-        dataset = tf.data.TFRecordDataset(filenames).repeat()
+        data = next(self.generator)
+        input_images = np.asarray(data[0])
+        input_images = tf.convert_to_tensor(input_images, np.float32)
 
-        # Parse records.
-        #dataset = dataset.map(
-        #    self.parser, num_threads=8, output_buffer_size=2 * batch_size)
-        dataset = dataset.map(self.parser,
-                              num_parallel_calls=16)
+        input_score_maps = np.asarray(data[2])
+        input_score_maps = tf.convert_to_tensor(input_score_maps, np.float32)
 
-        # Potentially shuffle records.
-        if self.subset == 'train':
-            min_queue_examples = int(
-                EastDataSet.num_examples_per_epoch(self.subset) * 0.01)
-            # Ensure that the capacity is sufficiently large to provide good random
-            # shuffling.
-            dataset = dataset.shuffle(buffer_size=min_queue_examples + 3 * batch_size)
+        input_geo_maps = np.asarray(data[3])
+        input_geo_maps = tf.convert_to_tensor(input_geo_maps, np.float32)
 
-        # Batch it up.
-        dataset = dataset.batch(batch_size)
-        iterator = dataset.make_one_shot_iterator()
-        image_batch, score_map_batch, geo_map_batch, training_mask_batch = iterator.get_next()
-
-        return image_batch, score_map_batch, geo_map_batch, training_mask_batch
-
-    @staticmethod
-    def num_examples_per_epoch(subset='train'):
-        if subset == 'train':
-            return 900
-        elif subset == 'validation':
-            return 100
-        else:
-            raise ValueError('Invalid data subset "%s"' % subset)
+        input_training_masks = np.asarray(data[4])
+        input_training_masks = tf.convert_to_tensor(input_training_masks, np.float32)                                                                          
+        return input_images, input_score_maps, input_geo_maps, input_training_masks

@@ -24,7 +24,7 @@ tf.app.flags.DEFINE_integer('save_checkpoint_steps', 1000, '')
 tf.app.flags.DEFINE_integer('save_summary_steps', 100, '')
 tf.app.flags.DEFINE_string('pretrained_model_path', None, '')
 tf.app.flags.DEFINE_integer('num_intra_threads', 0, '')
-tf.app.flags.DEFINE_string('tfrecord_dir', 'tfrecords', '')
+tf.app.flags.DEFINE_string('train_dir', 'tfrecords', '')
 tf.app.flags.DEFINE_boolean('sync', False, '')
 tf.app.flags.DEFINE_integer('decay_steps', 10000, '')
 tf.app.flags.DEFINE_float('decay_rate', 0.997, '')
@@ -293,12 +293,12 @@ def main(argv=None):
     log_device_placement = False
     data_dir = FLAGS.data_dir
     output_dir = FLAGS.output_dir
-    tfrecord_dir = FLAGS.tfrecord_dir
+    train_dir = FLAGS.train_dir
 
     # The env variable is on deprecation path, default is set to off.
     os.environ['TF_SYNC_ON_FINISH'] = '1'
     os.environ['TF_ENABLE_WINOGRAD_NONFUSED'] = '1'
-    data_dir = os.path.join(data_dir, tfrecord_dir)
+    data_dir = os.path.join(data_dir, train_dir)
     tf.logging.set_verbosity(tf.logging.INFO)
 
     # Session configuration.
