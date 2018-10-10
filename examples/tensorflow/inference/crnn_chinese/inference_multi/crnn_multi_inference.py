@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# @Time    : 17-9-29 下午3:56
-# @Author  : Luo Yao
-# @Site    : http://github.com/TJCVRS
-# @File    : demo_shadownet.py
-# @IDE: PyCharm Community Edition
 """
 Use shadow net to recognize the scene text
 """
@@ -29,25 +22,22 @@ from uai.arch.tf_model import TFAiUcloudModel
 import crnn_multi_infer
 
 #logger = log_utils.init_logger()
-
-
 class CrnnModel(TFAiUcloudModel):
     def __init__(self,conf):
         super(CrnnModel,self).__init__(conf)
 
     def load_model(self):
         predictor = crnn_multi_infer.crnnPredictor('./checkpoint_dir')
-        predictor.build_crnn_model()
+        predictor.load_serve_model()
         self._predictor = predictor
-
+                
     def execute(self,data,batch_size):
         predictor = self._predictor
-        ret=[]
 
         images = []
         for i in range(batch_size):
             image = Image.open(data[i])
             images.append(image)
 
-        word = predictor.do_predict(images)
-        return word
+        word = predictor.do_serve_predict(images)
+        return word 

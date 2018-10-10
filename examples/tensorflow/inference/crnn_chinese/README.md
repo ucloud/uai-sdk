@@ -119,6 +119,20 @@ curl -X POST http://localhost:8080/service -T test_02.jpg
 ```
 
 ## 4. Inference with multi-gpu/dist crnn training model
+We provide implementation of inference code compatable with the multi-gpu/dist crnn training example. It takes two steps to build a inference service:
+1. export the model checkpoint into a .pb file
+
+2. use .pb file to initialize a inference service
+
+### 4.1 Generating .pb file
+We provide inference\_multi/crnn\_multi\_infer.py for you to generate .pb model file (Which is compatable with tfserve). You can run the following command to generate it:
+
+	python crnn_multi_infer.py
+
+Pay attention to the py-modules crnn\_multi\_infer.py required (including basic crnn realted modules such as crnn\_model, local\_utils, etc.), you should put them in the same dir as crnn\_multi\_infer.py. Also you should put the checkpoint files into ./checkpoint\_dir.
+
+The resulting .pb file and the corresponding variables files are located under ./checkpoint\_dir
+
 ### 4.1 Writing Service Code
 We provide the example service code in inference_multi/crnn_multi\_inference.py. We defined CrnnModel which derived from TFAiUcloudModel. 
 
@@ -129,7 +143,7 @@ In CrnnModel we implement load_model func and execute func:
 2. execute(self, data, batch_size) which will do the inference. The django server will invoke ocrModel->execute when it receives requests. It will buffer requests into a array named 'data' when possible. In execute(), it will call the crnnPredictor to format the images and do the inference call. You can refer to inference\_multi/crnn\_multi\_infer.py for more details. At last, execute() formats result into list object. (You can format it into json also)
 
 ### 4.3 Preparing model
-You can use the model you trained on UAI Train Platform. Please following the example in examples/tensorflow/train/crnn_chinese/code_multi/.(The multi-gpu version)
+You can use the model you trained on UAI Train Platform. Please following the example in examples/tensorflow/train/crnn_chinese/code_multi/.(The multi-gpu version) You should also convert the .ckpt model into .pb model according to [Generating .pb file](#generating-pb-file)
 
 ### 4.4 Preparing directory
 We put all these files into one directory:
@@ -140,10 +154,12 @@ We put all these files into one directory:
    |_ crnn_multi_inference.py 
    |_ crnn_multi_infer.py 
    |_ checkpoint_dir/
+      |_ saved_model.pb
+      |_ variables/
 |_ crnn_multi.conf
 |_ crnn_multi_infer.Dockerfile
 ```
-You should put multi-gpu-crnn checkpoint files under inference\_multi/checkpoint\_dir/
+You should put .pb files under inference\_multi/checkpoint\_dir/
 
 ### 4.5 Build Your Own Inference Docker
 With the above docker file you can now build your own inference docker image.

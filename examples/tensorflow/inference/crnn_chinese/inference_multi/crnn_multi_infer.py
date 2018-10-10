@@ -70,13 +70,12 @@ def get_words_from_chars(characters_list: List[str], sequence_lengths: List[int]
 
 def get_shadownet_fn():
     def _shadownet_fun(features, labels, mode): 
-        tower_batch_size = 1
-
         with tf.variable_scope('shadownet'):
             with tf.name_scope('tower_0') as name_scope:
-                preds, tensor_dict, seq_len = _tower_fn(features)
+                preds, tensor_dict, seq_len = _tower_fn(features['feature'])
 
-        decoded, log_prob = tf.nn.ctc_beam_search_decoder(preds, seq_len*np.ones(tower_batch_size), merge_repeated=False)
+        batch_size = tf.shape(features['feature'])[0]
+        decoded, log_prob = tf.nn.ctc_beam_search_decoder(preds, seq_len*tf.ones([batch_size], dtype=tf.int32), merge_repeated=False)
         sequence_lengths_pred = tf.bincount(tf.cast(decoded[0].indices[:, 0], tf.int32))
 
         with tf.name_scope('code2str_conversion'):
@@ -89,9 +88,10 @@ def get_shadownet_fn():
             keys = tf.cast(keys, tf.int32)
             values = features.get_idx2ord().values()
             values = list(map(int, values))
-            values = tf.cast(values, tf.int32)                                                                                                             
+            values = tf.cast(values, tf.int32)
             table_int2str = tf.contrib.lookup.HashTable(
-                     tf.contrib.lookup.KeyValueTensorInitializer(keys, values), -1)                                                                            
+                     tf.contrib.lookup.KeyValueTensorInitializer(keys, values), -1)
+
         preds = table_int2str.lookup(tf.cast(decoded[0], tf.int32))
         word_keys = features.get_char_list().keys()
         word_keys = list(map(int, word_keys))
@@ -112,15 +112,21 @@ def get_shadownet_fn():
             'decoded': decoded[0].values,
         }
 
+        export_outputs = {
+            'prediction': tf.estimator.export.PredictOutput(predictions)
+        }
+
         return tf.estimator.EstimatorSpec(
             mode=mode,
-            predictions=predictions)
+            predictions=predictions,
+            export_outputs=export_outputs)
 
     return _shadownet_fun
 
 class crnnPredictor():
     def __init__(self, model_dir):
         self._model_dir = model_dir
+        self.output = {}
 
     def build_crnn_model(self):
         sess_config = tf.ConfigProto(
@@ -134,7 +140,7 @@ class crnnPredictor():
             config=run_config)
         self._classifier = classifier
 
-    def do_predict(self, raw_images):
+    def do_serve_predict(self, raw_images):
         images = []
         for image in raw_images:
             image = cv2.cvtColor(np.asarray(image), cv2.COLOR_RGB2BGR)
@@ -142,23 +148,52 @@ class crnnPredictor():
             image = np.expand_dims(image, axis=0).astype(np.float32)
             image = image.reshape((32, 200, 3)).astype(np.uint8)
             images.append(image)
+        
+        sess = self.output['sess']
+        input_tensor = self.output['input_tensor']
+        output_tensor = self.output['output_tensor']
 
-        batch_size = len(images)
-        input_fn_predict = tf.estimator.inputs.numpy_input_fn(
-            x=np.array(images),
-            y=None,
-            batch_size=batch_size,
-            num_epochs=1,
-            shuffle=False)
+        output_tensor = sess.run(output_tensor, feed_dict={input_tensor: np.array(images)})
+        return output_tensor                                                                                                                                   
+                                                                                                                                                               
+    def load_serve_model(self):                                                                                                                                
+        sess = tf.Session()
 
-        print('do_predict')
-        results = self._classifier.predict(input_fn_predict,
-            yield_single_examples=False)
+        """
+        You can use 
+            saved_model_cli show --dir /tmp/saved_model_dir
+            to inspect the saved model for tag-set and signatures
+            refer to https://www.tensorflow.org/guide/saved_model#using_savedmodel_with_estimators for more details
+        """
+        tag = 'serve'
+        meta_graph_def = tf.saved_model.loader.load(sess, [tag], self._model_dir)
+        signature = meta_graph_def.signature_def
+        
+        sig = 'prediction'
+        input_key = 'input'
+        input_tensor_name = signature[sig].inputs[input_key].name
+        input_tensor = sess.graph.get_tensor_by_name(input_tensor_name)
 
-        words = []
-        for result in results:
-            print(result)
-            word = result['words'][0]
-            words.append(word)
+        output_key = 'words'
+        output_tensor_name = signature[sig].outputs[output_key].name
+        output_tensor = sess.graph.get_tensor_by_name(output_tensor_name)
 
-        return words
+        self.output['sess'] = sess
+        self.output['input_tensor'] = input_tensor
+        self.output['output_tensor'] = output_tensor
+
+    def export_model(self):
+        def serving_input_reciver_fn():
+            """ 
+            You should change the shape of this placeholder according to your request
+            This shape is compatable with do_serve_predict()
+            """
+            serialized_tf_example = tf.placeholder(shape=[None, 32, 200, 3], dtype=tf.uint8)
+            return tf.estimator.export.ServingInputReceiver(serialized_tf_example, serialized_tf_example)
+
+        self._classifier.export_savedmodel('./checkpoint_dir', serving_input_reciver_fn)
+
+if __name__ == '__main__':
+    predictor = crnnPredictor('./checkpoint_dir')
+    predictor.build_crnn_model()
+    predictor.export_model()
