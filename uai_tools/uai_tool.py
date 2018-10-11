@@ -45,6 +45,7 @@ from uai.operation.modify_version_weight.modify_version_weight import UaiService
 from uai.operation.modify_node_count.modify_node_count import UaiServiceModifySrvVersionNodeCountOp
 from uai.operation.start_uaiservice.start_uaiservice import UaiServiceStartServiceOp
 from uai.operation.stop_uaiservice.stop_uaiservice import UaiServiceStopServiceOp
+from uai.operation.get_real_time_metric.get_real_time_metric import UaiServiceGetUAISrvRealTimeMetricOp
 
 def parse_args(subparser):
     create_parser = subparser.add_parser('create', help='Create UAI Service')
@@ -59,6 +60,7 @@ def parse_args(subparser):
     modify_node_count_parser = subparser.add_parser('modifynodecount', help='Set UAI Service Node Count')
     start_parser = subparser.add_parser('start', help='Start UAI Service')
     stop_parser = subparser.add_parser('stop', help='Stop UAI Service')
+    metric_parser = subparser.add_parser('metric', help='Get real-time metric of UAI Service')
 
     tar_parser = subparser.add_parser('tar', help='Tar User Files for UAI Service')
     ai_tar_parser = tar_parser.add_subparsers(dest='ai_arch_type', help='ai_arch_type')
@@ -94,6 +96,7 @@ def parse_args(subparser):
     modify_node_count_op = UaiServiceModifySrvVersionNodeCountOp(modify_node_count_parser)
     start_op = UaiServiceStartServiceOp(start_parser)
     stop_op = UaiServiceStopServiceOp(stop_parser)
+    metric_op = UaiServiceGetUAISrvRealTimeMetricOp(metric_parser)
 
     caffe_tar_op = UaiServiceCaffeTarOp(caffe_tar_parser)
     keras_tar_op = UaiServiceKerasTarOp(keras_tar_parser)
@@ -146,6 +149,7 @@ def parse_args(subparser):
         "modifynodecount": modify_node_count_op,
         "start": start_op,
         "stop": stop_op,
+        "metric": metric_op,
 
         "tar": tar_op_dic,
         "pack": pack_op_dic,
