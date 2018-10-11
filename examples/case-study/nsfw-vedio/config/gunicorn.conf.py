@@ -1,0 +1,15 @@
+bind = '[::]:8080'
+workers = 1 #use 1 worker, easy to debug
+worker_class = 'gthread'
+threads = 2
+timeout = 60
+graceful_timeout = 60
+keep_alive = 5
+limit_request_line = 2048
+limit_request_fields = 50
+limit_request_field_site = 8190
+forwarded_allow_ips = '::'
+#accesslog = ''
+#access_log_format = ''
+loglevel = 'debug'
+capture_output = True

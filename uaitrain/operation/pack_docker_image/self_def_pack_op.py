@@ -16,12 +16,13 @@
 import subprocess
 
 from uai.utils.logger import uai_logger
+
 from uaitrain.operation.pack_docker_image.base_pack_op import BaseUAITrainDockerImagePackOp
 from uaitrain.operation.pack_docker_image.base_pack_op import TMP_DOCKER_FILE
 from uaitrain.operation.pack_docker_image.base_pack_op import DOCKER_RUN_CMD_FILE
+from uaitrain.operation.pack_docker_image.base_pack_op import DOCKER_TAG_SUFFIX
 
 class SelfDefUAITrainDockerImagePackOp(BaseUAITrainDockerImagePackOp):
-    """docstring for ClassName"""
     def __init__(self, parser):
         super(SelfDefUAITrainDockerImagePackOp, self).__init__(parser)
 
@@ -34,12 +35,16 @@ class SelfDefUAITrainDockerImagePackOp(BaseUAITrainDockerImagePackOp):
             help='The self defined docker image name')
 
     def _add_args(self):
-        super(SelfDefUAITrainDockerImagePackOp, self)._add_args()
+        #super(SelfDefUAITrainDockerImagePackOp, self)._add_args()
+        self.pack_parser = self.parser.add_parser('pack', help='Pack local docker image for uai train')
 
+        self._add_image_args(self.pack_parser)
+        self._add_code_args(self.pack_parser)
         self._add_self_def_image(self.pack_parser)
 
     def _parse_args(self, args):
-        super(SelfDefUAITrainDockerImagePackOp, self)._parse_args(args)
+        self._parse_img_args(args)
+        self._parse_code_args(args)
 
         if args['self_img'] == '':
             raise RuntimeError('Need self defined image name')
@@ -107,5 +112,3 @@ class SelfDefUAITrainDockerImagePackOp(BaseUAITrainDockerImagePackOp):
             return False
 
         self._build_userimage()
-        
-        

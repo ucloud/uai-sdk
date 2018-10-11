@@ -13,12 +13,12 @@
 # limitations under the License.
 # ==============================================================================
 
-import time
 from uai.utils.logger import uai_logger
 from uai.utils.logger import printConsoleOnlyError
 from uaitrain.operation.base_op import BaseUAITrainOp
-from uaitrain.api.get_train_log_topic_list import GetUAITrainRunningLogTopicListOp
-from uaitrain.api.get_train_job_list import GetUAITrainJobListOp
+from uaitrain.api.get_train_log_topic_list import GetUAITrainRunningLogTopicListApiOp
+from uaitrain.api.get_train_job_list import GetUAITrainJobListApiOp
+
 
 class BaseUAITrainGetLogTopicOp(BaseUAITrainOp):
     def __init__(self, parser):
@@ -42,12 +42,11 @@ class BaseUAITrainGetLogTopicOp(BaseUAITrainOp):
 
     def _parse_args(self, args):
         super(BaseUAITrainGetLogTopicOp, self)._parse_args(args)
-
         self.job_id = args['job_id']
         return True
 
     def _check_job_running(self):
-        job_op = GetUAITrainJobListOp(
+        job_op = GetUAITrainJobListApiOp(
             pub_key=self.pub_key,
             priv_key=self.pri_key,
             job_id=self.job_id,
@@ -68,7 +67,7 @@ class BaseUAITrainGetLogTopicOp(BaseUAITrainOp):
         if self._parse_args(args) == False:
             return False
 
-        topic_op = GetUAITrainRunningLogTopicListOp(
+        topic_op = GetUAITrainRunningLogTopicListApiOp(
             pub_key=self.pub_key,
             priv_key=self.pri_key,
             job_id=self.job_id,

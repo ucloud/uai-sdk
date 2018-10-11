@@ -1,0 +1,1 @@
+You can download model at https://github.com/MaybeShewill-CV/CRNN_Tensorflow/tree/master/model/shadownet

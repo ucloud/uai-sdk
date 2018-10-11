@@ -25,7 +25,7 @@ We provide the example code to generate tf-serving compatable model after the tr
     	# Save model to create inference.
     	model.export_savedmodel(FLAGS.serving_checkpoint, serving_input_receiver_fn)
     
-Thanks to the estimator interface, the estimator object can directly export tf-serving compatable model through export_savedmodel if we provide the serving\_input\_receiver\_fn func. The serving\_input\_receiver\_fn func defines two variables: 1) the *features* argument for ServingInputReceiver is the data that will be feed to the estimator.model\_fn(); the *receiver\_tensor* is the actual input from inference call. For more details, please refer to https://www.tensorflow.org/programmers_guide/saved_model.
+Thanks to the estimator interface, the estimator object can directly export tf-serving compatable model through export_savedmodel if we provide the serving\_input\_receiver\_fn func. The serving\_input\_receiver\_fn func defines two variables: 1) the *features* argument for ServingInputReceiver is the data that will be feed to the estimator.model\_fn(); the *receiver\_tensor* is the actual input from inference call. For more details, please refer to https://www.tensorflow.org/programmers\_guide/saved\_model.
 
 ### Generate Wide&Deep tf-serving model
 Run the following code to generate the wide&deep model, for more details please refer to https://github.com/tensorflow/models/tree/master/official/wide_deep
@@ -81,7 +81,7 @@ The entry-point file module is inference (Note we must omit the .py suffix). The
 It provides several info for the system to load the model. These infos are necessary to load a tf-serving capable module which is usually a protobuf file e.g. checkpoint\_dir/saved\_model.pb：
 
 1. model\_dir: tell where to find the model file
-2. tag: tell which graph to load from the model file, it should be "serve" here as compatable with tf.saved\_model.tag\_constants.SERVING. (For more details please see: https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/saved_model/tag_constants.py)
+2. tag: tell which graph to load from the model file, it should be "serve" here as compatable with tf.saved\_model.tag\_constants.SERVING. (For more details please see: https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/saved\_model/tag\_constants.py)
 3. signature: use the predefined 'predict' API in Estimator
 4. input: tell the input tensor name
 5. output: tell the output tensor name, both *classes* and *logits* are predefined by the Estimator.
@@ -124,7 +124,7 @@ The dockerfile(uaiservice.Dockerfile) include following contents:
 1. build the docker image based on UCloud AI Inference Docker base image. (Note if you are using UCloud VM you can use 'uhub.service.ucloud.cn' otherwise you should change it into 'uhub.ucloud.cn'
 2. EXPOSE 8080 port for http service
 3. ADD all code under wide\_deep into /ai-ucloud-client-django/. (Note the root path when the django server start is /ai-ucloud-client-django/)
-4. ADD the conf.json into /ai-ucloud-client-django/, The django server will automatically load a json config file to get all running info. For more details of how json file is organized please refer: [Define the Config File](###define-the-config-file)
+4. ADD the conf.json into /ai-ucloud-client-django/, The django server will automatically load a json config file to get all running info. For more details of how json file is organized please refer: [Define the Config File](#define-the-config-file)
 5. Set the UAI_SERVICE_CONFIG environment to tell django server to load the config file named 'conf.json'
 6. use gunicorn to run the server
 

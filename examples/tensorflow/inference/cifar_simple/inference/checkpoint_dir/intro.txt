@@ -1,0 +1,4 @@
+通过filemgr-linux64.elf工具下载的下载命令(假设你要将数据下载到/data/cifar_simple/checkpoint_dir/文件夹)：
+./filemgr-linux64 --action batch-download  --bucket uaidocs  --pattern /cifar_simple/*  --dir /data/
+
+

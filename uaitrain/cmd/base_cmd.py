@@ -28,10 +28,7 @@ DEPLOY_ID_FILE = './deploy_id.log'
 UCLOUD_API_URL = 'http://api.ucloud.cn'
 PARAMS_DEFAULT_REGION = 'cn-bj2'
 PARAMS_DEFAULT_ZONE ='cn-bj2-04'
-#UCLOUD_API_URL = 'http://api.pre.ucloudadmin.com'
-#PARAMS_DEFAULT_REGION = "pre"
-# UCLOUD_API_URL = 'http://127.0.0.1:8088'
-# PARAMS_DEFAULT_REGION = "pre"
+
 PARAMS_DEFAULT_BUSINESSGROUP = "Default"
 PACKAGE_TYPE = {'os':'OS', 'language':'Python', 'ai_arch_v':'AIFrame', 'accelerator':'Accelerator'}
 

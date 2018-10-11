@@ -13,16 +13,12 @@
 # limitations under the License.
 # ==============================================================================
 
-import sys
-import os
-import argparse
-import json
 import subprocess
 
 from uai.utils.logger import uai_logger
 from uaitrain.operation.base_op import BaseUAITrainOp
 from uaitrain.api.get_env_pkg import GetUAITrainEnvPkgAPIOp
-from uaitrain.api.check_and_get_base_image_op import CheckAndGetUAITrainBasesImageAPIOp
+from uaitrain.api.check_and_get_base_image_op import CheckAndGetUAITrainBaseImageApiOp
 
 DOCKER_PUBLIC_REGISTRY = "uhub.ucloud.cn"
 DOCKER_INTERNAL_REGISTRY = "uhub.service.ucloud.cn"
@@ -41,7 +37,7 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         pack_parser.add_argument(
             '--os',
             type=str,
-            default='ubuntu',
+            default='ubuntu-14.04.05',
             help='The docker os version')
         pack_parser.add_argument(
             '--python_version',
@@ -51,6 +47,7 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         pack_parser.add_argument(
             '--ai_arch_v',
             type=str,
+            required=True,
             help='The AI framework and its version, e.g., tensorflow-1.1.0')
         pack_parser.add_argument(
             '--acc_type',
@@ -133,10 +130,30 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         self._add_image_args(pack_parser)
         self._add_code_args(pack_parser)
 
+    def _parse_img_args(self, args):
+        self.uhub_username = args['uhub_username']
+        self.uhub_password = args['uhub_password']
+        self.uhub_registry = args['uhub_registry']
+        self.uhub_imagename = args['uhub_imagename']
+        self.uhub_imagetag = args['uhub_imagetag']
+        self.internal_uhub = args['internal_uhub']
+
+        self.internal_uhub = True if self.internal_uhub == 'true' else False
+
+        if self.internal_uhub is True:
+            self.dcoker_register = DOCKER_INTERNAL_REGISTRY
+
+    def _parse_code_args(self, args):
+        self.code_path = args['code_path']
+        self.mainfile_path = args['mainfile_path']
+        self.train_params = args['train_params']
+        self.test_data_path = args['test_data_path']
+        self.test_output_path = args['test_output_path']
+
     def _parse_args(self, args):
         super(BaseUAITrainDockerImagePackOp, self)._parse_args(args)
 
-        if args['ai_arch_v'] in (None, ''):
+        if ('ai_arch_v' in args) is False:
             print("AI Framework and its version is required, e.g. --ai_arch_v=tensorflow-1.1.0")
             return False
 
@@ -179,7 +196,7 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         if succ is False:
             raise RuntimeError("Error get {0} info from server".format(pkgtype))
 
-        for avpkg in result['PkgSet']:
+        for avpkg in result['DataSet']:
             if pkgtype == 'OS' or pkgtype == 'Python' or pkgtype == 'AIFrame':
                 versionsplit = pkg.rfind('-')
                 if versionsplit > 0:
@@ -343,7 +360,7 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         ai_arch_v = self._translate_pkg_to_id('AIFrame', self.ai_arch_v_name)
         acc_id = self._translate_pkg_to_id('Accelerator', self.acc_id_name)
 
-        get_acc_image_op = CheckAndGetUAITrainBasesImageAPIOp(
+        get_acc_image_op = CheckAndGetUAITrainBaseImageApiOp(
             self.pub_key,
             self.pri_key,
             os_v,
@@ -359,7 +376,7 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         acc_image_name = self.check_interHub(acc_image_name)
 
         cpu_acc_id = self._translate_pkg_to_id('Accelerator', 'cpu')
-        get_cpu_image_op = CheckAndGetUAITrainBasesImageAPIOp(
+        get_cpu_image_op = CheckAndGetUAITrainBaseImageApiOp(
             self.pub_key,
             self.pri_key,
             os_v,
@@ -380,4 +397,3 @@ class BaseUAITrainDockerImagePackOp(BaseUAITrainOp):
         self.cpu_image = cpu_image_name
 
         self._build_userimage()
-        

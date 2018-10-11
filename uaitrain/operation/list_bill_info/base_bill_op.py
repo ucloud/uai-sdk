@@ -13,15 +13,11 @@
 # limitations under the License.
 # ==============================================================================
 
-import sys
-import os
-import argparse
-import datetime
 import time
-from uai.utils.utils import GATEWAY_DEFAULT
 from uai.utils.logger import uai_logger
 from uaitrain.operation.base_op import BaseUAITrainOp
-from uaitrain.api.get_train_job_bill_info import GetUAITrainBillInfoOp
+from uaitrain.api.get_train_job_bill_info import GetUAITrainBillInfoApiOp
+
 
 class BaseUAITrainListBillInfoOp(BaseUAITrainOp):
     def __init__(self, parser):
@@ -44,8 +40,15 @@ class BaseUAITrainListBillInfoOp(BaseUAITrainOp):
             '--limit',
             type=int,
             required=False,
-            default=10,
-            help='Number of jobs show in this list')
+            default=0,
+            help='Number of bill infos show in this list')
+        info_parser.add_argument(
+            '--offset',
+            type=int,
+            required=False,
+            default=0,
+            help='Offset of first bill info to show in this list')
+
 
     def _add_args(self):
         parser = self.parser.add_parser('bill', help='Get bill info of UAI Train Job')
@@ -55,11 +58,11 @@ class BaseUAITrainListBillInfoOp(BaseUAITrainOp):
 
     def _parse_args(self, args):
         super(BaseUAITrainListBillInfoOp, self)._parse_args(args)
-        self.begin_time = self._datetime_timestamp(args['begin_time']) if args['begin_time'] is not None else ''
-        self.end_time = self._datetime_timestamp(args['end_time']) if args['end_time'] is not None else ''
+        self.begin_time = self._datetime_timestamp(args['begin_time']) if 'begin_time' in args else ''
+        self.end_time = self._datetime_timestamp(args['end_time']) if 'end_time' in args else ''
 
         self.limit = args['limit']
-        self.offset = 1
+        self.offset = args['offset']
         return True
 
     def _datetime_timestamp(self, dt):
@@ -86,7 +89,7 @@ class BaseUAITrainListBillInfoOp(BaseUAITrainOp):
         if self._parse_args(args) == False:
             return False
 
-        bill_op = GetUAITrainBillInfoOp(
+        bill_op = GetUAITrainBillInfoApiOp(
             pub_key=self.pub_key,
             priv_key=self.pri_key,
             beg_time=self.begin_time,
@@ -102,7 +105,7 @@ class BaseUAITrainListBillInfoOp(BaseUAITrainOp):
             uai_logger.error("Error call list bill info")
             return False
 
-        print('Total job num: {0}, Total exec time: {1} s, Total price: {2}'.format(
+        print('Total job num: {0}, Total exec time: {1} s, Total price: {2} yuan;'.format(
             resp['TotalCount'],
             resp['TotalExecuteTime'],
             float(resp['TotalPrice'])/100))

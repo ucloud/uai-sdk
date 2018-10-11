@@ -15,35 +15,43 @@
 
 from uaitrain.api.base_op import BaseUAITrainAPIOp
 
-class GetUAITrainAvailableResourceOp(BaseUAITrainAPIOp):
-    ACTION_NAME = "GetUAITrainAvailableResource"
-    """
-    GetUAITrainAvailableResourceOp
-        Compatable with UAI Train GetUAITrainAvailableResource API func
-        Input:
-            pub_key             string(required) Public key of the user
-            priv_key            string(required) Private key of the user
-            project_id          int(optional)    Project ID of the job
-            region              string(optional) Which Region to run the job
-            zone                string(optional) Which Zone in the Region to run the job
-            node_type           string(optional) the type of node, default is 'Work'. 
-                                                    'Work': train node
-                                                    'PS': param node
-        Output:
-            RetCode         int(required)                Op return code: 0: success, others: error code
-            TotalCount      string(required)             the count of result
-            Message         string(not required)         Message: error description
-            DataSet         []                           the detailed information of resource
-    """
 
-    def __init__(self, pub_key, priv_key, node_type='Work', project_id="", region="", zone=""):
-        super(GetUAITrainAvailableResourceOp, self).__init__(self.ACTION_NAME,
-                                                     pub_key,
-                                                     priv_key,
-                                                     project_id,
-                                                     region,
-                                                     zone)
+class GetUAITrainAvailableResourceApiOp(BaseUAITrainAPIOp):
+    """
+    GetUAITrainAvailableResourceAPI
+
+        Identical with UAI Train GetUAITrainAvailableResource API func
+        Input:
+            NodeType           string(optional)         the type of node, default is 'Work' ('Work':train node, 'PS':param node)
+            TrainModeId        int(required)            id of current train mode
+        Output:
+            RetCode            int                      API return code: 0: success, others: error code
+            Action             string                   Action name
+            Message            string                   Message: error description
+            DataSet            Array                    []FixedServerNodeInfo
+
+        FixedServerNodeInfo:
+            NodeId              int64                   id of current node
+            NodeName            string                  name of current node
+            NodeType            string                  type of current node
+            DiskSize            int64                   disk size of current node
+            CPU                 int64                   num of cpu
+            Memory              int64                   memory of current node
+            AcceleratorName     string                  name of accelerator
+            AcceleratorVersion  string                  version of accelerator
+            AcceleratorAmount   int64                   amount of accelerator
+            UnitPrice           int64                   unit price of current node
+    """
+    ACTION_NAME = "GetUAITrainAvailableResource"
+
+    def __init__(self, train_mode, pub_key, priv_key, node_type='Work', project_id="", region="", zone=""):
+        super(GetUAITrainAvailableResourceApiOp, self).__init__(self.ACTION_NAME, pub_key, priv_key, project_id, region, zone)
         self.cmd_params["NodeType"] = node_type
+        self.cmd_params["TrainModeId"] = train_mode
 
     def _check_args(self):
-        super(GetUAITrainAvailableResourceOp, self)._check_args()
+        super(GetUAITrainAvailableResourceApiOp, self)._check_args()
+        if self.cmd_params["NodeType"] != "Work" and self.cmd_params["NodeType"] != "PS":
+            raise ValueError("NodeType should be chosen from 'Work' and 'PS'")
+        if self.cmd_params["TrainModeId"] == "" or type(self.cmd_params["TrainModeId"]) != int:
+            raise ValueError("TrainModeId should be <int> and should not be nil")

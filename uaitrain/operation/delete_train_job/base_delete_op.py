@@ -12,16 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-
-import sys
-import os
-import argparse
-import json
-import subprocess
-
-from uai.utils.logger import uai_logger
 from uaitrain.operation.base_op import BaseUAITrainOp
-from uaitrain.api.remove_train_job import RemoveUAITrainJobOp
+from uaitrain.api.remove_train_job import RemoveUAITrainJobApiOp
+
 
 class BaseUAITrainDeleteTrainJobOp(BaseUAITrainOp):
     def __init__(self, parser):
@@ -44,16 +37,14 @@ class BaseUAITrainDeleteTrainJobOp(BaseUAITrainOp):
 
     def _parse_args(self, args):
         super(BaseUAITrainDeleteTrainJobOp, self)._parse_args(args)
-
         self.job_id = args['job_id']
         return True
-
 
     def cmd_run(self, args):
         if self._parse_args(args) == False:
             return False
 
-        create_op = RemoveUAITrainJobOp(
+        delete_op = RemoveUAITrainJobApiOp(
             pub_key=self.pub_key,
             priv_key=self.pri_key,
             job_id=self.job_id,
@@ -61,9 +52,10 @@ class BaseUAITrainDeleteTrainJobOp(BaseUAITrainOp):
             region=self.region,
             zone=self.zone)
 
-        succ, resp = create_op.call_api()
+        succ, resp = delete_op.call_api()
         if succ is False:
-            print("Error delete job {0}, check your job_id".format(self.job_id))
+            print("Error delete job {0}, err msg: {1}".format(self.job_id, resp['Message']))
             return False
 
         print("Success delete job {0}".format(self.job_id))
+        return True

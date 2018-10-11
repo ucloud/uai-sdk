@@ -13,15 +13,12 @@
 # limitations under the License.
 # ==============================================================================
 
-import sys
-import os
-import argparse
 import datetime
 
-from uai.utils.utils import GATEWAY_DEFAULT
 from uai.utils.logger import uai_logger
 from uaitrain.operation.base_op import BaseUAITrainOp
-from uaitrain.api.get_train_job_list import GetUAITrainJobListOp
+from uaitrain.api.get_train_job_list import GetUAITrainJobListApiOp
+
 
 class BaseUAITrainListTrainJobOp(BaseUAITrainOp):
     def __init__(self, parser):
@@ -41,8 +38,15 @@ class BaseUAITrainListTrainJobOp(BaseUAITrainOp):
             '--limit',
             type=int,
             required=False,
-            default=10,
+            default=0,
             help='Number of jobs show in this list')
+
+        info_parser.add_argument(
+            '--offset',
+            type=int,
+            required=False,
+            default=0,
+            help='Offset of first job to show in this list')
 
     def _add_args(self):
         parser = self.parser.add_parser('list', help='List UAI Train Job')
@@ -55,7 +59,7 @@ class BaseUAITrainListTrainJobOp(BaseUAITrainOp):
 
         self.job_id = args['job_id']
         self.limit = args['limit']
-        self.offset = 1
+        self.offset = args['offset']
         return True
 
     def _format_jobinfo(self, job):
@@ -70,20 +74,20 @@ class BaseUAITrainListTrainJobOp(BaseUAITrainOp):
 
         status = job['Status']
 
-        print('JOB_NAME: {0}; JOB_ID: {1}; BUSINESS_ID: {2}; STATUS: {3}; CREATE_TIME: {4}; START_TIME: {5}; END_TIME: {6}'.format(
+        print('JOB_NAME: {0}; JOB_ID: {1}; BUSINESS_ID: {2}; STATUS: {3}; CREATE_TIME: {4}; START_TIME: {5}; END_TIME: {6};'.format(
             job_name,
             job_id,
             business_group,
             status,
             datetime.datetime.fromtimestamp(create_time).strftime('%Y-%m-%d %H:%M:%S'),
-            datetime.datetime.fromtimestamp(start_time).strftime('%Y-%m-%d %H:%M:%S'),
-            datetime.datetime.fromtimestamp(end_time).strftime('%Y-%m-%d %H:%M:%S')))
+            '' if start_time == 0 else datetime.datetime.fromtimestamp(start_time).strftime('%Y-%m-%d %H:%M:%S'),
+            '' if end_time == 0 else datetime.datetime.fromtimestamp(end_time).strftime('%Y-%m-%d %H:%M:%S')))
 
     def cmd_run(self, args):
         if self._parse_args(args) == False:
             return False
 
-        create_op = GetUAITrainJobListOp(
+        job_op = GetUAITrainJobListApiOp(
             pub_key=self.pub_key,
             priv_key=self.pri_key,
             job_id=self.job_id,
@@ -93,7 +97,7 @@ class BaseUAITrainListTrainJobOp(BaseUAITrainOp):
             region=self.region,
             zone=self.zone)
 
-        succ, resp = create_op.call_api()
+        succ, resp = job_op.call_api()
         if succ is False:
             uai_logger.error("Error call list train jobs")
             return False
@@ -101,4 +105,4 @@ class BaseUAITrainListTrainJobOp(BaseUAITrainOp):
         result = resp['DataSet']
         for job in result:
             self._format_jobinfo(job)
-
+        return True
