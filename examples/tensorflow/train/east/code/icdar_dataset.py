@@ -37,28 +37,37 @@ def prepare_data_once(data_dir):
     return prepare_data
 
 class EastDataSet(object):                                                                                                                                     
-    def __init__(self, data_dir, subset='train', use_distortion=True):                                                                                                        
+    def __init__(self, data_dir, batch_size, subset='train', use_distortion=True):
         prepare_action = prepare_data_once(data_dir)
         data_path = prepare_action()
 
         FLAGS.training_data_path = data_path
         generator = icdar.get_batch(num_workers=FLAGS.num_readers,
                                     input_size=FLAGS.input_size,
-                                    batch_size=FLAGS.batch_size)
+                                    batch_size=batch_size)
 
         self.generator = generator
+        self.subset = subset
+
+    def gen(self):
+        while True:
+            data = next(self.generator)
+            input_images = np.asarray(data[0])
+            input_score_maps = np.asarray(data[2])
+            input_geo_maps = np.asarray(data[3])
+            input_training_masks = np.asarray(data[4])
+            yield input_images, input_score_maps, input_geo_maps, input_training_masks
 
     def make_batch(self, batch_size):
-        data = next(self.generator)
-        input_images = np.asarray(data[0])
-        input_images = tf.convert_to_tensor(input_images, np.float32)
+        dataset = tf.data.Dataset.from_generator(
+            self.gen, (tf.float32, tf.float32, tf.float32, tf.float32),
+            (tf.TensorShape([batch_size, 512, 512, 3]),
+            tf.TensorShape([batch_size, 128, 128, 1]),
+            tf.TensorShape([batch_size, 128, 128, 5]),
+            tf.TensorShape([batch_size, 128, 128, 1])))
 
-        input_score_maps = np.asarray(data[2])
-        input_score_maps = tf.convert_to_tensor(input_score_maps, np.float32)
+        iterator = dataset.make_one_shot_iterator()
 
-        input_geo_maps = np.asarray(data[3])
-        input_geo_maps = tf.convert_to_tensor(input_geo_maps, np.float32)
+        image_batch, score_map_batch, geo_map_batch, training_mask_batch = iterator.get_next()
 
-        input_training_masks = np.asarray(data[4])
-        input_training_masks = tf.convert_to_tensor(input_training_masks, np.float32)                                                                          
-        return input_images, input_score_maps, input_geo_maps, input_training_masks
+        return image_batch, score_map_batch, geo_map_batch, training_mask_batch

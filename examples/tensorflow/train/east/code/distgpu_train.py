@@ -27,7 +27,7 @@ tf.app.flags.DEFINE_integer('num_intra_threads', 0, '')
 tf.app.flags.DEFINE_string('train_dir', 'tfrecords', '')
 tf.app.flags.DEFINE_boolean('sync', False, '')
 tf.app.flags.DEFINE_integer('decay_steps', 10000, '')
-tf.app.flags.DEFINE_float('decay_rate', 0.997, '')
+tf.app.flags.DEFINE_float('decay_rate', 0.94, '')
 
 import model
 
@@ -71,7 +71,7 @@ def local_device_setter(num_devices=1,
 def _tower_fn(is_training, images, score_maps, geo_maps, training_masks, reuse_variables=None):
     # Build inference graph
     with tf.variable_scope(tf.get_variable_scope(), reuse=reuse_variables):
-        f_score, f_geometry = model.model(images, is_training=True)
+        f_score, f_geometry = model.model(images, is_training=is_training)
 
     model_loss = model.loss(score_maps, f_score,
                             geo_maps, f_geometry,
@@ -115,7 +115,7 @@ def input_fn(data_dir,
     """
     with tf.device('/cpu:0'):
         use_distortion = subset == 'train' and use_distortion_for_training
-        dataset = icdar_dataset.EastDataSet(data_dir, subset, use_distortion)
+        dataset = icdar_dataset.EastDataSet(data_dir, batch_size, subset, use_distortion)
         image_batch, score_map_batch, geo_map_batch, training_mask_batch = dataset.make_batch(batch_size)
 
         if num_shards <= 1:
@@ -267,7 +267,7 @@ def get_experiment_fn(data_dir,
             num_shards=num_gpus)
 
         train_steps = FLAGS.max_steps
-        eval_steps = 1024 // FLAGS.batch_size
+        eval_steps = 900 // FLAGS.batch_size
 
         variable_strategy = 'CPU'
         classifier = tf.estimator.Estimator(
