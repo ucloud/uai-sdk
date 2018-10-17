@@ -69,9 +69,10 @@ Info.json and labels.txt store information about the category information of fer
 ### Run Single Node Training
 You can use the docker image slim:test to run slim training locally with following cmd:
 
-    $ sudo nvidia-docker run -v /data/imagenet/tf-record/:/data/data/ -v /data/output/slim/:/data/output -it slim:test /bin/bash -c "python /data/train_image_classifier.py --data_dir=/data/data/ --output_dir=/data/output/ --num_gpus=1 --model_name=vgg_19"
+    $ sudo nvidia-docker run -v /data/imagenet/tf-record/:/data/data/ -v /data/output/slim/:/data/output -it slim:test /bin/bash -c "python /data/train_image_classifier.py --data_dir=/data/data/ --output_dir=/data/output/ --num_gpus=1 --model_name=vgg_19 "
 
 You can modify the picture classification model by modifying the parameter --model_name.
+The default value of parameter --dataset_name written in train_image_classifier.py is 'fer'.
 You can also run this docker image on UAI Train Platform. 
 
 For more details please see https://docs.ucloud.cn/ai/uai-train.
