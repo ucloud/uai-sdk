@@ -140,7 +140,7 @@ In CrnnModel we implement load_model func and execute func:
 
 1. load_model(self), which loads the crnn model by invoking crnn_multi_infer.crnnPredictor('./checkpoint_dir'). We should put the checkpoint files into checkpoint_dir.
 
-2. execute(self, data, batch_size) which will do the inference. The django server will invoke ocrModel->execute when it receives requests. It will buffer requests into a array named 'data' when possible. In execute(), it will call the crnnPredictor to format the images and do the inference call. You can refer to inference\_multi/crnn\_multi\_infer.py for more details. At last, execute() formats result into list object. (You can format it into json also)
+2. execute(self, data, batch_size) which will do the inference. The django server will invoke CrnnModel->execute when it receives requests. It will buffer requests into a array named 'data' when possible. In execute(), it will call the crnnPredictor to format the images and do the inference call. You can refer to inference\_multi/crnn\_multi\_infer.py for more details. At last, execute() formats result into list object. (You can format it into json also)
 
 ### 4.3 Preparing model
 You can use the model you trained on UAI Train Platform. Please following the example in examples/tensorflow/train/crnn_chinese/code_multi/.(The multi-gpu version) You should also convert the .ckpt model into .pb model according to [Generating .pb file](#generating-pb-file)
