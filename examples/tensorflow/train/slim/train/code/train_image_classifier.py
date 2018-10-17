@@ -8,6 +8,7 @@ from __future__ import print_function
 import tensorflow as tf
 import json
 import os
+#import time
 
 from datasets import dataset_factory
 from deployment import model_deploy
@@ -156,10 +157,10 @@ tf.app.flags.DEFINE_float(
 #######################
 
 tf.app.flags.DEFINE_string(
-    'dataset_name', 'imagenet', 'The name of the dataset to load.')
+    'dataset_name', 'fer', 'The name of the dataset to load.')
 
 tf.app.flags.DEFINE_string(
-    'dataset_split_name', 'train', 'The name of the train/test split.')
+    'dataset_split_name', 'train', 'The name of the train/eval split.')
 
 tf.app.flags.DEFINE_string(
     'dataset_dir', None, 'The directory where the dataset files are stored.')
@@ -393,6 +394,7 @@ def _build_uai_dist_env():
     server.join()                                                                                                                          
     os.exit(0)
   else:
+    #time.sleep(60)
     FLAGS.num_ps_tasks=dis_conf.num_ps()
     FLAGS.worker_replicas=dis_conf.num_worker()
 
