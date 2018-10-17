@@ -69,10 +69,10 @@ Info.json and labels.txt store information about the category information of fer
 ### Run Single Node Training
 You can use the docker image slim:test to run slim training locally with following cmd:
 
-    $ sudo nvidia-docker run -v /data/imagenet/tf-record/:/data/data/ -v /data/output/slim/:/data/output -it slim:test /bin/bash -c "python /data/train_image_classifier.py --data_dir=/data/data/ --output_dir=/data/output/ --num_gpus=1 --model_name=vgg_19 "
+    $ sudo nvidia-docker run -v /data/imagenet/tf-record/:/data/data/ -v /data/output/slim/:/data/output -it slim:test /bin/bash -c "python /data/train_image_classifier.py --data_dir=/data/data/ --dataset_name=fer --output_dir=/data/output/ --num_gpus=1 --model_name=vgg_19 "
 
 You can modify the picture classification model by modifying the parameter --model_name.
-The default value of parameter --dataset_name written in train_image_classifier.py is 'fer'.
+The default value of parameter --dataset_name written in train_image_classifier.py is 'fer'. If you want to use other dataset,you can change value of the parameter.
 You can also run this docker image on UAI Train Platform. 
 
 For more details please see https://docs.ucloud.cn/ai/uai-train.
@@ -106,7 +106,7 @@ We also modify the deployment/model\_deploy.py to control the device assignment 
 
 You can run the dist train with same cmd as local training:
 
-    python /data/train_image_classifier.py --data_dir=/data/data/ --output_dir=/data/output/ --num_gpus=1 --model_name=vgg_19
+    python /data/train_image_classifier.py --data_dir=/data/data/ --output_dir=/data/output/ --num_gpus=1 --model_name=vgg_19 --dataset_name=fer
 
 Note: you should generate TF\_CONFIG for each node in the cluster.
 
@@ -115,7 +115,7 @@ Note: This example run the training with async-replica mode.
 ### Run Distributed Training On UAI Platform 
 UAI Train Platform can dynamicaaly deploy the training cluster and generate the TF\_CONFIG for each training node. You only need to run the training cmd as:
 
-    /data/train_image_classifier.py --batch_size=64 --model_name=vgg_19
+    /data/train_image_classifier.py --batch_size=64 --model_name=vgg_19 --dataset_name=fer
 
 
 ### Fine-tuning a model from an existing checkpoint
@@ -133,7 +133,7 @@ rm resnet_v2_101_2017_04_14.tar.gz
 ```
 Then you can train your model with resnet_v2_101 checkpoint:
 ```
-python /data/train_image_classifier.py --data_dir=/data/data/ --output_dir=/data/output/ --num_gpus=1 --model_name=resnet_v2_101 -checkpoint_exclude_scopes=resnet_v2_101/logits --trainable_scopes=resnet_v2_101/logits
+python /data/train_image_classifier.py --data_dir=/data/data/ --dataset_name=fer --output_dir=/data/output/ --num_gpus=1 --model_name=resnet_v2_101 -checkpoint_exclude_scopes=resnet_v2_101/logits --trainable_scopes=resnet_v2_101/logits
 ```
 For more details please see https://docs.ucloud.cn/ai/uai-train.
 
