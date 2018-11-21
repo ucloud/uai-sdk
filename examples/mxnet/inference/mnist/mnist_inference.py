@@ -43,18 +43,15 @@ class MnistModel(MXNetAiUcloudModel):
                         for_training=False)
         self.model.set_params(self.arg_params, self.aux_params)
 
-        ims = []
+        ret = []
         for i in range(batch_size):
             im = Image.open(data[i]).resize((28, 28))
             im = np.array(im) / 255.0
-            ims.append(im)
-        ims = np.array(ims)
-        ims = ims.reshape(-1, 1, 28, 28)
-        self.model.forward(BATCH([mx.nd.array(ims)], None))
-        predict_values = self.model.get_outputs()[0].asnumpy()
-       
-        ret = []
-        for val in predict_values:
+            im = im.reshape(-1, 1, 28, 28)
+            self.model.forward(BATCH([mx.nd.array(im)], None))
+            predict_values = self.model.get_outputs()[0].asnumpy()
+
+            val = predict_values[0]
             ret_val = np.array_str(np.argmax(val)) + '\n'
             ret.append(ret_val)
         return ret
