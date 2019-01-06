@@ -1,18 +1,19 @@
 # ArcFace Example
-This example shows how to run insightface/ArcFace training on UAI Platform. The example provides an implementation of running the training using softmax loss on a distributed environment.
+This example shows how to run insightface/ArcFace training on UAI Platform.
 
 ## Intro
-This example follows the implementation in https://github.com/deepinsight/insightface. We only provide a distributed training implementation of ArcFace here in code/train\_softmax\_dist.py. The modules train\_softmax\_dist.py depends are identical to those in https://github.com/deepinsight/insightface.
+This example follows the implementation in https://github.com/deepinsight/insightface. We provide two modified implementation of insightface here: 1) train\_softmax\_single.py for running the face-reco training using softmax loss on UAI Train Platform with a single node; 2) train\_softmax\_dist.py for running the face-reco training using softmax loss under a distributed environment. The modules train\_softmax\_single.py and train\_softmax\_dist.py depend on are identical to those in https://github.com/deepinsight/insightface.
 
 ## Setup
 You should follow https://github.com/deepinsight/insightface to download the training dataset and setup the code.
 
-You can put the insightface code into one directory and put code/train\_softmax\_dist.py into the same directory, for example:
+You can put the insightface code into one directory and put code/train\_softmax\_single.py and code/train\_softmax\_dist.py into the same directory, for example:
 
     /example/insightface/code/
     |_ src/
     |  |_ train_softmax.py
-    |  |_ train_softmax_multi.py
+    |  |_ train_softmax_single.py
+    |  |_ train_softmax_dist.py
     |  |_ data.py
     |  |_ align/
     |  |_ api/
@@ -21,7 +22,7 @@ You can put the insightface code into one directory and put code/train\_softmax\
     |  |_ utils/
     |_ ...
     
-This example use the data of https://github.com/deepinsight/insightface/wiki/Dataset-Zoo DeepGlint.
+This example use the data of https://github.com/deepinsight/insightface/wiki/Dataset-Zoo DeepGlint. To use your own dataset please refer to examples/mxnet/insightface/train/data for more details.
 
 ## UAI Example  
                                                                                                                                                
@@ -55,35 +56,50 @@ We have provided insightface.Dockerfile to build the docker image for training. 
     |_ insightface.Dockerfile
     |_ insightface/code/
     |_ src/
-    |  |_ train_softmax.py
-    |  |_ train_softmax_multi.py
+    |  |_ train_softmax.py  
+    |  |_ train_softmax_single.py
+    |  |_ train_softmax_dist.py
     |  |_ ...
     |_ ...
     
 And run the following cmd to build the docker
 
-	sudo docker build -f insightface.Dockerfile -t insightface_dist:test .
+	sudo docker build -f insightface.Dockerfile -t insightface:test .
 	
-You can use insightface_dist:test for training. For single node training, the entry is code/train\_softmax.py. For distributed training, the entry is code/train\_softmax\_multi.py.
+You can use insightface:test for training. For single node training, the entry is code/train\_softmax\_single.py. For distributed training, the entry is code/train\_softmax\_dist.py.
 
 ### Run training locally
 To run/test the docker image locally, you can use following cmd:
 
-	sudo docker run -it -v /PATH_TO_TRAIN_DATA/:/data/data/ -v /PATH_TO_OUTPUT/:/data/output insightface_dist:test /bin/bash -c "cd /data/&&python src/train_softmax.py --num_gpus=1 --network r50 --loss-type 4 --margin-m 0.5 --prefix /data/output/model-r50-aceFace --per-batch-size=64"
+	sudo docker run -it -v /PATH_TO_TRAIN_DATA/:/data/data/ -v /PATH_TO_OUTPUT/:/data/output insightface:test /bin/bash -c "cd /data/&&python src/train_softmax_single.py --num_gpus=1 --network r50 --loss-type 4 --margin-m 0.5 --prefix /data/output/model-r50-aceFace --per-batch-size=64" --data_dir=/data/data/
 	
-You should put the data (e.g., faces_glint/ of DeepGlint) into /PATH\_TO\_TRAIN\_DATA/. The result model will be output to /PATH\_TO\_OUTPUT/.
+You should put the data (e.g., the data under faces_glint/ of DeepGlint) into /PATH\_TO\_TRAIN\_DATA/. The result model will be output to /PATH\_TO\_OUTPUT/.
 
-### Running Distributed Training
+### Running Single Node Training On UAI Platform
+UAI Platform provides a mxnet training environment for running training tasks on the GPU node. Each node may equip with 4 GPUs.
+
+You can tag docker image as follows and push it into UCloud Docker Hub:
+
+    sudo docker tag insightface:test -t uhub.ucloud.cn/YOUR_BUCKET_NAME/insightface_single:test
+    sudo docker push uhub.ucloud.cn/YOUR_BUCKET_NAME/insightface_single:test
+    
+And start distributed training with following cmds:
+
+    src/train_softmax_single.py --network r50 --loss-type 4 --margin-m 0.5 --prefix /data/output/model-r50-aceFace --per-batch-size=128 --ce-loss --end-epoch=100 --lr=0.1
+
+Note: the args data_dir and num_gpus is auto-generated by UAI Platform
+
+### Running Distributed Training On UAI Platform
 UAI Platform provides an automatic mxnet distributed training environment configurate. We can directly start distributed training by using UAI Train Platform.
 
 You can tag docker image as follows and push it into UCloud Docker Hub:
 
-    sudo docker tag insightface_dist:test -t uhub.ucloud.cn/YOUR_BUCKET_NAME/insightface_dist:test
+    sudo docker tag insightface:test -t uhub.ucloud.cn/YOUR_BUCKET_NAME/insightface_dist:test
     sudo docker push uhub.ucloud.cn/YOUR_BUCKET_NAME/insightface_dist:test
     
 And start distributed training with following cmds (We use dist_sync for kv-store in this example, and try to load a pretrained model with prefix of /data/output/model-r50-aceFace with epoch 2):
 
-	src/train_softmax_multi.py --network r50 --loss-type 4 --margin-m 0.5 --prefix /data/output/model-r50-aceFace --per-batch-size=256 --kv-store=dist_sync --pretrained=/data/output/model-r50-aceFace,2
+	src/train_softmax_dist.py --network r50 --loss-type 4 --margin-m 0.5 --prefix /data/output/model-r50-aceFace --per-batch-size=256 --kv-store=dist_sync --pretrained=/data/output/model-r50-aceFace,2
 	
 To run it in private distributed environment, you should add additional args to the cmd line and start the cluster yourself: 
 
