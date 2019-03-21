@@ -7,7 +7,7 @@
 5. mxnet/mxnet_tools.py uaitrain tool for mxnet only
 6. pytorch/pytorch_tools.py uaitrain tool for pytorch only
 
-For more details please see: https://docs.ucloud.cn/ai/uai-train/scripts
+For more details please see: https://docs.ucloud.cn/ai/uai-train/guide/scripts
 
 ## Helper tools
 1. split_tools.py, help split a large file into small chuncks, especially for caffe lmdb files. As UAI Train platform perform to download large file from ufile, it is better to split it out at beginning to help upload the file into ufile and merge it before training (Uploading and download large file 100GB+ is fragile).

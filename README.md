@@ -12,7 +12,7 @@
 
 ### UAI Inference
 
-**CHECK ON**：[UAI Inference Base Docker Images](https://docs.ucloud.cn/ai/uai-inference/general/dockers)
+**CHECK ON**：[UAI Inference Base Docker Images](https://docs.ucloud.cn/ai/uai-inference/guide/general/docker)
 
 #### 1. GPU
 - Tensorflow (1.6.0 tested)
@@ -26,6 +26,12 @@
 - Tensorflow (1.4.0 tested)
 - Tensorflow (1.6.0 tested)
 - Tensorflow (1.7.0 tested)
+- Tensorflow (1.8.0, cuda9 tested)
+- Tensorflow (1.9.0, cuda9 tested)
+- Tensorflow (1.10.0, cuda9 tested)
+- Tensorflow (1.11.0, cuda9 tested)
+- Tensorflow (1.12.0, cuda9 tested)
+- Tensorflow (2.0.0a, cuda10 tested)
 - MXNet (0.9.5 tested)
 - MXNet (1.0.0 tested)
 - Keras (1.2.0 tested)
@@ -36,7 +42,7 @@
 
 ### UAI Train
 
-**CHECK ON**：[UAI Train Base Docker Images](https://docs.ucloud.cn/ai/uai-train/general/dockers)
+**CHECK ON**：[UAI Train Base Docker Images](https://docs.ucloud.cn/ai/uai-train/guide/general/docker)
 
 - Tensorflow (0.11.0 tested)
 - Tensorflow（1.1.0 tested）
@@ -48,6 +54,10 @@
 - Tensorflow (1.7.0, cuda9 tested)
 - Tensorflow (1.8.0, cuda9 tested)
 - Tensorflow (1.9.0, cuda9 tested)
+- Tensorflow (1.10.0, cuda9 tested)
+- Tensorflow (1.11.0, cuda9 tested)
+- Tensorflow (1.12.0, cuda9 tested)
+- Tensorflow (2.0.0a, cuda10 tested)
 - MXNet (0.9.5 tested)
 - MXNet (1.0.0, cuda9 tested)
 - Keras (2.0.8 tested)
