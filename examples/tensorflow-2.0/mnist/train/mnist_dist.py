@@ -112,6 +112,7 @@ def train():
   test_labels = None
  
   if is_ps:
+    # dummy call, no usage for MultiWorkerMirroredStrategy() in dist train
     distribution = tf.distribute.experimental.ParameterServerStrategy()
   else:
     distribution = tf.distribute.experimental.MultiWorkerMirroredStrategy()
