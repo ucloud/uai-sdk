@@ -100,22 +100,15 @@ def get_model_fn(num_gpus, variable_strategy, num_workers):
     learning_rate = tf.compat.v1.train.piecewise_constant(tf.compat.v1.train.get_global_step(),
                                                   boundaries, staged_lr)
     tf.identity(learning_rate, name='learning_rate')
-    tf.summary.scalar('learning_rate', learning_rate)
+    lr_s = tf.compat.v1.summary.scalar('learning_rate', learning_rate)
 
     loss = tf.reduce_mean(loss, name='loss')
 
     examples_sec_hook = imagenet_utils.ExamplesPerSecondHook(
         params['train_batch_size'], every_n_steps=10)
 
-    tensors_to_log = {'learning_rate': learning_rate, 'loss': loss}
-    logging_hook = tf.estimator.LoggingTensorHook(
-        tensors=tensors_to_log, every_n_secs=10)
-
-    train_hooks = [logging_hook, examples_sec_hook]
-
     optimizer = tf.compat.v1.train.MomentumOptimizer(
         learning_rate=learning_rate, momentum=momentum)
-
     train_op = optimizer.minimize(loss, global_step=tf.compat.v1.train.get_global_step())
 
     predictions = {
@@ -123,25 +116,37 @@ def get_model_fn(num_gpus, variable_strategy, num_workers):
         'probabilities': preds['probabilities'],
         'top5_class': preds['top5_classes'],
     }
-    print(train_hooks)
-    '''
-    stacked_labels = tf.concat(labels, axis=0)
+
+    stacked_labels = labels
     accuracy = tf.compat.v1.metrics.accuracy(stacked_labels, predictions['classes'])
-    accuracy_5 = tf.compat.v1.metrics.recall_at_top_k(tf.cast(stacked_labels, tf.int64), predictions['top5_class'], k=5)
-    metrics = {
+    #accuracy_5 = tf.compat.v1.metrics.recall_at_top_k(tf.cast(stacked_labels, tf.int64), predictions['top5_class'], k=5)
+
+    acc_s = tf.compat.v1.summary.scalar('train_accuracy', accuracy[1])
+    tensors_to_log = {'learning_rate': learning_rate, 'loss': loss, 'acc': accuracy[1]}
+    logging_hook = tf.estimator.LoggingTensorHook(
+        tensors=tensors_to_log, every_n_secs=10)
+
+    summary_op = [acc_s, lr_s]
+    summary_hook = tf.estimator.SummarySaverHook(
+                save_steps=100,
+                summary_op=summary_op)
+
+    train_hooks = [logging_hook, examples_sec_hook, summary_hook]
+
+    metrics = None
+    if (mode ==  tf.estimator.ModeKeys.EVAL):
+      metrics = {
         'accuracy': accuracy,
-        'accuracy_5': accuracy_5
-    }
-    tf.identity(accuracy[1], name='train_accuracy')
-    tf.summary.scalar('train_accuracy', accuracy[1])
-    '''
+        #'accuracy_5': accuracy_5,
+      }
+
     return tf.estimator.EstimatorSpec(
         mode=mode,
         predictions=predictions,
         loss=loss,
         train_op=train_op,
-        training_hooks=train_hooks)
-        #eval_metric_ops=metrics)
+        training_hooks=train_hooks,
+        eval_metric_ops=metrics)
 
   return _resnet_model_fn
 
@@ -209,6 +214,7 @@ def input_fn(data_dir,
     use_distortion = subset == 'train' and use_distortion_for_training
     dataset = imagenet.ImagenetDataSet(data_dir, subset, use_distortion)
 
+    print(num_gpus)
     dataset = dataset.make_dataset(batch_size, 
         is_training=(subset == 'train'), 
         num_shards=num_gpus, 
@@ -218,6 +224,8 @@ def input_fn(data_dir,
 def main(output_dir, data_dir, num_gpus, train_epochs, epochs_per_eval, variable_strategy,
          use_distortion_for_training, log_device_placement, num_intra_threads,
          **hparams):
+  print('num of gpus:')
+  print(num_gpus)
   # The env variable is on deprecation path, default is set to off.
   os.environ['TF_SYNC_ON_FINISH'] = '0'
   os.environ['TF_ENABLE_WINOGRAD_NONFUSED'] = '1'
@@ -233,11 +241,30 @@ def main(output_dir, data_dir, num_gpus, train_epochs, epochs_per_eval, variable
     else:
       is_ps = False
 
+    '''
+    if is_ps:
+      if conf['task']['index'] == '0' or conf['task']['index'] == 0:
+        conf['cluster']['evaluator'] = [conf['cluster']['ps'][0]]
+        conf['task']['type'] = 'evaluator'
+        is_ps = False
+        print('ps act as evaluator')
+    '''
+
     if conf['task']['type'] == 'master':
       conf['task']['type'] = 'chief'
- 
+
     conf['cluster']['chief'] = conf['cluster']['master']
     del conf['cluster']['master']
+
+    # If you need evaluator, we can change the role of last worker
+    n_workers = len(conf['cluster']['worker'])
+    last_worker = conf['cluster']['worker'][-1]
+    conf['cluster']['worker'] = conf['cluster']['worker'][0:-1]
+    conf['cluster']['evaluator'] = [last_worker]
+    if conf['task']['type'] == 'worker' and conf['task']['index'] == (n_workers - 1):
+      conf['task']['index'] = 0
+      conf['task']['type'] ='evaluator'
+
     print(conf)
     os.environ['TF_CONFIG'] = json.dumps(conf)
     
@@ -259,6 +286,7 @@ def main(output_dir, data_dir, num_gpus, train_epochs, epochs_per_eval, variable
   config = tf.estimator.RunConfig(model_dir=output_dir,
       save_checkpoints_secs=3600,
       train_distribute=distribution,
+      eval_distribute=distribution,
       session_config=sess_config)
 
   hparams['is_chief']=config.is_chief
@@ -287,7 +315,7 @@ def main(output_dir, data_dir, num_gpus, train_epochs, epochs_per_eval, variable
           subset='validation',
           batch_size=hparams['eval_batch_size'],
           num_gpus=num_gpus),
-          steps=100,
+          steps=500,
           start_delay_secs=0)
 
   tf.estimator.train_and_evaluate(
