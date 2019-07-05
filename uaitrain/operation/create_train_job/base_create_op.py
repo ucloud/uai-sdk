@@ -239,7 +239,7 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
         train_mode_api = GetUAITrainAvailableTrainModeApiOp(self.pub_key, self.pri_key)
         succ, rsp = train_mode_api.call_api()
         if not succ:
-            raise RuntimeError("Call GetUAITrainAvailableTrainMode fail, Err message:[{0}]{1}".format(rsp['Retcode'], rsp['Message']))
+            raise RuntimeError("Call GetUAITrainAvailableTrainMode fail, Err message:[{0}]{1}".format(rsp['RetCode'], rsp['Message']))
         for available_mode in rsp['DataItem']:
             if available_mode['TrainModeName'].lower() == self.train_mode.lower():
                 return available_mode['TrainModeId']
@@ -249,7 +249,7 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
         node_api = GetUAITrainAvailableResourceApiOp(train_mode_id, self.pub_key, self.pri_key)
         succ, rsp = node_api.call_api()
         if not succ:
-            raise RuntimeError("Call GetUAITrainAvailableResource fail, Err message:[{0}]{1}".format(rsp['Retcode'], rsp['Message']))
+            raise RuntimeError("Call GetUAITrainAvailableResource fail, Err message:[{0}]{1}".format(rsp['RetCode'], rsp['Message']))
         nodeinfo = self.work_node.lower().split('-')
         acc_amount, acc_name = int(nodeinfo[0]), nodeinfo[1]
         # available_nodes = rsp['DataSet']
@@ -264,7 +264,7 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
         aiframe_api = GetUAITrainAvailableDistAIFrameApiOp(train_mode_id, self.pub_key, self.pri_key)
         succ, rsp = aiframe_api.call_api()
         if not succ:
-            raise RuntimeError("Call GetUAITrainAvailableDistAIFrame fail, Err message:[{0}]{1}".format(rsp['Retcode'], rsp['Message']))
+            raise RuntimeError("Call GetUAITrainAvailableDistAIFrame fail, Err message:[{0}]{1}".format(rsp['RetCode'], rsp['Message']))
         for available_aiframe in rsp['DataItem']:
             if available_aiframe['DistAIFrameName'].lower() == self.dist_ai_frame.lower():
                 return available_aiframe['DistAIFrameId']
@@ -277,7 +277,7 @@ class BaseUAITrainCreateTrainJobOp(BaseUAITrainOp):
         backend_api = GetUAITrainAvailableBackendApiOp(train_mode_id, self.pub_key, self.pri_key)
         succ, rsp = backend_api.call_api()
         if not succ:
-            raise RuntimeError("Call GetUAITrainAvailableBackend fail, Err message:[{0}]{1}".format(rsp['Retcode'], rsp['Message']))
+            raise RuntimeError("Call GetUAITrainAvailableBackend fail, Err message:[{0}]{1}".format(rsp['RetCode'], rsp['Message']))
         for available_backend in rsp['DataItem']:
             if available_backend['DataBackendName'].lower() == data_backend.lower():
                 uai_logger.debug("Data_backend_id: {0}".format(available_backend['DataBackendId']))
