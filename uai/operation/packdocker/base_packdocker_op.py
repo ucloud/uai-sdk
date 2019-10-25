@@ -21,8 +21,8 @@ from uai.utils.retcode_checker import *
 from uai.api.check_uai_base_img_exist import CheckUAIBaseImgExistApiOp
 from uai.api.get_uai_available_env_pkg import GetUAIAvailableEnvPkgApiOp
 
-DOCKER_PUBLIC_REGISTRY = "uhub.ucloud.cn"
-DOCKER_INTERNAL_REGISTRY = "uhub.service.ucloud.cn"
+DOCKER_PUBLIC_REGISTRY = "uhub-edu.service.ucloud.cn"
+DOCKER_INTERNAL_REGISTRY = "uhub-edu.service.ucloud.cn"
 TMP_DOCKER_FILE = "uai_inference.Dockerfile"
 DOCKER_RUN_CMD_FILE = "uai_inference_cmd.txt"
 

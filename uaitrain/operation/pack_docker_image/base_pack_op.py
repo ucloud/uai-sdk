@@ -20,8 +20,8 @@ from uaitrain.operation.base_op import BaseUAITrainOp
 from uaitrain.api.get_env_pkg import GetUAITrainEnvPkgAPIOp
 from uaitrain.api.check_and_get_base_image_op import CheckAndGetUAITrainBaseImageApiOp
 
-DOCKER_PUBLIC_REGISTRY = "uhub.ucloud.cn"
-DOCKER_INTERNAL_REGISTRY = "uhub.service.ucloud.cn"
+DOCKER_PUBLIC_REGISTRY = "uhub-edu.service.ucloud.cn"
+DOCKER_INTERNAL_REGISTRY = "uhub-edu.service.ucloud.cn"
 DOCKER_TAG_SUFFIX = "uaitrain"
 TMP_CPU_DOCKER_FILE = "uaitrain-cpu.Dockerfile"
 TMP_DOCKER_FILE = "uaitrain.Dockerfile"

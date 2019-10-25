@@ -19,9 +19,9 @@ import json
 from uai.utils.utils import _verfy_ac
 from uai.utils.retcode_checker import *
 
-DEFAULT_UCLOUD_API_URL = 'http://api.ucloud.cn'
-DEFAULT_UAI_TRAIN_REGION = 'cn-bj2'
-DEFAULT_UAI_TRAIN_ZONE = 'cn-bj2-04'
+DEFAULT_UCLOUD_API_URL = 'http://api-edu.ucloud.cn'
+DEFAULT_UAI_TRAIN_REGION = 'cn-sh2'
+DEFAULT_UAI_TRAIN_ZONE = 'cn-sh2-02'    
 
 PARAM_ACTION = 'Action'
 PARAM_PUBLIC_KEY = 'PublicKey'

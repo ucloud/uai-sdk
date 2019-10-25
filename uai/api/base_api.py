@@ -21,9 +21,9 @@ from uai.utils.retcode_checker import *
 class BaseUaiServiceApiOp(object):
     """ The Base api for uai Service
     """
-    UCLOUD_API_URL = 'http://api.ucloud.cn'
-    PARAMS_DEFAULT_REGION = "cn-bj2"
-    PARAMS_DEFAULT_ZONE = "cn-bj2-04"
+    UCLOUD_API_URL = 'http://api-edu.ucloud.cn'
+    PARAMS_DEFAULT_REGION = "cn-sh2"
+    PARAMS_DEFAULT_ZONE = "cn-sh2-02"
 
     PARAMS_DEFAULT_BUSINESSGROUP = "Default"
     PACKAGE_TYPE = {'os': 'OS', 'language': 'Python', 'ai_arch': 'AIFrame', 'os_deps': 'AptGet', 'pip': 'Pip'}
